@@ -1,0 +1,120 @@
+{
+  "defaultSeverity": "warning",
+  "linterOptions": {
+    "exclude": ["*.json", "**/*.json"]
+  },
+  "rules": {
+    "adjacent-overload-signatures": true,
+    "align": [
+      true,
+      "arguments",
+      "elements",
+      "members",
+      "parameters",
+      "statements"
+    ],
+    "await-promise": true,
+    "binary-expression-operand-order": true,
+    "class-name": true,
+    "completed-docs": [
+      false, // For now
+      {
+        "classes": { "visibilities": ["exported"] },
+        "enums": { "visibilities": ["exported"] },
+        "functions": { "visibilities": ["exported"] },
+        "interfaces": { "visibilities": ["exported"] },
+        "namespaces": { "visibilities": ["exported"] },
+        "types": { "visibilities": ["exported"] },
+        "variables": { "visibilities": ["exported"] },
+        "methods": {
+          "locations": ["all"],
+          "privacies": ["public", "protected"]
+        },
+        "properties": {
+          "locations": ["all"],
+          "privacies": ["public", "protected"]
+        }
+      }
+    ],
+    "curly": true,
+    "cyclomatic-complexity": true,
+    "deprecation": true,
+    "encoding": true,
+    "indent": true,
+    "interface-name": true,
+    "label-position": true,
+    //"match-default-export-name": true,]
+    "member-ordering": [
+      true,
+      {
+        "order": [
+          "private-static-field",
+          "protected-static-field",
+          "public-static-field",
+          "private-instance-field",
+          "protected-instance-field",
+          "public-instance-field",
+          "private-constructor",
+          "protected-constructor",
+          "public-constructor",
+          "private-static-method",
+          "protected-static-method",
+          "public-static-method",
+          "private-instance-method",
+          "protected-instance-method",
+          "public-instance-method"
+        ]
+      }
+    ],
+    "new-parens": true,
+    "no-angle-bracket-type-assertion": true,
+    "no-any": true,
+    "no-arg": true,
+    "no-boolean-literal-compare": true,
+    "no-construct": true,
+    "no-duplicate-imports": true,
+    "no-duplicate-super": true,
+    "no-duplicate-variable": true,
+    "no-empty": false,
+    "no-internal-module": true,
+    "no-mergeable-namespace": true,
+    "no-misused-new": true,
+    "no-reference": true,
+    "no-reference-import": true,
+    "no-shadowed-variable": false,
+    "no-string-literal": false,
+    "no-this-assignment": true,
+    "no-trailing-whitespace": true,
+    "no-unnecessary-callback-wrapper": true,
+    "no-unnecessary-initializer": true,
+    "no-unnecessary-qualifier": true,
+    "no-unnecessary-type-assertion": true,
+    "no-unused-expression": true,
+    "no-var-keyword": true,
+    "no-unsafe-any": false,
+    "ordered-imports": [
+      true,
+      {
+        "import-sources-order": "lowercase-first",
+        "grouped-import": true,
+        "module-source-path": "full",
+        "named-imports-order": "lowercase-first"
+      }
+    ],
+    "one-variable-per-declaration": true,
+    "prefer-for-of": true,
+    "promise-function-async": true,
+    "quotemark": [true, "double"],
+    "restrict-plus-operands": true,
+    "semicolon": true,
+    "switch-default": true,
+    "use-isnan": true,
+    "variable-name": [
+      true,
+      "allow-leading-underscore",
+      "ban-keywords",
+      "check-format"
+    ],
+    "whitespace": true
+  }
+}
