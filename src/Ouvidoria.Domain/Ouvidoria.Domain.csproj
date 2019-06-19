@@ -4,6 +4,10 @@
     <ProjectReference Include="..\Ouvidoria.Domain.Core\Ouvidoria.Domain.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="8.4.0" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
