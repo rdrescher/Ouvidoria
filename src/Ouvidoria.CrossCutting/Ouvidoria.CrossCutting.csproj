@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ouvidoria.Domain\Ouvidoria.Domain.csproj" />
+    <ProjectReference Include="..\Ouvidoria.Services\Ouvidoria.Services.csproj" />
+    <ProjectReference Include="..\Ouvidoria.Infrastructure\Ouvidoria.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+</Project>
