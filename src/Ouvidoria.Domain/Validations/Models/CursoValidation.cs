@@ -3,9 +3,9 @@ using Ouvidoria.Domain.Models;
 
 namespace Ouvidoria.Domain.Validations.Models
 {
-    public abstract class CursoValidation<T> : AbstractValidator<T> where T : Curso
+    public abstract class CursoValidation: AbstractValidator<Curso>
     {
-        protected void ValidateName()
+        public CursoValidation()
         {
             RuleFor(c => c.Nome)
                 .NotEmpty().WithMessage("Por favor, preencha o nome do curso")
