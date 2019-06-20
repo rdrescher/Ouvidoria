@@ -41,5 +41,6 @@ namespace Ouvidoria.Domain.Models
         public virtual List<Departamento> Departamento { get; private set; }
         public virtual List<Manifestacao> Manifestacoes { get; private set; }
         public virtual List<Questionario> Questionarios { get; private set; }
+        public virtual List<QuestionarioResposta> QuestionarioResposta { get; private set; }
     }
 }

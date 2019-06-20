@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -37,5 +38,19 @@ namespace Ouvidoria.Infrastructure.Context
                     builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
                 });
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            foreach (var property in modelBuilder.Model.GetEntityTypes()
+                .SelectMany(e => e.GetProperties()
+                    .Where(p => p.ClrType == typeof(string))))
+                property.Relational().ColumnType = "varchar(100)";
+
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(OuvidoriaContext).Assembly);
+
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())) relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
+
+            base.OnModelCreating(modelBuilder);
+        }
+
     }
 }

@@ -17,6 +17,14 @@ namespace Ouvidoria.Infrastructure.Mappings
                 .WithMany(c => c.Respostas)
                 .HasForeignKey(c => c.IdOpcao);
 
+            builder.HasOne(c => c.Pergunta)
+                .WithMany(c => c.Respostas)
+                .HasForeignKey(c => c.IdPergunta);
+
+            builder.HasOne(c => c.QuestionarioResposta)
+                .WithMany(c => c.Resposta)
+                .HasForeignKey(c => c.IdQuestionarioResposta);
+
             builder.Property(c => c.DataInsercao)
                 .IsRequired()
                 .HasColumnType("datetime");
