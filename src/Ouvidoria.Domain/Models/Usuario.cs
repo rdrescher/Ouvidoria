@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Ouvidoria.Domain.Core.Models;
 using Ouvidoria.Domain.Enums;
 
@@ -37,5 +38,9 @@ namespace Ouvidoria.Domain.Models
         public int? IdCurso { get; private set; }
         public UsuarioPerfil UsuarioPerfil { get; private set; }
         public virtual Curso Curso { get; private set; }
+        public virtual List<Departamento> Departamento { get; private set; }
+        public virtual List<Manifestacao> Manifestacoes { get; private set; }
+        public virtual List<Questionario> Questionarios { get; private set; }
+        public virtual List<QuestionarioResposta> QuestionarioResposta { get; private set; }
     }
 }

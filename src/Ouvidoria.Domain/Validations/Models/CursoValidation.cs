@@ -9,7 +9,7 @@ namespace Ouvidoria.Domain.Validations.Models
         {
             RuleFor(c => c.Nome)
                 .NotEmpty().WithMessage("Por favor, preencha o nome do curso")
-                .Length(2, 150).WithMessage("O nome do curso deve conter entre 2 e 50 caracteres");
+                .Length(2, 50).WithMessage("O nome do curso deve conter entre 2 e 50 caracteres");
         }
     }
 }

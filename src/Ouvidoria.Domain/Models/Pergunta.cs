@@ -20,6 +20,6 @@ namespace Ouvidoria.Domain.Models
         public List<Opcao> Opcoes { get; private set; }
         public int IdQuestionario { get; private set; }
         public virtual Questionario Questionario { get; private set; }
-
+        public virtual List<Resposta> Respostas { get; private set; }
     }
 }

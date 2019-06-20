@@ -24,5 +24,6 @@ namespace Ouvidoria.Domain.Models
         public int IdUsuarioCriador { get; private set; }
         public List<Pergunta> Pergunta { get; private set; }
         public virtual Usuario Usuario { get; private set; }
+        public virtual List<QuestionarioResposta> QuestionarioResposta { get; private set; }
     }
 }
