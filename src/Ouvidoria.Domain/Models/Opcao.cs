@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Ouvidoria.Domain.Core.Models;
 
 namespace Ouvidoria.Domain.Models
@@ -15,5 +16,6 @@ namespace Ouvidoria.Domain.Models
         public string Descricao { get; private set; }
         public int IdPergunta { get; private set; }
         public virtual Pergunta Pergunta { get; private set; }
+        public virtual List<Resposta> Respostas { get; private set; }
     }
 }

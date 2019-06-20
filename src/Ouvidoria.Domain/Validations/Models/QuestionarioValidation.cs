@@ -13,7 +13,7 @@ namespace Ouvidoria.Domain.Validations.Models
 
             RuleFor(q => q.Descricao)
                 .NotEmpty().WithMessage("Por favor, preencha a descrição")
-                .Length(2, 1000).WithMessage("A descrição deve conter entre 2 e 1000 caracteres");
+                .Length(2, 5000).WithMessage("A descrição deve conter entre 2 e 5000 caracteres");
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Ouvidoria.Domain.Validations.Models
         {
             RuleFor(m => m.Titulo)
                 .NotEmpty().WithMessage("Por favor, preencha o título")
-                .Length(2, 150).WithMessage("O título deve conter entre 2 e 50 caracteres");
+                .Length(2, 150).WithMessage("O título deve conter entre 2 e 150 caracteres");
 
             RuleFor(m => m.Descricao)
                 .NotEmpty().WithMessage("Preencha a descrição")
