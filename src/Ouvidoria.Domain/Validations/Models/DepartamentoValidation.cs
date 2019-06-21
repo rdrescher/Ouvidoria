@@ -3,7 +3,7 @@ using Ouvidoria.Domain.Models;
 
 namespace Ouvidoria.Domain.Validations.Models
 {
-    public abstract class DepartamentoValidation : AbstractValidator<Departamento>
+    public class DepartamentoValidation : AbstractValidator<Departamento>
     {
         public DepartamentoValidation()
         {

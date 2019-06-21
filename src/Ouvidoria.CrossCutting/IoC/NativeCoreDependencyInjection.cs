@@ -6,7 +6,6 @@ using Ouvidoria.Infrastructure.Context;
 using Ouvidoria.Infrastructure.Repositories;
 using Ouvidoria.Services;
 using Ouvidoria.Domain.Notificacoes;
-using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Ouvidoria.Application.Interfaces;
 using Ouvidoria.Application.Services;
