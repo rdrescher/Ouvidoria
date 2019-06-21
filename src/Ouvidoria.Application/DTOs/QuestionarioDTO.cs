@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Ouvidoria.Application.DTOs
 {
-    public class QuestionarioDTO
+    public class QuestionarioDTO : EntityDTO
     {
         public string titulo { get; set; }
         public string descricao { get; set; }

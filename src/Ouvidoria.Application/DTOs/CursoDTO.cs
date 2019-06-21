@@ -1,8 +1,7 @@
 namespace Ouvidoria.Application.DTOs
 {
-    public class CursoDTO
+    public class CursoDTO : EntityDTO
     {
-        public int id { get; set; }
         public string nome { get; set; }
     }
 }

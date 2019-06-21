@@ -2,9 +2,8 @@ using Ouvidoria.Domain.Enums;
 
 namespace Ouvidoria.Application.DTOs
 {
-    public class ManifestacaoDTO
+    public class ManifestacaoDTO : EntityDTO
     {
-        public int id { get; set; }
         public string titulo { get; set; }
         public string descricao { get; set; }
         public string resposta { get; set; }

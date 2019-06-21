@@ -1,9 +1,8 @@
-using System.Collections.Generic;
 using Ouvidoria.Domain.Enums;
 
 namespace Ouvidoria.Application.DTOs
 {
-    public class UsuarioDTO
+    public class UsuarioDTO : EntityDTO
     {
         public string nome { get; set; }
         public string email { get; set; }

@@ -1,8 +1,7 @@
 namespace Ouvidoria.Application.DTOs
 {
-    public class OpcaoDTO
+    public class OpcaoDTO : EntityDTO
     {
-        public int id { get; set; }
         public string descricao { get; set; }
     }
 }
