@@ -29,7 +29,7 @@ namespace Ouvidoria.Domain.Models
         public string Resposta { get; private set; }
         public int IdDepartamento { get; private set; }
         public int IdUsuario { get; private set; }
-        public virtual TipoManifestacao TipoManifestacao { get; private set; }
+        public TipoManifestacao TipoManifestacao { get; private set; }
         public virtual Departamento Departamento { get; private set; }
         public virtual Usuario Usuario { get; private set; }
     }

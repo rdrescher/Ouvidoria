@@ -6,8 +6,9 @@ using Ouvidoria.Infrastructure.Context;
 using Ouvidoria.Infrastructure.Repositories;
 using Ouvidoria.Services;
 using Ouvidoria.Domain.Notificacoes;
-using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Ouvidoria.Application.Interfaces;
+using Ouvidoria.Application.Services;
 
 namespace Ouvidoria.CrossCutting.IoC
 {
@@ -17,6 +18,16 @@ namespace Ouvidoria.CrossCutting.IoC
         {
             //Notificator
             services.AddScoped<INotificador, Notificador>();
+
+            //Application Services
+            services.AddScoped<ICursoAppService, CursoAppService>();
+            services.AddScoped<IDepartamentoAppService, DepartamentoAppService>();
+            services.AddScoped<IManifestacaoAppService, ManifestacaoAppService>();
+            services.AddScoped<IOpcaoAppService, OpcaoAppService>();
+            services.AddScoped<IPerguntaAppService, PerguntaAppService>();
+            services.AddScoped<IQuestionarioAppService, QuestionarioAppService>();
+            services.AddScoped<IRespostaAppService, RespostaAppService>();
+            services.AddScoped<IUsuarioAppService, UsuarioAppService>();
             
             //Domain Services
             services.AddScoped<ICursoService, CursoService>();

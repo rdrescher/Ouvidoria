@@ -3,7 +3,7 @@ using Ouvidoria.Domain.Models;
 
 namespace Ouvidoria.Domain.Validations.Models
 {
-    public abstract class CursoValidation: AbstractValidator<Curso>
+    public class CursoValidation: AbstractValidator<Curso>
     {
         public CursoValidation()
         {
