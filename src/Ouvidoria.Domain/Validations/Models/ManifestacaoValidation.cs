@@ -3,13 +3,13 @@ using Ouvidoria.Domain.Models;
 
 namespace Ouvidoria.Domain.Validations.Models
 {
-    public abstract class ManifestacaoValidation : AbstractValidator<Manifestacao>
+    public class ManifestacaoValidation : AbstractValidator<Manifestacao>
     {
         public ManifestacaoValidation()
         {
             RuleFor(m => m.Titulo)
                 .NotEmpty().WithMessage("Por favor, preencha o título")
-                .Length(2, 150).WithMessage("O título deve conter entre 2 e 50 caracteres");
+                .Length(2, 150).WithMessage("O título deve conter entre 2 e 150 caracteres");
 
             RuleFor(m => m.Descricao)
                 .NotEmpty().WithMessage("Preencha a descrição")

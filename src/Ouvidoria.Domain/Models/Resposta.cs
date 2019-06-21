@@ -1,5 +1,4 @@
 using System;
-using Ouvidoria.Domain.Core.Models;
 
 namespace Ouvidoria.Domain.Models
 {
@@ -19,10 +18,11 @@ namespace Ouvidoria.Domain.Models
             this.DataAtualizacao = DateTime.Now;
             this.DataInsercao = DateTime.Now;
         }
-        protected Resposta() { }
+        public Resposta() { }
         public string Retorno { get; private set; }
         public int? IdOpcao { get; private set; }
         public int IdPergunta { get; private set; }
+        public int IdQuestionarioResposta { get; private set; }
         public virtual Opcao Opcao { get; private set; }
         public virtual Pergunta Pergunta { get; private set; }
         public virtual QuestionarioResposta QuestionarioResposta { get; private set; }

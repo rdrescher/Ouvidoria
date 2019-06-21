@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Ouvidoria.Domain.Core.Models;
 
 namespace Ouvidoria.Domain.Models
 {
@@ -13,7 +12,7 @@ namespace Ouvidoria.Domain.Models
             this.DataAtualizacao = DateTime.Now;
             this.DataInsercao = DateTime.Now;
         }
-        protected QuestionarioResposta() { }
+        public QuestionarioResposta() { }
         public int IdQuestionario { get; private set; }
         public int IdUsuario { get; private set; }
         public List<Resposta> Resposta { get; private set; }

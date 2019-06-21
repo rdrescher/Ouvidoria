@@ -1,5 +1,5 @@
 using System;
-using Ouvidoria.Domain.Core.Models;
+using System.Collections.Generic;
 using Ouvidoria.Domain.Enums;
 
 namespace Ouvidoria.Domain.Models
@@ -27,7 +27,7 @@ namespace Ouvidoria.Domain.Models
             this.DataAtualizacao = DateTime.Now;
             this.DataInsercao = DateTime.Now;
         }
-        protected Usuario() { }
+        public Usuario() { }
         public string Nome { get; private set; }
         public string Email { get; private set; }
         public string Telefone { get; private set; }
@@ -37,5 +37,9 @@ namespace Ouvidoria.Domain.Models
         public int? IdCurso { get; private set; }
         public UsuarioPerfil UsuarioPerfil { get; private set; }
         public virtual Curso Curso { get; private set; }
+        public virtual List<Departamento> Departamento { get; private set; }
+        public virtual List<Manifestacao> Manifestacoes { get; private set; }
+        public virtual List<Questionario> Questionarios { get; private set; }
+        public virtual List<QuestionarioResposta> QuestionarioResposta { get; private set; }
     }
 }

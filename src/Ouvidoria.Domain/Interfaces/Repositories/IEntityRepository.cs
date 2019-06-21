@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Ouvidoria.Domain.Core.Models;
+using Ouvidoria.Domain.Models;
 
 namespace Ouvidoria.Domain.Interfaces
 {
     public interface IEntityRepository<TEntity> : IDisposable where TEntity : Entity
     {
         Task Create(TEntity entity);
-        Task Delete(Guid id);
+        Task Delete(int id);
         Task<List<TEntity>> GetAll();
         Task<TEntity> GetById(int id);
         Task<int> SaveChanges();

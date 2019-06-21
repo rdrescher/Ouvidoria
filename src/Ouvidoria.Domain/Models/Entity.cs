@@ -1,10 +1,10 @@
 using System;
 
-namespace Ouvidoria.Domain.Core.Models
+namespace Ouvidoria.Domain.Models
 {
     public abstract class Entity
     {
-        public virtual int Id { get; protected set; }
+        public virtual int Id { get; set; }
 
         public virtual DateTime DataAtualizacao { get; protected set; }
 
