@@ -3,17 +3,16 @@ using FluentValidation.Results;
 using Ouvidoria.Domain.Interfaces;
 using Ouvidoria.Domain.Models;
 using Ouvidoria.Domain.Notificacoes;
-using Ouvidoria.Services.Interfaces;
 
 namespace Ouvidoria.Services
 {
     public abstract class EntityService
     {
-        private readonly INotificador _notificador;
+        private readonly INotificador Notificador;
 
         protected EntityService(INotificador notificador)
         {
-            _notificador = notificador;
+            Notificador = notificador;
         }
 
         protected void Notify(ValidationResult validationResult)
@@ -26,7 +25,7 @@ namespace Ouvidoria.Services
 
         protected void Notify(string mensagem)
         {
-            _notificador.Handle(new Notificacao(mensagem));
+            Notificador.Handle(new Notificacao(mensagem));
         }
 
         protected bool Validate<TV, TE>(TV validacao, TE entidade) where TV : AbstractValidator<TE> where TE : Entity
