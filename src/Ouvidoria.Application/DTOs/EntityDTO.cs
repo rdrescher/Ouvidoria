@@ -1,6 +1,6 @@
 namespace Ouvidoria.Application.DTOs
 {
-    public class EntityDTO
+    public abstract class EntityDTO
     {
         public int id { get; set; }
     }
