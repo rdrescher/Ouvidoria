@@ -1,5 +1,4 @@
 using System;
-using Ouvidoria.Domain.Core.Models;
 
 namespace Ouvidoria.Domain.Models
 {
@@ -11,7 +10,7 @@ namespace Ouvidoria.Domain.Models
             this.DataAtualizacao = DateTime.Now;
             this.DataInsercao = DateTime.Now;
         }
-        protected Curso() { }
+        public Curso() { }
         public string Nome { get; private set; }
     }
 }

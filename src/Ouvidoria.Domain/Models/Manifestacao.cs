@@ -1,5 +1,4 @@
 using System;
-using Ouvidoria.Domain.Core.Models;
 using Ouvidoria.Domain.Enums;
 
 namespace Ouvidoria.Domain.Models
@@ -24,7 +23,7 @@ namespace Ouvidoria.Domain.Models
             this.DataAtualizacao = DateTime.Now;
             this.DataInsercao = DateTime.Now;
         }
-        protected Manifestacao() { }
+        public Manifestacao() { }
         public string Titulo { get; private set; }
         public string Descricao { get; private set; }
         public string Resposta { get; private set; }
