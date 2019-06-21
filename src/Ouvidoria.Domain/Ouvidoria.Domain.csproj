@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Ouvidoria.Domain.Core\Ouvidoria.Domain.Core.csproj" />
+    <PackageReference Include="FluentValidation" Version="8.4.0" />
   </ItemGroup>
 
   <PropertyGroup>
