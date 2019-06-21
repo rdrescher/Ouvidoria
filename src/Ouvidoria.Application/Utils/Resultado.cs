@@ -1,5 +1,3 @@
-using System;
-
 namespace Ouvidoria.Application.Utils
 {
     public class Resultado

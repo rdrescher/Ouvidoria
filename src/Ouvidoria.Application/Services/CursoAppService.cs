@@ -5,7 +5,7 @@ using Ouvidoria.Domain.Models;
 
 namespace Ouvidoria.Application.Services
 {
-    public class CursoAppService : EntityAppService<Curso, CursoDTO>
+    public class CursoAppService : EntityAppService<Curso, CursoDTO>, ICursoAppService
     {
         public CursoAppService(IMapper map) : base(map)
         { }
