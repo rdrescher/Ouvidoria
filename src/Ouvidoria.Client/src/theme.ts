@@ -1,5 +1,6 @@
 import red from "@material-ui/core/colors/red";
 import { createMuiTheme } from "@material-ui/core/styles";
+import { StandardLonghandProperties } from "csstype";
 
 const white = "#fff";
 
@@ -61,6 +62,22 @@ const theme = createMuiTheme({
     MuiMenu: {
       paper: {
         top: "65px !important"
+      }
+    },
+    MuiTableCell: {
+      head: {
+        color: "black"
+      }
+    },
+    MuiInputLabel: {
+      root: {
+        color: "black"
+      }
+    },
+    MuiDialog: {
+      root: {
+        // tslint:disable-next-line:no-any
+        zIndex: "10000 !important" as any
       }
     }
   }

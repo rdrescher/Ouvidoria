@@ -15,6 +15,7 @@ export default class Http {
     private static async fetch(method: HttpMethods, url: string, body?: unknown, header?: Record<string, string>) {
         const headers =
         {
+            "content-type": "application/json",
             ...header
         };
 

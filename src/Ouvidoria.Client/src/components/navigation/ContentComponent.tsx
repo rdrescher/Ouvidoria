@@ -5,6 +5,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Route, Switch } from "react-router-dom";
 import { IApplicationState } from "../../store";
+import CursoView from "../../views/administracao/CursoView";
 import DashboardView from "../../views/manifestacoes/DashboardView";
 import DenunciaView from "../../views/manifestacoes/DenunciaView";
 import ElogioView from "../../views/manifestacoes/ElogioView";
@@ -63,6 +64,7 @@ function ContentComponent(props: IStateProps) {
           <Route exact path="/reclamacao" component={ReclamacaoView} />
           <Route exact path="/solicitacao" component={SolicitacaoView} />
           <Route exact path="/sugestao" component={SugestaoView} />
+          <Route exact path="/cursos" component={CursoView} />
           <Route exact path="/" component={DashboardView} />
         </Switch>
       </main>

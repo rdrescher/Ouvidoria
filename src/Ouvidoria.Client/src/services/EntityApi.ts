@@ -1,4 +1,5 @@
 import Http from "../core/http";
+import IResultado from "../models/Resultado";
 
 export default class EntityApi<TEntity>
 {
@@ -8,23 +9,23 @@ export default class EntityApi<TEntity>
         this.controller = controller;
     }
 
-    public async create(entity: TEntity): Promise<TEntity> {
+    public async create(entity: TEntity): Promise<IResultado<TEntity>> {
         return await Http.post(`/api/${this.controller}`, entity);
     }
 
-    public async delete(entity: TEntity): Promise<void> {
+    public async delete(entity: TEntity): Promise<IResultado> {
         return await Http.delete(`/api/${this.controller}`, entity);
     }
 
-    public async get(): Promise<Array<TEntity>> {
+    public async get(): Promise<IResultado<Array<TEntity>>> {
         return await Http.get(`/api/${this.controller}`);
     }
 
-    public async getById(id: number): Promise<TEntity> {
+    public async getById(id: number): Promise<IResultado<TEntity>> {
         return await Http.post(`/api/${this.controller}/${id}`);
     }
 
-    public async update(entity: TEntity): Promise<TEntity> {
+    public async update(entity: TEntity): Promise<IResultado<TEntity>> {
         return await Http.put(`/api/${this.controller}`, entity);
     }
 }

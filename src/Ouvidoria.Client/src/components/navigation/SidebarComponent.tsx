@@ -1,5 +1,29 @@
-import { makeStyles, Collapse, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, Theme, Typography } from "@material-ui/core";
-import { Build, ExpandLess, ExpandMore, Home, Message, QuestionAnswer, RecordVoiceOver, Report, ThumbsUpDown, ThumbDown, ThumbUp } from "@material-ui/icons";
+import {
+    makeStyles,
+    Collapse,
+    Divider,
+    Drawer,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Theme,
+    Typography
+} from "@material-ui/core";
+import {
+    Build,
+    ExpandLess,
+    ExpandMore,
+    Home,
+    Message,
+    QuestionAnswer,
+    RecordVoiceOver,
+    Report,
+    School,
+    ThumbsUpDown,
+    ThumbDown,
+    ThumbUp
+} from "@material-ui/icons";
 import clsx from "clsx";
 import React, { useState } from "react";
 import { connect } from "react-redux";
@@ -8,9 +32,20 @@ import AMFIcon from "../../assets/img/amf_white.png";
 import Background from "../../assets/img/bg-clear.png";
 import { IApplicationState } from "../../store";
 
-
 const drawerWidth = 240;
-type Menus = "Home" | "Elogio" | "Sugestão" | "Solicitação" | "Reclamação" | "Denúncia" | "Questionários" | "Cursos" | "Departamentos" | "Usuários" | "AdmQuestionarios" | "Manifestações";
+type Menus =
+    | "Home"
+    | "Elogio"
+    | "Sugestão"
+    | "Solicitação"
+    | "Reclamação"
+    | "Denúncia"
+    | "Questionários"
+    | "Cursos"
+    | "Departamentos"
+    | "Usuários"
+    | "AdmQuestionarios"
+    | "Manifestações";
 
 const useStyles = makeStyles((theme: Theme) => ({
     titulo: {
@@ -20,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     drawer: {
         width: drawerWidth,
         flexShrink: 0,
-        border: 0,
+        border: 0
     },
     drawerPaper: {
         backgroundImage: `linear-gradient(to bottom, rgba(0, 180, 219, 1) 20%, rgba(0, 131, 176, 0.5)), url(${Background})`,
@@ -28,14 +63,14 @@ const useStyles = makeStyles((theme: Theme) => ({
         backgroundSize: "240px 100%",
         background: "linear-gradient(-206deg, #00B4DB 35%, #0083B0)",
         width: drawerWidth,
-        color: "white",
+        color: "white"
     },
     drawerHeader: {
         display: "flex",
         alignItems: "center",
         padding: "0 8px",
         ...theme.mixins.toolbar,
-        justifyContent: "flex-end",
+        justifyContent: "flex-end"
     },
     AMFIcon: {
         width: "125px",
@@ -43,10 +78,10 @@ const useStyles = makeStyles((theme: Theme) => ({
         marginTop: 20,
         marginLeft: "auto",
         marginRight: "auto",
-        marginBottom: 10,
+        marginBottom: 10
     },
     selected: {
-        background: "rgba(0, 0, 0, 0.09) !important",
+        background: "rgba(0, 0, 0, 0.09) !important"
     },
     link: {
         color: "white",
@@ -54,8 +89,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     nested: {
         paddingLeft: theme.spacing(4),
-        background: "rgba(0, 0, 0, 0.04)",
-    },
+        background: "rgba(0, 0, 0, 0.04)"
+    }
 }));
 
 interface IStateProps {
@@ -66,8 +101,12 @@ function SidebarComponent(props: IStateProps) {
     const classes = useStyles();
     const sidebarIsOpen = props.sidebarIsOpen;
     const [activeMenu, setActiveMenu] = useState<Menus>();
-    const [manifestationIsOpen, setManifestationIsOpen] = useState<boolean>(false);
-    const [administrationIsOpen, setAdministrationIsOpen] = useState<boolean>(false);
+    const [manifestationIsOpen, setManifestationIsOpen] = useState<boolean>(
+        false
+    );
+    const [administrationIsOpen, setAdministrationIsOpen] = useState<boolean>(
+        false
+    );
 
     function onMenuChange(menu: Menus) {
         setActiveMenu(menu);
@@ -162,7 +201,8 @@ function SidebarComponent(props: IStateProps) {
                                 <RecordVoiceOver />
                             </ListItemIcon>
                             <ListItemText primary="Solicitação" />
-                        </ListItem></Link>
+                        </ListItem>
+                    </Link>
                     <Link to="/reclamacao" className={classes.link}>
                         <ListItem
                             button
@@ -175,7 +215,8 @@ function SidebarComponent(props: IStateProps) {
                                 <ThumbDown />
                             </ListItemIcon>
                             <ListItemText primary="Reclamação" />
-                        </ListItem></Link>
+                        </ListItem>
+                    </Link>
                     <Link to="/denuncia" className={classes.link}>
                         <ListItem
                             button
@@ -214,8 +255,8 @@ function SidebarComponent(props: IStateProps) {
                     <ListItemText primary="Administração" />
                     {administrationIsOpen ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
-                <Collapse in={manifestationIsOpen} timeout="auto" unmountOnExit>
-                    <Link to="/elogio" className={classes.link}>
+                <Collapse in={administrationIsOpen} timeout="auto" unmountOnExit>
+                    <Link to="/cursos" className={classes.link}>
                         <ListItem
                             button
                             className={clsx(classes.nested, {
@@ -224,14 +265,14 @@ function SidebarComponent(props: IStateProps) {
                             onClick={() => onMenuChange("Cursos")}
                         >
                             <ListItemIcon>
-                                <ThumbUp />
+                                <School />
                             </ListItemIcon>
                             <ListItemText primary="Cursos" />
                         </ListItem>
                     </Link>
                 </Collapse>
             </List>
-        </Drawer >
+        </Drawer>
     );
 }
 
@@ -239,4 +280,7 @@ const mapStateToProps = (state: IApplicationState) => ({
     sidebarIsOpen: state.NavigationReducer.sidebarIsOpen
 });
 
-export default connect(mapStateToProps, null)(SidebarComponent);
+export default connect(
+    mapStateToProps,
+    null
+)(SidebarComponent);

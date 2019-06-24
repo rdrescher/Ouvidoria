@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Ouvidoria.Domain.Interfaces;
+using Ouvidoria.Domain.Models;
 using Ouvidoria.Services.Interfaces;
 
 namespace Ouvidoria.Services
@@ -15,6 +18,17 @@ namespace Ouvidoria.Services
         public void Dispose()
         {
             repository.Dispose();
+        }
+
+        public async Task<List<Curso>> GetClasses()
+        {
+            return await repository.GetAll();
+        }
+
+        public async Task<Curso> Update(Curso curso)
+        {
+            await repository.Update(curso);
+            return curso;
         }
     }
 }
