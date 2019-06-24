@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Ouvidoria.CrossCutting.IoC;
 using Ouvidoria.Application.Extensions;
+using AutoMapper;
 
 namespace Ouvidoria.Api
 {
@@ -29,6 +30,7 @@ namespace Ouvidoria.Api
                         .AllowCredentials()
                 );
             });
+            services.AddAutoMapper(typeof(Startup));
             services.AddAutoMapperSetup();
             services.AddDependencies(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
