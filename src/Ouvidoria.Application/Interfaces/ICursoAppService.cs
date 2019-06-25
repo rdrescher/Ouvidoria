@@ -10,5 +10,7 @@ namespace Ouvidoria.Application.Interfaces
     {
         Task<Resultado<List<CursoDTO>>> GetClasses();
         Task<Resultado<CursoDTO>> Update(CursoDTO cursoDTO);
+        Task<Resultado<CursoDTO>> Create(CursoDTO cursoDTO);
+        Task<Resultado> Delete(int id);
     }
 }

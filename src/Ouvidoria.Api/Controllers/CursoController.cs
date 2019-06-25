@@ -17,46 +17,29 @@ namespace Ouvidoria.Api.Controllers
         public CursoController(ICursoAppService service)
         {
             this.service = service;
-
         }
 
         [HttpGet]
-        public async Task<ActionResult<Resultado<List<CursoDTO>>>> Get()
-        {
-            var cursos = await service.GetClasses();
-            if(!cursos.Success)
-                return BadRequest(cursos);
-            return Ok(cursos);
-        }
+        public async Task<ActionResult<Resultado<List<CursoDTO>>>> Get() =>
+            Ok(await service.GetClasses());
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult<Resultado<CursoDTO>>> Post(CursoDTO cursoDTO) =>
+            ModelState.IsValid ?
+                Ok(await service.Create(cursoDTO)) :
+                Ok(Resultado<CursoDTO>.Failed(ModelState.Values.Select(x => x.Errors).FirstOrDefault().ToString()));
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<Resultado<CursoDTO>>> Put(int id, CursoDTO cursoDTO)
         {
-            
+            if(id != cursoDTO.id) return BadRequest();
+            return ModelState.IsValid ?
+                Ok(await service.Update(cursoDTO)) :
+                Ok(Resultado<CursoDTO>.Failed(ModelState.Values.Select(x => x.Errors).FirstOrDefault().ToString()));
         }
 
-        // PUT api/values/5
-        [HttpPut]
-        public async Task<ActionResult<Resultado<CursoDTO>>> Put(CursoDTO cursoDTO)
-        {
-            var curso = await service.Update(cursoDTO);
-            if(!curso.Success)
-                return BadRequest(curso);
-            return Ok(curso);
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult<Resultado>> Delete(int id) =>
+            Ok(await service.Delete(id));
     }
 }

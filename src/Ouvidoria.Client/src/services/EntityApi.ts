@@ -13,8 +13,8 @@ export default class EntityApi<TEntity>
         return await Http.post(`/api/${this.controller}`, entity);
     }
 
-    public async delete(entity: TEntity): Promise<IResultado> {
-        return await Http.delete(`/api/${this.controller}`, entity);
+    public async delete(id: number): Promise<IResultado> {
+        return await Http.delete(`/api/${this.controller}/${id}`);
     }
 
     public async get(): Promise<IResultado<Array<TEntity>>> {
@@ -25,7 +25,7 @@ export default class EntityApi<TEntity>
         return await Http.post(`/api/${this.controller}/${id}`);
     }
 
-    public async update(entity: TEntity): Promise<IResultado<TEntity>> {
-        return await Http.put(`/api/${this.controller}`, entity);
+    public async update(id: number, entity: TEntity): Promise<IResultado<TEntity>> {
+        return await Http.put(`/api/${this.controller}/${id}`, entity);
     }
 }

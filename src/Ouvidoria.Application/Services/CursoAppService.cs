@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Ouvidoria.Application.DTOs;
 using Ouvidoria.Application.Interfaces;
 using Ouvidoria.Application.Utils;
+using Ouvidoria.Domain.Interfaces;
 using Ouvidoria.Domain.Models;
 using Ouvidoria.Services.Interfaces;
 
@@ -12,16 +15,38 @@ namespace Ouvidoria.Application.Services
     public class CursoAppService : EntityAppService<Curso, CursoDTO>, ICursoAppService
     {
         private readonly ICursoService Service;
-        public CursoAppService(IMapper map, ICursoService service) : base(map)
-        { 
+        private readonly INotificador Notificador;
+        public CursoAppService(IMapper map, ICursoService service, INotificador notificador) : base(map)
+        {
+            this.Notificador = notificador;
             this.Service = service;
         }
-            
+
+        public async Task<Resultado<CursoDTO>> Create(CursoDTO cursoDTO)
+        {
+            var curso = MapToDomain(cursoDTO);
+            await Service.Create(curso);
+
+            cursoDTO = MapToDTO(curso);
+
+            return Notificador.HasNotification() ?
+                Resultado<CursoDTO>.Failed(Notificador.GetNotifications().FirstOrDefault().Mensagem) :
+                Resultado<CursoDTO>.Successfull(cursoDTO);
+        }
+
+        public async Task<Resultado> Delete(int id)
+        {
+            await Service.Delete(id);
+            return Notificador.HasNotification() ?
+                Resultado.Failed(Notificador.GetNotifications().FirstOrDefault().Mensagem) :
+                Resultado.Successfull();
+        }
+
         public async Task<Resultado<List<CursoDTO>>> GetClasses()
         {
             var cursos = base.Mapper.Map<List<CursoDTO>>(await Service.GetClasses());
 
-            if(cursos == null || cursos.Count == 0)
+            if (cursos == null || cursos.Count == 0)
                 return Resultado<List<CursoDTO>>.Failed("Nenhum curso encontrado");
 
             var cursosDTO = base.Mapper.Map<List<CursoDTO>>(cursos);
@@ -32,10 +57,13 @@ namespace Ouvidoria.Application.Services
         {
             var curso = MapToDomain(cursoDTO);
 
-            curso = await Service.Update(curso);
+            await Service.Update(curso);
 
             var cursosDTO = MapToDTO(curso);
-            return Resultado<CursoDTO>.Successfull(cursosDTO);
+
+            return Notificador.HasNotification() ?
+                Resultado<CursoDTO>.Failed(Notificador.GetNotifications().FirstOrDefault().Mensagem) :
+                Resultado<CursoDTO>.Successfull(cursoDTO);
         }
     }
 }

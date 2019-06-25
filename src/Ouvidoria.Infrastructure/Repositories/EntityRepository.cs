@@ -46,6 +46,7 @@ namespace Ouvidoria.Infrastructure.Repositories
 
         public virtual async Task Update(TEntity entity)
         {
+            entity.SetUpdatedDate();
             DbSet.Update(entity);
             await SaveChanges();
         }
