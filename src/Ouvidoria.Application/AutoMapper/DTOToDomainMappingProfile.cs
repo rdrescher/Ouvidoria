@@ -8,7 +8,8 @@ namespace Ouvidoria.Application.AutoMapper
     {
         public DTOToDomainMappingProfile()
         {
-            CreateMap<CursoDTO, Curso>();
+            CreateMap<CursoDTO, Curso>()
+                .ConstructUsing(c => new Curso(c.nome));
             CreateMap<DepartamentoDTO, Departamento>();
             CreateMap<ManifestacaoDTO, Manifestacao>();
             CreateMap<PerguntaDTO, Pergunta>();

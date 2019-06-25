@@ -7,11 +7,13 @@ namespace Ouvidoria.Application.Extensions
 {
     public static class AutoMapperSetup
     {
-        public static void AddAutoMapperSetup(this IServiceCollection services)
+        public static void AddAutoMapperSetup(this IServiceCollection services, Type type)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            AutoMapperConfig.RegisterMappings();
+            var mappingConfig = AutoMapperConfig.RegisterMappings();
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
         }
     }
 }

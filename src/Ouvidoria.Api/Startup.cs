@@ -30,8 +30,8 @@ namespace Ouvidoria.Api
                         .AllowCredentials()
                 );
             });
-            services.AddAutoMapper(typeof(Startup));
-            services.AddAutoMapperSetup();
+            //services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapperSetup(typeof(Startup));
             services.AddDependencies(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

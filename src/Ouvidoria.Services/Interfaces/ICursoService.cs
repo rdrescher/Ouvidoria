@@ -8,6 +8,8 @@ namespace Ouvidoria.Services.Interfaces
     public interface ICursoService : IDisposable
     {
         Task<List<Curso>> GetClasses();
-        Task<Curso> Update(Curso curso);
+        Task Update(Curso curso);
+        Task Create(Curso curso);
+        Task Delete(int id);
     }
 }

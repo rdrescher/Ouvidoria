@@ -1,6 +1,5 @@
 import red from "@material-ui/core/colors/red";
 import { createMuiTheme } from "@material-ui/core/styles";
-import { StandardLonghandProperties } from "csstype";
 
 const white = "#fff";
 
@@ -71,7 +70,7 @@ const theme = createMuiTheme({
     },
     MuiInputLabel: {
       root: {
-        color: "black"
+        color: "rgba(0.0, 0, 0.2, 0.3)"
       }
     },
     MuiDialog: {
