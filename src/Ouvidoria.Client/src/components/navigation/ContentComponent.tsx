@@ -6,6 +6,8 @@ import { connect } from "react-redux";
 import { Route, Switch } from "react-router-dom";
 import { IApplicationState } from "../../store";
 import CursoView from "../../views/administracao/CursoView";
+import DepartamentoView from "../../views/administracao/DepartamentoView";
+import UsuarioView from "../../views/administracao/UsuarioView";
 import DashboardView from "../../views/manifestacoes/DashboardView";
 import DenunciaView from "../../views/manifestacoes/DenunciaView";
 import ElogioView from "../../views/manifestacoes/ElogioView";
@@ -13,6 +15,47 @@ import QuestionarioView from "../../views/manifestacoes/QuestionarioView";
 import ReclamacaoView from "../../views/manifestacoes/ReclamacaoView";
 import SolicitacaoView from "../../views/manifestacoes/SolicitacaoView";
 import SugestaoView from "../../views/manifestacoes/SugestaoView";
+
+interface IStateProps {
+  sidebarIsOpen: boolean;
+}
+
+function ContentComponent(props: IStateProps) {
+  const classes = useStyles();
+
+  return (
+    <Container maxWidth="lg">
+      <main
+        className={clsx(classes.content, {
+          [classes.contentShift]: props.sidebarIsOpen
+        })}
+      >
+        <div className={classes.drawerHeader} />
+        <Switch>
+          <Route exact path="/denuncia" component={DenunciaView} />
+          <Route exact path="/elogio" component={ElogioView} />
+          <Route exact path="/questionario" component={QuestionarioView} />
+          <Route exact path="/reclamacao" component={ReclamacaoView} />
+          <Route exact path="/solicitacao" component={SolicitacaoView} />
+          <Route exact path="/sugestao" component={SugestaoView} />
+          <Route exact path="/cursos" component={CursoView} />
+          <Route exact path="/departamentos" component={DepartamentoView} />
+          <Route exact path="/usuarios" component={UsuarioView} />
+          <Route exact path="/" component={DashboardView} />
+        </Switch>
+      </main>
+    </Container>
+  );
+}
+
+const mapStateToProps = (state: IApplicationState) => ({
+  sidebarIsOpen: state.NavigationReducer.sidebarIsOpen
+});
+
+export default connect(
+  mapStateToProps,
+  null
+)(ContentComponent);
 
 const drawerWidth = 240;
 
@@ -41,42 +84,3 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 0
   }
 }));
-
-interface IStateProps {
-  sidebarIsOpen: boolean;
-}
-
-function ContentComponent(props: IStateProps) {
-  const classes = useStyles();
-
-  return (
-    <Container maxWidth="lg">
-      <main
-        className={clsx(classes.content, {
-          [classes.contentShift]: props.sidebarIsOpen
-        })}
-      >
-        <div className={classes.drawerHeader} />
-        <Switch>
-          <Route exact path="/denuncia" component={DenunciaView} />
-          <Route exact path="/elogio" component={ElogioView} />
-          <Route exact path="/questionario" component={QuestionarioView} />
-          <Route exact path="/reclamacao" component={ReclamacaoView} />
-          <Route exact path="/solicitacao" component={SolicitacaoView} />
-          <Route exact path="/sugestao" component={SugestaoView} />
-          <Route exact path="/cursos" component={CursoView} />
-          <Route exact path="/" component={DashboardView} />
-        </Switch>
-      </main>
-    </Container>
-  );
-}
-
-const mapStateToProps = (state: IApplicationState) => ({
-  sidebarIsOpen: state.NavigationReducer.sidebarIsOpen
-});
-
-export default connect(
-  mapStateToProps,
-  null
-)(ContentComponent);

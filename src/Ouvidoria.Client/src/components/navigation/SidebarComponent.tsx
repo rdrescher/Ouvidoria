@@ -16,13 +16,15 @@ import {
     ExpandMore,
     Home,
     Message,
+    People,
     QuestionAnswer,
     RecordVoiceOver,
     Report,
     School,
     ThumbsUpDown,
     ThumbDown,
-    ThumbUp
+    ThumbUp,
+    Work
 } from "@material-ui/icons";
 import clsx from "clsx";
 import React, { useState } from "react";
@@ -46,52 +48,6 @@ type Menus =
     | "Usuários"
     | "AdmQuestionarios"
     | "Manifestações";
-
-const useStyles = makeStyles((theme: Theme) => ({
-    titulo: {
-        marginBottom: 10,
-        textAlign: "center"
-    },
-    drawer: {
-        width: drawerWidth,
-        flexShrink: 0,
-        border: 0
-    },
-    drawerPaper: {
-        backgroundImage: `linear-gradient(to bottom, rgba(0, 180, 219, 1) 20%, rgba(0, 131, 176, 0.5)), url(${Background})`,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "240px 100%",
-        background: "linear-gradient(-206deg, #00B4DB 35%, #0083B0)",
-        width: drawerWidth,
-        color: "white"
-    },
-    drawerHeader: {
-        display: "flex",
-        alignItems: "center",
-        padding: "0 8px",
-        ...theme.mixins.toolbar,
-        justifyContent: "flex-end"
-    },
-    AMFIcon: {
-        width: "125px",
-        display: "block",
-        marginTop: 20,
-        marginLeft: "auto",
-        marginRight: "auto",
-        marginBottom: 10
-    },
-    selected: {
-        background: "rgba(0, 0, 0, 0.09) !important"
-    },
-    link: {
-        color: "white",
-        textDecoration: "none"
-    },
-    nested: {
-        paddingLeft: theme.spacing(4),
-        background: "rgba(0, 0, 0, 0.04)"
-    }
-}));
 
 interface IStateProps {
     sidebarIsOpen: boolean;
@@ -255,7 +211,11 @@ function SidebarComponent(props: IStateProps) {
                     <ListItemText primary="Administração" />
                     {administrationIsOpen ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
-                <Collapse in={administrationIsOpen} timeout="auto" unmountOnExit>
+                <Collapse
+                    in={administrationIsOpen}
+                    timeout="auto"
+                    unmountOnExit
+                >
                     <Link to="/cursos" className={classes.link}>
                         <ListItem
                             button
@@ -268,6 +228,35 @@ function SidebarComponent(props: IStateProps) {
                                 <School />
                             </ListItemIcon>
                             <ListItemText primary="Cursos" />
+                        </ListItem>
+                    </Link>
+                    <Link to="/departamentos" className={classes.link}>
+                        <ListItem
+                            button
+                            className={clsx(classes.nested, {
+                                [classes.selected]:
+                                    activeMenu === "Departamentos"
+                            })}
+                            onClick={() => onMenuChange("Departamentos")}
+                        >
+                            <ListItemIcon>
+                                <Work />
+                            </ListItemIcon>
+                            <ListItemText primary="Departamentos" />
+                        </ListItem>
+                    </Link>
+                    <Link to="/usuarios" className={classes.link}>
+                        <ListItem
+                            button
+                            className={clsx(classes.nested, {
+                                [classes.selected]: activeMenu === "Usuários"
+                            })}
+                            onClick={() => onMenuChange("Usuários")}
+                        >
+                            <ListItemIcon>
+                                <People />
+                            </ListItemIcon>
+                            <ListItemText primary="Usuários" />
                         </ListItem>
                     </Link>
                 </Collapse>
@@ -284,3 +273,49 @@ export default connect(
     mapStateToProps,
     null
 )(SidebarComponent);
+
+const useStyles = makeStyles((theme: Theme) => ({
+    titulo: {
+        marginBottom: 10,
+        textAlign: "center"
+    },
+    drawer: {
+        width: drawerWidth,
+        flexShrink: 0,
+        border: 0
+    },
+    drawerPaper: {
+        backgroundImage: `linear-gradient(to bottom, rgba(0, 180, 219, 1) 20%, rgba(0, 131, 176, 0.5)), url(${Background})`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "240px 100%",
+        background: "linear-gradient(-206deg, #00B4DB 35%, #0083B0)",
+        width: drawerWidth,
+        color: "white"
+    },
+    drawerHeader: {
+        display: "flex",
+        alignItems: "center",
+        padding: "0 8px",
+        ...theme.mixins.toolbar,
+        justifyContent: "flex-end"
+    },
+    AMFIcon: {
+        width: "125px",
+        display: "block",
+        marginTop: 20,
+        marginLeft: "auto",
+        marginRight: "auto",
+        marginBottom: 10
+    },
+    selected: {
+        background: "rgba(0, 0, 0, 0.09) !important"
+    },
+    link: {
+        color: "white",
+        textDecoration: "none"
+    },
+    nested: {
+        paddingLeft: theme.spacing(4),
+        background: "rgba(0, 0, 0, 0.04)"
+    }
+}));

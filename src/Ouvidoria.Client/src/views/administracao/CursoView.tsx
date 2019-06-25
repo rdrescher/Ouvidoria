@@ -1,6 +1,5 @@
 import {
     makeStyles,
-    Button,
     Dialog,
     DialogActions,
     DialogContent,
@@ -20,7 +19,7 @@ import {
     Typography
 } from "@material-ui/core";
 import { red } from "@material-ui/core/colors";
-import { Add, Delete, Edit } from "@material-ui/icons";
+import { Add, Cancel, Delete, Edit } from "@material-ui/icons";
 import React, { useEffect, useState, SyntheticEvent } from "react";
 import CursoComponent from "../../components/administracao/CursoComponent";
 import AvisoComponent from "../../components/common/AvisoComponent";
@@ -230,15 +229,36 @@ export default function CursoView() {
                     Você tem certeza que deseja deletar esse registro?
                 </DialogContent>
                 <DialogActions>
-                    <Button
+                    <Fab
                         onClick={() => setDeletar({ deletar: false, id: 0 })}
                         color="primary"
+                        size="small"
+                        variant="extended"
+                        aria-label="salvar"
                     >
-                        Cancelar
-                    </Button>
-                    <Button onClick={onHandleDelete} color="primary">
-                        Deletar
-                    </Button>
+                        <Cancel />
+                        <Typography
+                            variant="inherit"
+                            className={classes.contentSpacer}
+                        >
+                            Cancelar
+                        </Typography>
+                    </Fab>
+                    <Fab
+                        variant="extended"
+                        color="primary"
+                        aria-label="salvar"
+                        size="small"
+                        onClick={onHandleDelete}
+                    >
+                        <Delete />
+                        <Typography
+                            variant="inherit"
+                            className={classes.contentSpacer}
+                        >
+                            Deletar
+                        </Typography>
+                    </Fab>
                 </DialogActions>
             </Dialog>
             <AvisoComponent mensagem={mensagem} aberto={aviso} />
@@ -286,6 +306,10 @@ const useStyles = makeStyles((theme: Theme) => {
         },
         close: {
             padding: theme.spacing(0.5)
+        },
+        contentSpacer: {
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1)
         }
     };
 });
