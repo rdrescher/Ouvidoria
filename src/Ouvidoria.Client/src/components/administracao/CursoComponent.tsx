@@ -13,13 +13,13 @@ import React, {
   useEffect,
   useState,
   ChangeEvent,
-  SyntheticEvent,
-  KeyboardEvent
+  KeyboardEvent,
+  SyntheticEvent
 } from "react";
 import ICurso from "../../models/Curso";
+import IResultado from "../../models/Resultado";
 import CursoApi from "../../services/CursoApi";
 import Operacao from "../../types/Operacao";
-import IResultado from "../../models/Resultado";
 
 interface IProps {
   curso: ICurso;
@@ -43,7 +43,7 @@ export default function CursoComponent(props: IProps) {
 
   useEffect(() => {
     setCurso(props.curso);
-  }, [props]);
+  },        [props]);
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCurso({ ...curso, nome: e.target.value });
@@ -51,7 +51,7 @@ export default function CursoComponent(props: IProps) {
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    if (curso === props.curso) return;
+    if (curso === props.curso) { return; }
     if (curso.nome.length === 0) {
       setErro({ mensagem: "Insira o nome do curso", possuiErro: true });
     } else if (curso.nome.length < 2 || curso.nome.length > 50) {
@@ -77,7 +77,7 @@ export default function CursoComponent(props: IProps) {
   };
 
   const handleKeyPress = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter") e.preventDefault();
+    if (e.key === "Enter") { e.preventDefault(); }
   };
 
   return (
