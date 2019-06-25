@@ -31,7 +31,6 @@ namespace Ouvidoria.Services
         {
             if (!base.Validate(new CursoValidation(), curso)) return;
             if (await this.ClassNameAlreadyExists(curso.Nome)) return;
-            if (!await ClassExists(curso.Id)) return;
 
             await repository.Update(curso);
         }
@@ -43,13 +42,6 @@ namespace Ouvidoria.Services
             if (!(await repository.Search(c => c.Nome.Equals(nome))).Any()) return false;
             Notify("Já existe um curso com esse nome");
             return true;
-        }
-
-        private async Task<bool> ClassExists(int id)
-        {
-            if (await repository.GetById(id) != null) return true;
-            Notify("Curso não encontrado");
-            return false;
         }
 
         public async Task Delete(int id)
