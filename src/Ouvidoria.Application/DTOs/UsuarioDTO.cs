@@ -12,5 +12,6 @@ namespace Ouvidoria.Application.DTOs
         public bool ativo { get; set; }
         public int? idCurso { get; set; }
         public UsuarioPerfil usuarioPerfil { get; set; }
+        public CursoDTO curso { get; set; }
     }
 }
