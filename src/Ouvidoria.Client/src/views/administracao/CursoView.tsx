@@ -54,7 +54,9 @@ export default function CursoView() {
         let result = await CursoApi.entity.get();
         if (result.success) {
             setCursos(result.data as Curso[]);
+            setErro("");
         } else {
+            setCursos([] as Curso[]);
             setErro(result.message);
         }
         setLoading(false);
