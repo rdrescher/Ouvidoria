@@ -23,17 +23,19 @@ import UsuarioApi from "../../services/UsuarioApi";
 import { Edit, Add, ThumbDown, ThumbUp } from "@material-ui/icons";
 import Operacao from "../../types/Operacao";
 import UsuarioComponent from "../../components/administracao/UsuarioComponent";
-import AvisoComponent from "../../components/common/AvisoComponent";
+import { MUIDataTableColumnDef } from "mui-datatables";
+import DataTable from "../../components/common/dataTable/DataTable";
+import Resultado from "../../models/Resultado";
 
-const cabecalhos = [
-    "Nome",
-    "Email",
-    "Telefone",
-    "CPF",
-    "Curso",
-    "Perfil",
-    "Ativo",
-    "Ações"
+const cabecalhos: MUIDataTableColumnDef[] = [
+    { name: "nome", label: "Nome" },
+    { name: "email", label: "Email" },
+    { name: "telefone", label: "Telefone" },
+    { name: "cpf", label: "CPF" },
+    { name: "curso", label: "Curso" },
+    { name: "perfil", label: "Perfil" },
+    { name: "ativo", label: "Ativo" },
+    { name: "ações", label: "Ações" }
 ];
 
 interface IState {
@@ -55,15 +57,12 @@ const initialState: IState = {
 export default function UsuarioView() {
     const [state, setState] = useState<IState>(initialState);
     const classes = useStyles();
-    useEffect(() => {
-        GetUsuarios();
-    }, []);
 
-    async function GetUsuarios() {
-        setState({ ...state, carregando: true });
-        let retorno = await UsuarioApi.entity.get();
-        setState({ ...state, usuarios: retorno.data!, carregando: false });
+    async function getUsuarios(): Promise<Resultado<Usuario[]>> {
+        return await UsuarioApi.entity.get();
     }
+
+    
 
     const handleDialogClose = () => {
         setState({
@@ -88,6 +87,13 @@ export default function UsuarioView() {
     };
 
     return (
+        <DataTable
+            data={getUsuarios}
+            columns={cabecalhos}
+        />
+    );
+
+    /*return (
         <>
             <Paper>
                 <Toolbar className={classes.root}>
@@ -143,8 +149,16 @@ export default function UsuarioView() {
                                         {usuario.usuarioPerfil}
                                     </TableCell>
                                     <TableCell>
-                                        {usuario.ativo && <ThumbUp className={classes.active} />}
-                                        {!usuario.ativo && <ThumbDown className={classes.inactive}/>}
+                                        {usuario.ativo && (
+                                            <ThumbUp
+                                                className={classes.active}
+                                            />
+                                        )}
+                                        {!usuario.ativo && (
+                                            <ThumbDown
+                                                className={classes.inactive}
+                                            />
+                                        )}
                                     </TableCell>
                                     <TableCell>
                                         <Tooltip
@@ -202,7 +216,7 @@ export default function UsuarioView() {
                 </Dialog>
             </Paper>
         </>
-    );
+    );*/
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
