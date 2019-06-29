@@ -14,7 +14,7 @@ export default interface IUsuario
     curso: ICurso;
 }
 
-enum UsuarioPerfil
+export enum UsuarioPerfil
 {
     "Administrador",
     "Usuario" 

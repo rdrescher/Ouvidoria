@@ -1,24 +1,24 @@
 import {
-    LinearProgress,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    Tooltip,
-    Fab,
-    Typography,
-    Toolbar,
-    makeStyles,
-    Theme,
-    Dialog,
-    DialogTitle,
-    Divider,
-    DialogContent
+  LinearProgress,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Tooltip,
+  Fab,
+  Typography,
+  Toolbar,
+  makeStyles,
+  Theme,
+  Dialog,
+  DialogTitle,
+  Divider,
+  DialogContent
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import Usuario from "../../models/Usuario";
+import Usuario, { UsuarioPerfil } from "../../models/Usuario";
 import UsuarioApi from "../../services/UsuarioApi";
 import { Edit, Add, ThumbDown, ThumbUp } from "@material-ui/icons";
 import Operacao from "../../types/Operacao";
@@ -26,74 +26,98 @@ import UsuarioComponent from "../../components/administracao/UsuarioComponent";
 import { MUIDataTableColumnDef } from "mui-datatables";
 import DataTable from "../../components/common/dataTable/DataTable";
 import Resultado from "../../models/Resultado";
+import ICurso from "../../models/Curso";
 
 const cabecalhos: MUIDataTableColumnDef[] = [
-    { name: "nome", label: "Nome" },
-    { name: "email", label: "Email" },
-    { name: "telefone", label: "Telefone" },
-    { name: "cpf", label: "CPF" },
-    { name: "curso", label: "Curso" },
-    { name: "perfil", label: "Perfil" },
-    { name: "ativo", label: "Ativo" },
-    { name: "ações", label: "Ações" }
+  { name: "nome", label: "Nome" },
+  { name: "email", label: "Email" },
+  { name: "telefone", label: "Telefone" },
+  { name: "cpf", label: "CPF" },
+  {
+    name: "curso",
+    label: "Curso",
+    options: {
+      customBodyRender: value => value.nome as ICurso
+    }
+  },
+  {
+    name: "usuarioPerfil",
+    label: "Perfil",
+    options: {
+      customBodyRender: value => UsuarioPerfil[value]
+    }
+  },
+  {
+    name: "ativo",
+    label: "Ativo",
+    options: {
+      customBodyRender: value =>
+        (value === true && <ThumbUp color="primary" />) || (
+          <ThumbDown color="error" />
+        )
+    }
+  }
 ];
 
 interface IState {
-    usuarios: Usuario[];
-    carregando: boolean;
-    dialogoAberto: boolean;
-    operacao: Operacao;
-    usuarioSelecionado: Usuario;
+  usuarios: Usuario[];
+  carregando: boolean;
+  dialogoAberto: boolean;
+  operacao: Operacao;
+  usuarioSelecionado: Usuario;
 }
 
 const initialState: IState = {
-    usuarios: [],
-    carregando: false,
-    dialogoAberto: false,
-    operacao: "Criar",
-    usuarioSelecionado: {} as Usuario
+  usuarios: [],
+  carregando: false,
+  dialogoAberto: false,
+  operacao: "Criar",
+  usuarioSelecionado: {} as Usuario
 };
 
 export default function UsuarioView() {
-    const [state, setState] = useState<IState>(initialState);
-    const classes = useStyles();
+  const [state, setState] = useState<IState>(initialState);
+  const classes = useStyles();
 
-    async function getUsuarios(): Promise<Resultado<Usuario[]>> {
-        return await UsuarioApi.entity.get();
+  async function getUsuarios(): Promise<Resultado<Usuario[]>> {
+    return await UsuarioApi.entity.get();
+  }
+
+  const handleDialogClose = () => {
+    setState({
+      ...state,
+      dialogoAberto: false,
+      usuarioSelecionado: {} as Usuario
+    });
+  };
+
+  const onHandleClick = (operacao: Operacao, id: number = 0) => {
+    if (operacao === "Atualizar") {
+      let usuario = state.usuarios.find(x => x.id === id);
+      setState({
+        ...state,
+        dialogoAberto: true,
+        usuarioSelecionado: usuario!,
+        operacao: operacao
+      });
+    } else {
+      setState({ ...state, dialogoAberto: true, operacao: operacao });
     }
+  };
 
-    
+  return (
+    <DataTable
+      title="Usuários"
+      data={getUsuarios}
+      columns={cabecalhos}
+      create={true}
+      delete={false}
+      edit={true}
+      dialogContent={(<ThumbUp />)}
+    />
+  );
 
-    const handleDialogClose = () => {
-        setState({
-            ...state,
-            dialogoAberto: false,
-            usuarioSelecionado: {} as Usuario
-        });
-    };
-
-    const onHandleClick = (operacao: Operacao, id: number = 0) => {
-        if (operacao === "Atualizar") {
-            let usuario = state.usuarios.find(x => x.id === id);
-            setState({
-                ...state,
-                dialogoAberto: true,
-                usuarioSelecionado: usuario!,
-                operacao: operacao
-            });
-        } else {
-            setState({ ...state, dialogoAberto: true, operacao: operacao });
-        }
-    };
-
-    return (
-        <DataTable
-            data={getUsuarios}
-            columns={cabecalhos}
-        />
-    );
-
-    /*return (
+  /*return (
         <>
             <Paper>
                 <Toolbar className={classes.root}>
@@ -220,38 +244,38 @@ export default function UsuarioView() {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-    divider: {
-        backgroundColor: "rgba(0, 0, 0, 0.2)",
-        marginBottom: "2em"
-    },
-    header: {
-        display: "flex",
-        justifyContent: "flex-end",
-        marginBottom: theme.spacing(2),
-        marginRight: theme.spacing(2)
-    },
-    root: {
-        paddingLeft: theme.spacing(2),
-        paddingRight: theme.spacing(1)
-    },
-    spacer: {
-        flex: "1 1 100%"
-    },
-    actions: {
-        color: theme.palette.text.secondary,
-        marginTop: theme.spacing(2),
-        marginRight: theme.spacing(2)
-    },
-    title: {
-        flex: "0 0 auto",
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
-        marginLeft: theme.spacing(1)
-    },
-    active: {
-        color: "green"
-    },
-    inactive: {
-        color: "red"
-    }
+  divider: {
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
+    marginBottom: "2em"
+  },
+  header: {
+    display: "flex",
+    justifyContent: "flex-end",
+    marginBottom: theme.spacing(2),
+    marginRight: theme.spacing(2)
+  },
+  root: {
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(1)
+  },
+  spacer: {
+    flex: "1 1 100%"
+  },
+  actions: {
+    color: theme.palette.text.secondary,
+    marginTop: theme.spacing(2),
+    marginRight: theme.spacing(2)
+  },
+  title: {
+    flex: "0 0 auto",
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    marginLeft: theme.spacing(1)
+  },
+  active: {
+    color: "green"
+  },
+  inactive: {
+    color: "red"
+  }
 }));
