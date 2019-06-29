@@ -30,7 +30,6 @@ function ContentComponent(props: IStateProps) {
           [classes.contentShift]: props.sidebarIsOpen
         })}
       >
-        <div className={classes.drawerHeader} />
         <Switch>
           <Route exact path="/denuncia" component={DenunciaView} />
           <Route exact path="/elogio" component={ElogioView} />
@@ -60,13 +59,6 @@ export default connect(
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) => ({
-  drawerHeader: {
-    display: "flex",
-    alignItems: "center",
-    padding: "0 8px",
-    ...theme.mixins.toolbar,
-    justifyContent: "flex-end"
-  },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
@@ -74,7 +66,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
     }),
-    marginLeft: -drawerWidth
+    marginLeft: -drawerWidth,
+    paddingTop: 100
   },
   contentShift: {
     transition: theme.transitions.create("margin", {

@@ -16,6 +16,6 @@ export default interface IUsuario
 
 enum UsuarioPerfil
 {
-    "Administrador" = 0,
-    "Usuario" = 1 
+    "Administrador",
+    "Usuario" 
 }
