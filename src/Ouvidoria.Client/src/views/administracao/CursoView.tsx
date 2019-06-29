@@ -45,8 +45,8 @@ export default function CursoView() {
     const classes = useStyles();
 
     useEffect(() => {
-        GetCursos();
         setAviso(false);
+        GetCursos();
     },        []);
 
     async function GetCursos() {

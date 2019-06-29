@@ -21,6 +21,6 @@ namespace Ouvidoria.Services
         }
 
         public async Task<List<Usuario>> GetUsers() =>
-            await repository.GetAll();
+            await repository.GetAllWithClass();
     }
 }
