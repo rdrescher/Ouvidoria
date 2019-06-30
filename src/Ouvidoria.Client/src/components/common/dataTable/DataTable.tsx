@@ -37,6 +37,7 @@ interface IProps {
   edit: boolean;
   title: string;
   dialogContent: JSX.Element;
+  handle: (operacao: Operacao, data: object) => void;
 }
 
 interface IIndex {
@@ -96,10 +97,6 @@ const initialDialogState: IDialogsState = {
   selectedItem: null
 };
 
-const edit = () => {
-  console.log("Editar");
-};
-
 const options: MUIDataTableOptions = {};
 
 export default function DataTable(props: IProps) {
@@ -143,14 +140,17 @@ export default function DataTable(props: IProps) {
         ...state,
         selectedData: data
       });
+
+      props.handle(dialogs.operacao, data);
     } else {
       setState({
         ...state,
         selectedData: {}
       });
+      props.handle(dialogs.operacao, {});
     }
   }, [dialogs.selectedItem]);
-  
+
   const handleDialogOpen = (operacao: Operacao, data: unknown = null) => {
     setDialogs({
       ...dialogs,
@@ -185,9 +185,7 @@ export default function DataTable(props: IProps) {
       >
         <DialogTitle id="form-dialog-title">{dialogs.operacao}</DialogTitle>
         <Divider className={classes.divider} />
-        <DialogContent>
-          {props.dialogContent}
-        </DialogContent>
+        <DialogContent>{props.dialogContent}</DialogContent>
       </Dialog>
     </>
   );

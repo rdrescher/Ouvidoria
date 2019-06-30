@@ -83,6 +83,33 @@ export default function UsuarioView() {
     return await UsuarioApi.entity.get();
   }
 
+  const handle = (operacao: Operacao, data: object) => {
+    setState({
+      ...state,
+      operacao: operacao,
+      usuarioSelecionado: data as Usuario
+    });
+  };
+
+  return (
+    <DataTable
+      handle={handle}
+      title="Usuários"
+      data={getUsuarios}
+      columns={cabecalhos}
+      create={true}
+      delete={false}
+      edit={true}
+      dialogContent={
+        <UsuarioComponent
+          usuario={state.usuarioSelecionado}
+          operacao={state.operacao}
+          fechaDialogo={() => {}}
+        />
+      }
+    />
+  );
+
   const handleDialogClose = () => {
     setState({
       ...state,
@@ -104,18 +131,6 @@ export default function UsuarioView() {
       setState({ ...state, dialogoAberto: true, operacao: operacao });
     }
   };
-
-  return (
-    <DataTable
-      title="Usuários"
-      data={getUsuarios}
-      columns={cabecalhos}
-      create={true}
-      delete={false}
-      edit={true}
-      dialogContent={(<ThumbUp />)}
-    />
-  );
 
   /*return (
         <>
