@@ -19,7 +19,7 @@ namespace Ouvidoria.Domain.Validations.Models
                 .Length(9, 15).WithMessage("O telefone deve conter entre 9 e 15 caracteres");
 
             RuleFor(u => CpfValidacao.Validar(u.CPF)).Equal(true)
-                    .WithMessage("O CPF fornecido é inválido.");
+                .WithMessage("O CPF fornecido é inválido.");
 
             RuleFor(u => u.Email)
                 .NotEmpty().WithMessage("Informe o e-mail")

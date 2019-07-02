@@ -70,13 +70,12 @@ const theme = createMuiTheme({
     },
     MuiInputLabel: {
       root: {
-        color: "rgba(0.0, 0, 0.2, 0.3)"
+        color: "rgba(0.0, 0, 0.2, 0.5)"
       }
     },
     MuiDialog: {
       root: {
-        // tslint:disable-next-line:no-any
-        zIndex: "10000 !important" as any
+        zIndex: <any> "10000 !important"
       }
     }
   }

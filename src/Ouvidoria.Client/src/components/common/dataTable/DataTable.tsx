@@ -11,8 +11,7 @@ import {
   DialogTitle,
   Divider,
   DialogContent,
-  makeStyles,
-  Theme
+  makeStyles
 } from "@material-ui/core";
 import Operacao from "../../../types/Operacao";
 import { connect } from "react-redux";
@@ -115,32 +114,32 @@ const DataTable = (props: Props) => {
   const [dialogs, setDialogs] = useState<IDialogsState>(initialDialogState);
   const classes = useStyles();
 
-  async function getData() {
-    let result = await props.data();
-    setState({
-      ...state,
-      data: result.data!,
-      columns: props.columns,
-      options: {
-        ...state.options,
-        customToolbarSelect: selected => (
-          <DataTableToolBarSelected
-            edit={props.edit}
-            delete={props.delete}
-            onHandleClick={handleDialogOpen}
-            selectedData={selected.data[0]}
-          />
-        ),
-        customToolbar: () =>
-          props.create ? (
-            <DataTableToolBar handleCreate={handleDialogOpen} />
-          ) : null,
-        selectableRows: props.edit || props.delete ? "single" : "none"
-      }
-    });
-  }
-
   useEffect(() => {
+    async function getData() {
+      let result = await props.data();
+      setState({
+        ...state,
+        data: result.data!,
+        columns: props.columns,
+        options: {
+          ...state.options,
+          customToolbarSelect: selected => (
+            <DataTableToolBarSelected
+              edit={props.edit}
+              delete={props.delete}
+              onHandleClick={handleDialogOpen}
+              selectedData={selected.data[0]}
+            />
+          ),
+          customToolbar: () =>
+            props.create ? (
+              <DataTableToolBar handleCreate={handleDialogOpen} />
+            ) : null,
+          selectableRows: props.edit || props.delete ? "single" : "none"
+        }
+      });
+    }
+
     getData();
   }, []);
 
@@ -183,7 +182,7 @@ const DataTable = (props: Props) => {
   );
 };
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   divider: {
     backgroundColor: "rgba(0, 0, 0, 0.2)",
     marginBottom: "2em"
