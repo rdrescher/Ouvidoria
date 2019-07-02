@@ -10,7 +10,7 @@ interface IProps {
   delete: boolean;
   edit: boolean;
   onHandleClick: (operacao: Operacao, data: unknown) => void;
-  selectedData: unknown;
+  selectedData: object;
 }
 
 export default function CustomToolbarSelect(props: IProps) {

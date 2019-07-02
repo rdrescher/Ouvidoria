@@ -84,6 +84,7 @@ export default function UsuarioView() {
   }
 
   const handle = (operacao: Operacao, data: object) => {
+    console.log(operacao, data);
     setState({
       ...state,
       operacao: operacao,

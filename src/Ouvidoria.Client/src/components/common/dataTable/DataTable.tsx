@@ -15,6 +15,10 @@ import {
   Theme
 } from "@material-ui/core";
 import Operacao from "../../../types/Operacao";
+import { connect } from "react-redux";
+import { Dispatch, bindActionCreators } from "redux";
+import * as DialogActions from "../../../store/ducks/dialogDatatable/DialogActions";
+import { IApplicationState } from "../../../store";
 
 interface IState {
   data: object[];
@@ -24,9 +28,8 @@ interface IState {
 }
 
 interface IDialogsState {
-  open: boolean;
-  operacao: Operacao;
-  selectedItem: IIndex | null;
+  operation: Operacao;
+  selectedIndex: number;
 }
 
 interface IProps {
@@ -37,7 +40,16 @@ interface IProps {
   edit: boolean;
   title: string;
   dialogContent: JSX.Element;
-  handle: (operacao: Operacao, data: object) => void;
+  handle: (operation: Operacao, data: object) => void;
+}
+
+interface IDispatchProps {
+  openDialog(operation: Operacao, selectedObject: object): void;
+  closeDialog(): void;
+}
+
+interface IStateProps {
+  dialogIsOpen: boolean;
 }
 
 interface IIndex {
@@ -92,26 +104,25 @@ const initialState: IState = {
 };
 
 const initialDialogState: IDialogsState = {
-  open: false,
-  operacao: "Criar",
-  selectedItem: null
+  operation: "Criar",
+  selectedIndex: -10
 };
 
-const options: MUIDataTableOptions = {};
+type Props = IProps & IDispatchProps & IStateProps;
 
-export default function DataTable(props: IProps) {
+const DataTable = (props: Props) => {
   const [state, setState] = useState<IState>(initialState);
   const [dialogs, setDialogs] = useState<IDialogsState>(initialDialogState);
   const classes = useStyles();
 
   async function getData() {
-    let resultado = await props.data();
+    let result = await props.data();
     setState({
       ...state,
-      data: resultado.data!,
+      data: result.data!,
       columns: props.columns,
       options: {
-        ...options,
+        ...state.options,
         customToolbarSelect: selected => (
           <DataTableToolBarSelected
             edit={props.edit}
@@ -134,37 +145,18 @@ export default function DataTable(props: IProps) {
   }, []);
 
   useEffect(() => {
-    if (!!dialogs.selectedItem) {
-      let data = state.data[dialogs.selectedItem!.index];
-      setState({
-        ...state,
-        selectedData: data
-      });
-
-      props.handle(dialogs.operacao, data);
-    } else {
-      setState({
-        ...state,
-        selectedData: {}
-      });
-      props.handle(dialogs.operacao, {});
+    if (!props.dialogIsOpen && dialogs.selectedIndex !== -10) {
+      let selectedData =
+        dialogs.selectedIndex !== -1 ? state.data[dialogs.selectedIndex] : {};
+      props.openDialog(dialogs.operation, selectedData);
+      props.handle(dialogs.operation, selectedData);
     }
-  }, [dialogs.selectedItem]);
+  }, [dialogs]);
 
-  const handleDialogOpen = (operacao: Operacao, data: unknown = null) => {
+  const handleDialogOpen = (operation: Operacao, data: unknown = null) => {
     setDialogs({
-      ...dialogs,
-      open: true,
-      operacao: operacao,
-      selectedItem: !!data ? (data as IIndex) : null
-    });
-  };
-
-  const handleDialogClose = () => {
-    setDialogs({
-      ...dialogs,
-      open: false,
-      selectedItem: null
+      selectedIndex: !!data ? (data as IIndex).index : -1,
+      operation: operation
     });
   };
 
@@ -177,19 +169,19 @@ export default function DataTable(props: IProps) {
         options={state.options}
       />
       <Dialog
-        open={dialogs.open}
-        onClose={handleDialogClose}
+        open={props.dialogIsOpen}
+        onClose={props.closeDialog}
         aria-labelledby="form-dialog-title"
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle id="form-dialog-title">{dialogs.operacao}</DialogTitle>
+        <DialogTitle id="form-dialog-title">{dialogs.operation}</DialogTitle>
         <Divider className={classes.divider} />
         <DialogContent>{props.dialogContent}</DialogContent>
       </Dialog>
     </>
   );
-}
+};
 
 const useStyles = makeStyles((theme: Theme) => ({
   divider: {
@@ -197,3 +189,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: "2em"
   }
 }));
+
+const mapStateToProps = (state: IApplicationState) => ({
+  dialogIsOpen: state.DialogReducer.dialogIsOpen
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(DialogActions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DataTable);
