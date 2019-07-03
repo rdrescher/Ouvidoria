@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Ouvidoria.Application.DTOs;
@@ -21,11 +22,11 @@ namespace Ouvidoria.Api.Controllers
         public async Task<ActionResult<Resultado<List<UsuarioDTO>>>> Get() =>
             Ok(await service.GetUsers());
 
-        // [HttpPost]
-        // public async Task<ActionResult<Resultado<UsuarioDTO>>> Post(UsuarioDTO cursoDTO) =>
-        //     ModelState.IsValid ?
-        //         Ok(await service.Create(cursoDTO)) :
-        //         Ok(Resultado<CursoDTO>.Failed(ModelState.Values.Select(x => x.Errors).FirstOrDefault().ToString()));
+        [HttpPost]
+        public async Task<ActionResult<Resultado<UsuarioDTO>>> Post(UsuarioDTO usuarioDTO) =>
+            ModelState.IsValid ?
+                Ok(await service.Create(usuarioDTO)) :
+                Ok(Resultado<UsuarioDTO>.Failed(ModelState.Values.Select(x => x.Errors).FirstOrDefault().ToString()));
 
         // [HttpPut("{id:int}")]
         // public async Task<ActionResult<Resultado<CursoDTO>>> Put(int id, CursoDTO cursoDTO)

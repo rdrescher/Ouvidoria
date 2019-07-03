@@ -24,6 +24,7 @@ import Curso from "../../models/Curso";
 import { green, red } from "@material-ui/core/colors";
 import CursoApi from "../../services/CursoApi";
 import { MenuProps } from "@material-ui/core/Menu";
+import UsuarioApi from "../../services/UsuarioApi";
 
 interface IProps {
   user: Usuario;
@@ -113,9 +114,22 @@ export default function UsuarioComponent(props: IProps) {
 
     if (user === props.user || !valid) return;
     setState((prevState: IState) => {
-      return { ...prevState, loading: true, errors: "Erro ao cadastrar usuário" };
+      return { ...prevState, loading: true };
     });
-    let result = "";
+
+    let result = await UsuarioApi.entity.create(state.user);
+
+    setState((prevState: IState) => {
+      return { ...prevState, loading: false };
+    });
+
+    if (!result.success) {
+      setState((prevState: IState) => {
+        return { ...prevState, error: result.message };
+      });
+    } else {
+      console.log(result.data);
+    }
   };
 
   const validateName = (name: string): boolean => {
@@ -362,10 +376,10 @@ export default function UsuarioComponent(props: IProps) {
             onChange={handleSelectChange}
           >
             {Object.keys(UsuarioPerfil)
-              .filter(user => isNaN(Number(user)) === false)
-              .map(user => (
-                <option value={Number(user)} key={Number(user)}>
-                  {UsuarioPerfil[Number(user)]}
+              .filter(profile => isNaN(Number(profile)) === false)
+              .map(profile => (
+                <option value={Number(profile)} key={Number(profile)}>
+                  {UsuarioPerfil[Number(profile)]}
                 </option>
               ))}
           </NativeSelect>
@@ -384,7 +398,7 @@ export default function UsuarioComponent(props: IProps) {
             label="Cadastro ativo"
           />
         </FormControl>
-        
+
         {state.errors && (
           <div className={classes.errors}>
             <Typography variant="h6">Erro ao salvar</Typography>

@@ -4,7 +4,7 @@ using Ouvidoria.Domain.Models;
 
 namespace Ouvidoria.Domain.Validations.Models
 {
-    class UsuarioValidation : AbstractValidator<Usuario>
+    public class UsuarioValidation : AbstractValidator<Usuario>
     {
         public UsuarioValidation()
         {

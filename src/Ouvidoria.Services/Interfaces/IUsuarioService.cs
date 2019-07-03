@@ -8,5 +8,6 @@ namespace Ouvidoria.Services.Interfaces
     public interface IUsuarioService : IDisposable
     {
         Task<List<Usuario>> GetUsers();
+        Task Create(Usuario usuario);
     }
 }
