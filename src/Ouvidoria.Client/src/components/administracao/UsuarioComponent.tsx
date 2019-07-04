@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent, SyntheticEvent, useEffect } from "react";
 import Usuario, { UsuarioPerfil } from "../../models/Usuario";
+import CadastroUsuario from "../../models/CadastroUsuario";
 import Operacao from "../../types/Operacao";
 import {
   Input,
@@ -12,8 +13,6 @@ import {
   makeStyles,
   Theme,
   CircularProgress,
-  Select,
-  MenuItem,
   NativeSelect,
   FormControlLabel,
   Checkbox,
@@ -21,9 +20,8 @@ import {
 } from "@material-ui/core";
 import { Save } from "@material-ui/icons";
 import Curso from "../../models/Curso";
-import { green, red } from "@material-ui/core/colors";
+import { green } from "@material-ui/core/colors";
 import CursoApi from "../../services/CursoApi";
-import { MenuProps } from "@material-ui/core/Menu";
 import UsuarioApi from "../../services/UsuarioApi";
 
 interface IProps {
@@ -32,7 +30,7 @@ interface IProps {
 }
 
 interface IState {
-  user: Usuario;
+  user: CadastroUsuario;
   loading: boolean;
   classes: Curso[];
   errors: string;
@@ -54,6 +52,18 @@ const initialErrorsState: IErrors = {
   senha: ""
 };
 
+const initialUserState: CadastroUsuario = {
+  ativo: true,
+  cpf: "",
+  email: "",
+  id: 0,
+  idCurso: 0,
+  nome: "",
+  senha: "",
+  telefone: "",
+  usuarioPerfil: 1
+};
+
 export default function UsuarioComponent(props: IProps) {
   const [state, setState] = useState<IState>({
     user: props.user,
@@ -72,10 +82,17 @@ export default function UsuarioComponent(props: IProps) {
         classes = [];
       } else {
         classes = result.data!;
+        initialUserState.idCurso = classes[0].id;
       }
-      setState((prevState: IState) => {
-        return { ...prevState, classes: classes };
-      });
+      if (!state.user.nome) {
+        setState((prevState: IState) => {
+          return { ...prevState, classes: classes, user: initialUserState };
+        });
+      } else {
+        setState((prevState: IState) => {
+          return { ...prevState, classes: classes };
+        });
+      }
     }
     getClasses();
   }, []);
@@ -89,8 +106,11 @@ export default function UsuarioComponent(props: IProps) {
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     let name = e.target.name;
     let value = e.target.value;
-    console.log(name, value);
     setState({ ...state, user: { ...state.user, [name]: value } });
+  };
+
+  const handleActiveChange = () => {
+    setState({ ...state, user: { ...state.user, ativo: !state.user.ativo } });
   };
 
   const handleTelephoneCPFChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -117,7 +137,7 @@ export default function UsuarioComponent(props: IProps) {
       return { ...prevState, loading: true };
     });
 
-    let result = await UsuarioApi.entity.create(state.user);
+    let result = await UsuarioApi.create(state.user);
 
     setState((prevState: IState) => {
       return { ...prevState, loading: false };
@@ -389,8 +409,8 @@ export default function UsuarioComponent(props: IProps) {
           <FormControlLabel
             control={
               <Checkbox
-                checked={state.user.ativo}
-                onChange={handleInputChange}
+                checked={state.user.ativo || true}
+                onChange={handleActiveChange}
                 value="ativo"
                 name="ativo"
               />

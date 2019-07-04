@@ -19,7 +19,6 @@ namespace Ouvidoria.Application.Services
         {
             this.Notificador = notificador;
             this.Service = service;
-
         }
 
         public async Task<Resultado<UsuarioDTO>> Create(UsuarioDTO usuarioDTO)
