@@ -9,6 +9,7 @@ namespace Ouvidoria.Application.Interfaces
     public interface IUsuarioAppService : IEntityAppService<Usuario, UsuarioDTO>
     {
         Task<Resultado<List<UsuarioDTO>>> GetUsers();
-        Task<Resultado<UsuarioDTO>> Create(UsuarioDTO usuarioDTO);
+        Task<Resultado<UsuarioDTO>> Create(CadastroUsuarioDTO cadastroUsuarioDTO);
+        Task<Resultado<UsuarioDTO>> Update(CadastroUsuarioDTO cadastroUsuarioDTO);
     }
 }

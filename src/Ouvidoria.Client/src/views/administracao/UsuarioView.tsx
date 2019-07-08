@@ -8,6 +8,7 @@ import { MUIDataTableColumnDef } from "mui-datatables";
 import DataTable from "../../components/common/dataTable/DataTable";
 import Resultado from "../../models/Resultado";
 import ICurso from "../../models/Curso";
+import ICadastroUsuario from "../../models/CadastroUsuario";
 
 const headers: MUIDataTableColumnDef[] = [
   { name: "nome", label: "Nome" },
@@ -42,12 +43,12 @@ const headers: MUIDataTableColumnDef[] = [
 
 interface IState {
   operation: Operacao;
-  selectedUser: Usuario;
+  selectedUser: ICadastroUsuario;
 }
 
 const initialState: IState = {
   operation: "Criar",
-  selectedUser: {} as Usuario
+  selectedUser: {} as ICadastroUsuario
 };
 
 export default function UsuarioView() {
@@ -58,11 +59,32 @@ export default function UsuarioView() {
   }
 
   const handle = (operation: Operacao, data: object) => {
-    setState({
-      ...state,
-      operation: operation,
-      selectedUser: data as Usuario
-    });
+    const user = data as Usuario;
+    if (!user.nome) {
+      setState({
+        ...state,
+        operation: operation,
+        selectedUser: data as ICadastroUsuario
+      });
+    } else {
+      let SelectedUser: ICadastroUsuario = {
+        nome: user.nome,
+        email: user.email,
+        ativo: user.ativo,
+        cpf: user.cpf,
+        senha: "xxxxxx",
+        confirmaSenha: "",
+        id: user.id,
+        telefone: user.telefone,
+        idCurso: user.idCurso,
+        usuarioPerfil: user.usuarioPerfil
+      };
+      setState({
+        ...state,
+        operation: operation,
+        selectedUser: SelectedUser
+      });
+    }
   };
 
   return (
@@ -76,7 +98,7 @@ export default function UsuarioView() {
       edit={true}
       dialogContent={
         <UsuarioComponent
-          user={state.selectedUser}
+          user={state.selectedUser as ICadastroUsuario}
           operation={state.operation}
         />
       }

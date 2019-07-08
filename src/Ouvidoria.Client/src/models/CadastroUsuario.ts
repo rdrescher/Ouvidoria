@@ -8,6 +8,7 @@ export default interface ICadastroUsuario
     telefone: string;
     cpf: string;
     senha: string;
+    confirmaSenha: string;
     ativo: boolean;
     idCurso: number;
     usuarioPerfil: UsuarioPerfil;

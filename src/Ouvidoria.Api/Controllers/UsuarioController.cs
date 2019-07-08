@@ -23,22 +23,18 @@ namespace Ouvidoria.Api.Controllers
             Ok(await service.GetUsers());
 
         [HttpPost]
-        public async Task<ActionResult<Resultado<UsuarioDTO>>> Post(UsuarioDTO usuarioDTO) =>
+        public async Task<ActionResult<Resultado<UsuarioDTO>>> Post(CadastroUsuarioDTO cadastroUsuarioDTO) =>
             ModelState.IsValid ?
-                Ok(await service.Create(usuarioDTO)) :
-                Ok(Resultado<UsuarioDTO>.Failed(ModelState.Values.Select(x => x.Errors).FirstOrDefault().ToString()));
+                Ok(await service.Create(cadastroUsuarioDTO)) :
+                Ok(Resultado<UsuarioDTO>.Failed(ModelState.Values.Select(x => x.Errors).ToString()));
 
-        // [HttpPut("{id:int}")]
-        // public async Task<ActionResult<Resultado<CursoDTO>>> Put(int id, CursoDTO cursoDTO)
-        // {
-        //     if(id != cursoDTO.id) return BadRequest();
-        //     return ModelState.IsValid ?
-        //         Ok(await service.Update(cursoDTO)) :
-        //         Ok(Resultado<CursoDTO>.Failed(ModelState.Values.Select(x => x.Errors).FirstOrDefault().ToString()));
-        // }
-
-        // [HttpDelete("{id:int}")]
-        // public async Task<ActionResult<Resultado>> Delete(int id) =>
-        //     Ok(await service.Delete(id));
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<Resultado<UsuarioDTO>>> Put(int id, CadastroUsuarioDTO cadastroUsuarioDTO)
+        {
+            if(id != cadastroUsuarioDTO.id) return BadRequest();
+            return ModelState.IsValid ?
+                Ok(await service.Update(cadastroUsuarioDTO)) :
+                Ok(Resultado<CursoDTO>.Failed(ModelState.Values.Select(x => x.Errors).ToString()));
+        }
     }
 }

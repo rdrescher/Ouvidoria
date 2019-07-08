@@ -40,6 +40,7 @@ interface IProps {
   title: string;
   dialogContent: JSX.Element;
   handle: (operation: Operacao, data: object) => void;
+  //updateData: (newData: object) => void;
 }
 
 interface IDispatchProps {

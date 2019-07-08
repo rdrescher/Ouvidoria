@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, SyntheticEvent, useEffect } from "react";
-import Usuario, { UsuarioPerfil } from "../../models/Usuario";
+import IUsuario, { UsuarioPerfil } from "../../models/Usuario";
 import CadastroUsuario from "../../models/CadastroUsuario";
 import Operacao from "../../types/Operacao";
 import {
@@ -23,9 +23,17 @@ import Curso from "../../models/Curso";
 import { green } from "@material-ui/core/colors";
 import CursoApi from "../../services/CursoApi";
 import UsuarioApi from "../../services/UsuarioApi";
+import IResultado from "../../models/Resultado";
+import { connect } from "react-redux";
+import { Dispatch, bindActionCreators } from "redux";
+import * as DialogActions from "../../store/ducks/dialogDatatable/DialogActions";
+
+interface IDispatchProps {
+  closeDialog(): void;
+}
 
 interface IProps {
-  user: Usuario;
+  user: CadastroUsuario;
   operation: Operacao;
 }
 
@@ -33,7 +41,7 @@ interface IState {
   user: CadastroUsuario;
   loading: boolean;
   classes: Curso[];
-  errors: string;
+  errors: string[];
 }
 
 interface IErrors {
@@ -42,6 +50,7 @@ interface IErrors {
   telefone: string;
   cpf: string;
   senha: string;
+  confirmaSenha: string;
 }
 
 const initialErrorsState: IErrors = {
@@ -49,7 +58,8 @@ const initialErrorsState: IErrors = {
   email: "",
   telefone: "",
   cpf: "",
-  senha: ""
+  senha: "",
+  confirmaSenha: ""
 };
 
 const initialUserState: CadastroUsuario = {
@@ -60,16 +70,19 @@ const initialUserState: CadastroUsuario = {
   idCurso: 0,
   nome: "",
   senha: "",
+  confirmaSenha: "",
   telefone: "",
   usuarioPerfil: 1
 };
 
-export default function UsuarioComponent(props: IProps) {
+type Props = IProps & IDispatchProps;
+
+function UsuarioComponent(props: Props) {
   const [state, setState] = useState<IState>({
     user: props.user,
     loading: false,
     classes: [],
-    errors: ""
+    errors: []
   });
   const [errors, setErrors] = useState<IErrors>(initialErrorsState);
   const classes = useStyles();
@@ -130,14 +143,22 @@ export default function UsuarioComponent(props: IProps) {
     if (!validateEmail(user.email)) valid = false;
     if (!validateTelephone(user.telefone)) valid = false;
     if (!validateCPF(user.cpf)) valid = false;
-    if (!validatePassword(user.senha)) valid = false;
+    if (props.operation === "Criar") {
+      if (!validatePassword(user.senha)) valid = false;
+      if (!validateConfirmPassword(user.confirmaSenha, user.senha))
+        valid = false;
+    }
 
     if (user === props.user || !valid) return;
+
     setState((prevState: IState) => {
       return { ...prevState, loading: true };
     });
 
-    let result = await UsuarioApi.create(state.user);
+    let result: IResultado<IUsuario>;
+    if (props.operation === "Criar")
+      result = await UsuarioApi.create(state.user);
+    else result = await UsuarioApi.update(state.user.id, state.user);
 
     setState((prevState: IState) => {
       return { ...prevState, loading: false };
@@ -145,10 +166,10 @@ export default function UsuarioComponent(props: IProps) {
 
     if (!result.success) {
       setState((prevState: IState) => {
-        return { ...prevState, error: result.message };
+        return { ...prevState, errors: result.messages };
       });
     } else {
-      console.log(result.data);
+      props.closeDialog();
     }
   };
 
@@ -303,6 +324,35 @@ export default function UsuarioComponent(props: IProps) {
     return true;
   };
 
+  const validateConfirmPassword = (
+    confirmPassword: string,
+    password: string
+  ): boolean => {
+    if (!confirmPassword) {
+      setErrors((prevState: IErrors) => {
+        return {
+          ...prevState,
+          confirmaSenha: "Por favor, confirme a senha digitada anteriormente"
+        };
+      });
+      return false;
+    } else {
+      if (confirmPassword !== password) {
+        setErrors((prevState: IErrors) => {
+          return {
+            ...prevState,
+            confirmaSenha: "As senhas digitadas não são correspondentes"
+          };
+        });
+        return false;
+      }
+    }
+    setErrors((prevState: IErrors) => {
+      return { ...prevState, confirmaSenha: "" };
+    });
+    return true;
+  };
+
   return (
     <Container maxWidth="lg">
       <form>
@@ -371,6 +421,28 @@ export default function UsuarioComponent(props: IProps) {
           />
           <FormHelperText id="senha-helper">{errors.senha}</FormHelperText>
         </FormControl>
+        {props.operation === "Criar" && (
+          <FormControl fullWidth error={!!errors.confirmaSenha}>
+            <InputLabel htmlFor="confirmaSenha">Confirmar Senha</InputLabel>
+            <Input
+              name="confirmaSenha"
+              aria-describedby="senha-helper"
+              fullWidth
+              value={state.user.confirmaSenha || ""}
+              onChange={handleInputChange}
+              type="password"
+              onBlur={() =>
+                validateConfirmPassword(
+                  state.user.confirmaSenha,
+                  state.user.senha
+                )
+              }
+            />
+            <FormHelperText id="confirmaSenha-helper">
+              {errors.confirmaSenha}
+            </FormHelperText>
+          </FormControl>
+        )}
         <FormControl fullWidth>
           <InputLabel htmlFor="idCurso">Curso</InputLabel>
           <NativeSelect
@@ -419,11 +491,15 @@ export default function UsuarioComponent(props: IProps) {
           />
         </FormControl>
 
-        {state.errors && (
+        {!!state.errors.length && (
           <div className={classes.errors}>
             <Typography variant="h6">Erro ao salvar</Typography>
             <Divider className={classes.divider} />
-            <Typography variant="body2">{state.errors}</Typography>
+            {state.errors.map(error => (
+              <Typography key={error} variant="body2">
+                {error}
+              </Typography>
+            ))}
           </div>
         )}
 
@@ -479,7 +555,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: "relative"
   },
   errors: {
-    backgroundColor: "rgba(239, 83, 80, 0.7)",
+    backgroundColor: "rgba(239, 83, 80, 0.5)",
+    color: "rgba(0, 0, 0, 0.6)",
     width: "100%",
     border: 1,
     borderRadius: 5,
@@ -492,3 +569,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 15
   }
 }));
+
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(DialogActions, dispatch);
+
+export default connect(null, mapDispatchToProps)(UsuarioComponent);

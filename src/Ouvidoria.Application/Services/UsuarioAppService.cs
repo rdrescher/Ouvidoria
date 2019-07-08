@@ -21,19 +21,31 @@ namespace Ouvidoria.Application.Services
             this.Service = service;
         }
 
-        public async Task<Resultado<UsuarioDTO>> Create(UsuarioDTO usuarioDTO)
+        public async Task<Resultado<UsuarioDTO>> Create(CadastroUsuarioDTO cadastroUsuarioDTO)
         {
-            var usuario = base.MapToDomain(usuarioDTO);
+            if(cadastroUsuarioDTO.senha != cadastroUsuarioDTO.confirmaSenha)
+                return Resultado<UsuarioDTO>.Failed("As senhas não são correspondentes");
+            var usuario = base.Mapper.Map<Usuario>(cadastroUsuarioDTO);
             await Service.Create(usuario);
-            usuarioDTO = MapToDTO(usuario);
-            usuarioDTO.senha = "";
+            var usuarioDTO = MapToDTO(usuario);
            
             return Notificador.HasNotification() ?
-                Resultado<UsuarioDTO>.Failed(Notificador.GetNotifications().FirstOrDefault().Mensagem) :
+                Resultado<UsuarioDTO>.Failed(Notificador.GetNotifications().Select(x => x.Mensagem).ToArray()) :
                 Resultado<UsuarioDTO>.Successfull(usuarioDTO);
         }
 
         public async Task<Resultado<List<UsuarioDTO>>> GetUsers() =>
             Resultado<List<UsuarioDTO>>.Successfull(base.Mapper.Map<List<UsuarioDTO>>(await Service.GetUsers()));
+
+        public async Task<Resultado<UsuarioDTO>> Update(CadastroUsuarioDTO cadastroUsuarioDTO)
+        {
+            var usuario = base.Mapper.Map<Usuario>(cadastroUsuarioDTO);
+            await Service.Update(usuario);
+            var usuarioDTO = base.MapToDTO(usuario);
+
+            return Notificador.HasNotification() ?
+                Resultado<UsuarioDTO>.Failed(Notificador.GetNotifications().Select(x => x.Mensagem).ToArray()) :
+                Resultado<UsuarioDTO>.Successfull(usuarioDTO);
+        }
     }
 }

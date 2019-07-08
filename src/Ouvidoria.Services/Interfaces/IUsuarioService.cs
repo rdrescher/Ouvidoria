@@ -9,5 +9,6 @@ namespace Ouvidoria.Services.Interfaces
     {
         Task<List<Usuario>> GetUsers();
         Task Create(Usuario usuario);
+        Task Update(Usuario usuario);
     }
 }

@@ -53,5 +53,8 @@ namespace Ouvidoria.Services
             }
             await repository.Delete(id);
         }
+
+        public async Task<Curso> GetById(int id) =>
+            await repository.GetById(id);
     }
 }

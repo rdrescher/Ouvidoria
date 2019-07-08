@@ -7,7 +7,6 @@ export default interface IUsuario
     email: string;
     telefone: string;
     cpf: string;
-    senha: string;
     ativo: boolean;
     idCurso: number;
     usuarioPerfil: UsuarioPerfil;

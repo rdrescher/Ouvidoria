@@ -29,14 +29,14 @@ interface IProps {
 }
 
 interface IError {
-  mensagem: string;
+  mensagem: string[];
   possuiErro: boolean;
 }
 
 export default function CursoComponent(props: IProps) {
   const [curso, setCurso] = useState<ICurso>(props.curso);
   const [erro, setErro] = useState<IError>({
-    mensagem: "",
+    mensagem: [],
     possuiErro: false
   });
 
@@ -56,11 +56,14 @@ export default function CursoComponent(props: IProps) {
       return;
     }
     if (curso.nome.length === 0) {
-      setErro({ mensagem: "Insira o nome do curso", possuiErro: true });
+      let erros = erro.mensagem
+      erros.push("Insira o nome do curso");
+      setErro({ mensagem: erros, possuiErro: true });
     } else if (curso.nome.length < 2 || curso.nome.length > 50) {
+      let erros = erro.mensagem
+      erros.push("O nome do curso deve possuir entre dois e cinquênta caracteres");
       setErro({
-        mensagem:
-          "O nome do curso deve possuir entre dois e cinquênta caracteres",
+        mensagem: erros,
         possuiErro: true
       });
     } else {
@@ -71,10 +74,10 @@ export default function CursoComponent(props: IProps) {
         retorno = await CursoApi.entity.update(props.curso.id, curso);
       }
       if (retorno.success) {
-        setErro({ mensagem: "", possuiErro: false });
+        setErro({ mensagem: [], possuiErro: false });
         props.fechaModal(e, props.operacao);
       } else {
-        setErro({ mensagem: retorno.message, possuiErro: true });
+        setErro({ mensagem: retorno.messages, possuiErro: true });
       }
     }
   };

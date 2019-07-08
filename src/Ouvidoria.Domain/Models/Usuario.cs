@@ -13,7 +13,7 @@ namespace Ouvidoria.Domain.Models
             string telefone,
             string cpf,
             string senha,
-            int idCurso,
+            int? idCurso,
             UsuarioPerfil usuarioPerfil
         )
         {
@@ -43,9 +43,15 @@ namespace Ouvidoria.Domain.Models
         public virtual List<Questionario> Questionarios { get; private set; }
         public virtual List<QuestionarioResposta> QuestionarioResposta { get; private set; }
 
-        public void HashPassword() 
+        public void HashPassword()
         {
             this.Senha = HashMD5.GenerateHashMD5(this.Senha);
+        }
+
+        public void AjustToUpdate(string password)
+        {
+            this.Senha = password;
+            this.Curso = null;
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ouvidoria.Domain.Interfaces;
@@ -14,6 +15,13 @@ namespace Ouvidoria.Infrastructure.Repositories
         }
 
         public async Task<List<Usuario>> GetAllWithClass() =>
-            await base.DbSet.Include(x => x.Curso).ToListAsync(); 
+            await base.DbSet.Include(x => x.Curso).ToListAsync();
+
+        public async Task<string> GetPassword(int id)
+        {
+            return await base.DbSet.Where(x => x.Id == id)
+                .Select(x => x.Senha)
+                .FirstOrDefaultAsync();
+        }
     }
 }
