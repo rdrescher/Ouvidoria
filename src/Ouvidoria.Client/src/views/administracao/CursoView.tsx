@@ -38,15 +38,15 @@ export default function CursoView() {
     const [open, setOpen] = useState(false);
     const [curso, setCurso] = useState<Curso>({ id: 0, nome: "" });
     const [operacao, setOperacao] = useState<Operacao>("Criar");
-    const [erro, setErro] = useState<string>("");
+    const [erro, setErro] = useState<string[]>([]);
     const [aviso, setAviso] = useState<boolean>(false);
     const [mensagem, setMensagem] = useState<string>("");
     const [deletar, setDeletar] = useState<IDelete>({ deletar: false, id: 0 });
     const classes = useStyles();
 
     useEffect(() => {
-        GetCursos();
         setAviso(false);
+        GetCursos();
     },        []);
 
     async function GetCursos() {
@@ -54,8 +54,10 @@ export default function CursoView() {
         let result = await CursoApi.entity.get();
         if (result.success) {
             setCursos(result.data as Curso[]);
+            setErro([]);
         } else {
-            setErro(result.message);
+            setCursos([] as Curso[]);
+            setErro(result.messages);
         }
         setLoading(false);
     }
@@ -98,7 +100,7 @@ export default function CursoView() {
         if (resultado.success) {
             setMensagem("Registro deletado");
         } else {
-            setMensagem(`Erro: ${resultado.message}`);
+            setMensagem(`Erro: ${resultado.messages}`);
         }
         setDeletar({ deletar: false, id: 0 });
         setLoading(false);

@@ -4,5 +4,5 @@ export default interface IResultado<T = unknown>
 {
     data: Nullable<T>;
     success: boolean;
-    message: string;
+    messages: string[];
 }

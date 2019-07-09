@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Ouvidoria.Domain.Models
 {
@@ -12,5 +13,7 @@ namespace Ouvidoria.Domain.Models
         }
         public Curso() { }
         public string Nome { get; private set; }
+
+        public virtual List<Usuario> Usuarios { get; set; }
     }
 }
