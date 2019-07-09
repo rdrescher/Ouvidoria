@@ -7,19 +7,34 @@ import UsuarioComponent from "../../components/administracao/UsuarioComponent";
 import { MUIDataTableColumnDef } from "mui-datatables";
 import DataTable from "../../components/common/dataTable/DataTable";
 import Resultado from "../../models/Resultado";
-import ICurso from "../../models/Curso";
 import ICadastroUsuario from "../../models/CadastroUsuario";
 
 const headers: MUIDataTableColumnDef[] = [
-  { name: "nome", label: "Nome" },
+  {
+    name: "nome",
+    label: "Nome",
+  },
   { name: "email", label: "Email" },
-  { name: "telefone", label: "Telefone" },
-  { name: "cpf", label: "CPF" },
+  {
+    name: "telefone",
+    label: "Telefone",
+    options: {
+      sort: false
+    }
+  },
+  {
+    name: "cpf",
+    label: "CPF",
+    options: {
+      sort: false
+    }
+  },
   {
     name: "curso",
     label: "Curso",
     options: {
-      customBodyRender: value => value.nome as ICurso
+      customBodyRender: value => value.nome as string,
+      sort: false
     }
   },
   {
@@ -36,7 +51,8 @@ const headers: MUIDataTableColumnDef[] = [
       customBodyRender: value =>
         (value === true && <ThumbUp color="primary" />) || (
           <ThumbDown color="error" />
-        )
+        ),
+      sortDirection: "desc"
     }
   }
 ];
@@ -44,11 +60,13 @@ const headers: MUIDataTableColumnDef[] = [
 interface IState {
   operation: Operacao;
   selectedUser: ICadastroUsuario;
+  newUser: Usuario | null;
 }
 
 const initialState: IState = {
   operation: "Criar",
-  selectedUser: {} as ICadastroUsuario
+  selectedUser: {} as ICadastroUsuario,
+  newUser: null
 };
 
 export default function UsuarioView() {
@@ -87,6 +105,15 @@ export default function UsuarioView() {
     }
   };
 
+  const updateData = (user: Usuario) => {
+    setState((prevState: IState) => {
+      return {
+        ...prevState,
+        newUser: user
+      }
+    })
+  }
+
   return (
     <DataTable
       handle={handle}
@@ -96,10 +123,12 @@ export default function UsuarioView() {
       create={true}
       delete={false}
       edit={true}
+      newData={state.newUser}
       dialogContent={
         <UsuarioComponent
           user={state.selectedUser as ICadastroUsuario}
           operation={state.operation}
+          handleUpdateData={updateData}
         />
       }
     />

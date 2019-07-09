@@ -18,7 +18,7 @@ import {
   Checkbox,
   Divider
 } from "@material-ui/core";
-import { Save } from "@material-ui/icons";
+import { Save, Done } from "@material-ui/icons";
 import Curso from "../../models/Curso";
 import { green } from "@material-ui/core/colors";
 import CursoApi from "../../services/CursoApi";
@@ -27,6 +27,7 @@ import IResultado from "../../models/Resultado";
 import { connect } from "react-redux";
 import { Dispatch, bindActionCreators } from "redux";
 import * as DialogActions from "../../store/ducks/dialogDatatable/DialogActions";
+import clsx from "clsx";
 
 interface IDispatchProps {
   closeDialog(): void;
@@ -35,11 +36,13 @@ interface IDispatchProps {
 interface IProps {
   user: CadastroUsuario;
   operation: Operacao;
+  handleUpdateData: (user: IUsuario) => void;
 }
 
 interface IState {
   user: CadastroUsuario;
   loading: boolean;
+  success: boolean;
   classes: Curso[];
   errors: string[];
 }
@@ -81,6 +84,7 @@ function UsuarioComponent(props: Props) {
   const [state, setState] = useState<IState>({
     user: props.user,
     loading: false,
+    success: false,
     classes: [],
     errors: []
   });
@@ -129,7 +133,7 @@ function UsuarioComponent(props: Props) {
   const handleTelephoneCPFChange = (e: ChangeEvent<HTMLInputElement>) => {
     let name = e.target.name;
     let value = e.target.value;
-    let regex = /^\d+$/;
+    let regex = /^\s*\d*\s*$/;
     if (regex.test(String(value)))
       setState({ ...state, user: { ...state.user, [name]: value } });
   };
@@ -138,6 +142,8 @@ function UsuarioComponent(props: Props) {
     e.preventDefault();
     const { user } = state;
     let valid = true;
+
+    if (user === props.user || state.success) return;
 
     if (!validateName(user.nome)) valid = false;
     if (!validateEmail(user.email)) valid = false;
@@ -149,7 +155,7 @@ function UsuarioComponent(props: Props) {
         valid = false;
     }
 
-    if (user === props.user || !valid) return;
+    if (!valid) return;
 
     setState((prevState: IState) => {
       return { ...prevState, loading: true };
@@ -169,7 +175,13 @@ function UsuarioComponent(props: Props) {
         return { ...prevState, errors: result.messages };
       });
     } else {
-      props.closeDialog();
+      setState((prevState: IState) => {
+        return { ...prevState, success: true };
+      });
+      props.handleUpdateData(result.data!);
+      setTimeout(() => {
+        props.closeDialog();
+      }, 2000);
     }
   };
 
@@ -481,9 +493,9 @@ function UsuarioComponent(props: Props) {
           <FormControlLabel
             control={
               <Checkbox
-                checked={state.user.ativo || true}
+                checked={state.user.ativo === true ? true : false}
                 onChange={handleActiveChange}
-                value="ativo"
+                value={state.user.ativo}
                 name="ativo"
               />
             }
@@ -512,11 +524,31 @@ function UsuarioComponent(props: Props) {
               size="small"
               onClick={handleSubmit}
               disabled={state.loading}
+              className={clsx({
+                [classes.buttonSuccess]: state.success
+              })}
             >
-              <Save className={classes.btnMargin} />
-              <Typography variant="inherit" className={classes.contentSpacer}>
-                Salvar
-              </Typography>
+              {(!state.success && (
+                <>
+                  <Save className={classes.btnMargin} />
+                  <Typography
+                    variant="inherit"
+                    className={classes.contentSpacer}
+                  >
+                    Salvar
+                  </Typography>
+                </>
+              )) || (
+                <>
+                  <Done className={classes.btnMargin} />
+                  <Typography
+                    variant="inherit"
+                    className={classes.contentSpacer}
+                  >
+                    Sucesso ao salvar
+                  </Typography>
+                </>
+              )}
             </Fab>
             {state.loading && (
               <CircularProgress size={24} className={classes.buttonProgress} />
@@ -567,10 +599,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   divider: {
     marginBottom: 15
+  },
+  buttonSuccess: {
+    backgroundColor: green[500],
+    "&:hover": {
+      backgroundColor: green[700]
+    }
   }
 }));
 
 const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(DialogActions, dispatch);
 
-export default connect(null, mapDispatchToProps)(UsuarioComponent);
+export default connect(
+  null,
+  mapDispatchToProps
+)(UsuarioComponent);

@@ -17,7 +17,7 @@
     "binary-expression-operand-order": true,
     "class-name": true,
     "completed-docs": [
-      false, // For now
+      false,
       {
         "classes": { "visibilities": ["exported"] },
         "enums": { "visibilities": ["exported"] },
@@ -43,7 +43,6 @@
     "indent": true,
     "interface-name": true,
     "label-position": true,
-    //"match-default-export-name": true,]
     "member-ordering": [
       true,
       {

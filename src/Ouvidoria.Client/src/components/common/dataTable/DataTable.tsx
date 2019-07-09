@@ -11,7 +11,8 @@ import {
   DialogTitle,
   Divider,
   DialogContent,
-  makeStyles
+  makeStyles,
+  LinearProgress
 } from "@material-ui/core";
 import Operacao from "../../../types/Operacao";
 import { connect } from "react-redux";
@@ -22,8 +23,9 @@ import { IApplicationState } from "../../../store";
 interface IState {
   data: object[];
   columns: MUIDataTableColumnDef[];
-  options: MUIDataTableOptions;
+  loading: boolean;
   selectedData: object;
+  options: MUIDataTableOptions;
 }
 
 interface IDialogsState {
@@ -40,7 +42,7 @@ interface IProps {
   title: string;
   dialogContent: JSX.Element;
   handle: (operation: Operacao, data: object) => void;
-  //updateData: (newData: object) => void;
+  newData: object | null;
 }
 
 interface IDispatchProps {
@@ -61,12 +63,13 @@ const initialState: IState = {
   data: [],
   columns: [],
   selectedData: {},
+  loading: false,
   options: {
     responsive: "scroll",
     filterType: "textField",
     download: false,
     print: false,
-    rowsPerPageOptions: [],
+    rowsPerPageOptions: [5, 10, 50],
     textLabels: {
       filter: {
         title: "Filtros",
@@ -81,12 +84,12 @@ const initialState: IState = {
         displayRows: "",
         next: "Próxima",
         previous: "Anterior",
-        rowsPerPage: "Linhas por página"
+        rowsPerPage: "Registros por página"
       },
       selectedRows: {
         delete: "Deletar",
         deleteAria: "Deletar",
-        text: "Linha selecionada"
+        text: "Registro selecionado"
       },
       toolbar: {
         downloadCsv: "",
@@ -116,14 +119,13 @@ const DataTable = (props: Props) => {
   const classes = useStyles();
 
   useEffect(() => {
-    async function getData() {
-      let result = await props.data();
-      setState({
-        ...state,
-        data: result.data!,
+    setState((prevState: IState) => {
+      return {
+        ...prevState,
+        loading: true,
         columns: props.columns,
         options: {
-          ...state.options,
+          ...prevState.options,
           customToolbarSelect: selected => (
             <DataTableToolBarSelected
               edit={props.edit}
@@ -138,11 +140,62 @@ const DataTable = (props: Props) => {
             ) : null,
           selectableRows: props.edit || props.delete ? "single" : "none"
         }
+      };
+    });
+
+    async function getData() {
+      let result = await props.data();
+      setState((prevState: IState) => {
+        return {
+          ...prevState,
+          data: result.data!,
+          loading: false
+        };
       });
     }
 
     getData();
   }, []);
+
+  useEffect(() => {
+    if (props.newData === null) return;
+    switch (dialogs.operation) {
+      case "Criar":
+        setState((prevState: IState) => {
+          return {
+            ...prevState,
+            data: [...prevState.data, props.newData as object]
+          };
+        });
+        break;
+      case "Atualizar":
+        setState((prevState: IState) => {
+          let updatedData = prevState.data.map((item, index) => {
+            if (index === dialogs.selectedIndex) {
+              return props.newData as object;
+            } else {
+              return item;
+            }
+          });
+          return {
+            ...prevState,
+            data: updatedData
+          };
+        });
+        break;
+      case "Deletar":
+        setState((prevState: IState) => {
+          let deletedData = prevState.data.splice(dialogs.selectedIndex);
+          return {
+            ...prevState,
+            data: deletedData
+          };
+        });
+        break;
+      default:
+        break;
+    }
+  }, [props.newData]);
 
   useEffect(() => {
     if (!props.dialogIsOpen && dialogs.selectedIndex !== -10) {
@@ -155,19 +208,27 @@ const DataTable = (props: Props) => {
 
   const handleDialogOpen = (operation: Operacao, data: unknown = null) => {
     setDialogs({
-      selectedIndex: !!data ? (data as IIndex).index : -1,
+      selectedIndex: !!data ? (data as IIndex).dataIndex : -1,
       operation: operation
     });
   };
 
   return (
     <>
-      <MUIDataTable
-        title={props.title}
-        data={state.data}
-        columns={state.columns}
-        options={state.options}
-      />
+      <div className={classes.wrapper}>
+        <MUIDataTable
+          title={props.title}
+          data={state.data}
+          columns={state.columns}
+          options={state.options}
+        />
+        {state.loading && (
+          <div className={classes.progress}>
+            <LinearProgress />
+            <div className={classes.whiteSpace} />
+          </div>
+        )}
+      </div>
       <Dialog
         open={props.dialogIsOpen}
         onClose={props.closeDialog}
@@ -185,8 +246,19 @@ const DataTable = (props: Props) => {
 
 const useStyles = makeStyles(() => ({
   divider: {
-    backgroundColor: "rgba(0, 0, 0, 0.2)",
-    marginBottom: "2em"
+    backgroundColor: "rgba(0, 0, 0, 0.2)"
+  },
+  wrapper: {
+    position: "relative"
+  },
+  progress: {
+    position: "absolute",
+    top: "51%",
+    width: "100%"
+  },
+  whiteSpace: {
+    background: "white",
+    height: 30
   }
 }));
 

@@ -26,11 +26,10 @@ function NavbarComponent(props: IDispatchState) {
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <IconButton
-            color="inherit"
             aria-label="Open drawer"
             edge="start"
             onClick={props.toggleSidebar}
-            className={classes.menuButton}
+            className={classes.iconButton}
           >
             <Menu />
           </IconButton>
@@ -42,7 +41,7 @@ function NavbarComponent(props: IDispatchState) {
           <IconButton
             aria-owns={"menu-appbar"}
             aria-haspopup="false"
-            color="inherit"
+            className={classes.iconButton}
           >
             <AccountCircle />
           </IconButton>
@@ -66,8 +65,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: 0,
     background: "linear-gradient(-206deg, #00B4DB 35%, #0083B0)"
   },
-  menuButton: {
-    marginRight: theme.spacing(2)
+  iconButton: {
+    marginRight: theme.spacing(2),
+    color: "inherit"
   },
   grow: {
     flexGrow: 1
