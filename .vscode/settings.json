@@ -11,7 +11,6 @@
         "**/obj": true,
         "**/.vscode": true,
     },
-    "workbench.iconTheme": "material-icon-theme",
     "workbench.colorCustomizations": {
         "[Monokai Pro (Filter Octagon)]": {
             "list.warningForeground": "#ff7b00",

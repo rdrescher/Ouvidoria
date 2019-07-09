@@ -290,7 +290,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         backgroundSize: "240px 100%",
         background: "linear-gradient(-206deg, #00B4DB 35%, #0083B0)",
         width: drawerWidth,
-        color: "white"
+        color: "white",
+        bottom: 0,
     },
     drawerHeader: {
         display: "flex",

@@ -1,3 +1,3 @@
-type Operacao = "Criar" | "Atualizar";
+type Operacao = "Criar" | "Atualizar" | "Deletar";
 
 export default Operacao;

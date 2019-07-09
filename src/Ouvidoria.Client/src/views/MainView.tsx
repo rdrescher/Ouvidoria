@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 import React from "react";
 import { Provider } from "react-redux";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import ContentComponent from "../components/navigation/ContentComponent";
 import NavbarComponent from "../components/navigation/NavbarComponent";
 import SidebarComponent from "../components/navigation/SidebarComponent";
