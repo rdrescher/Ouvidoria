@@ -144,15 +144,13 @@ function CursoComponent(props: Props) {
   };
 
   const handleKeyPress = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-    }
+    if (e.key === "Enter") e.preventDefault();
   };
 
   return (
     <>
       <Container maxWidth="lg">
-        <form  className={classes.form}>
+        <form className={classes.form}>
           {(props.operation === "Deletar" && (
             <Typography variant="body2">
               Você tem certeza que deseja excluir curso {props.class.nome}{" "}
@@ -168,6 +166,7 @@ function CursoComponent(props: Props) {
                 value={state.class.nome}
                 onChange={handleNameChange}
                 onKeyPress={handleKeyPress}
+                onBlur={() => validateName(state.class.nome)}
               />
               <FormHelperText id="nome-helper">
                 {state.formError}

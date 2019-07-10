@@ -17,7 +17,7 @@ import {
 import { green } from "@material-ui/core/colors";
 import { Done, Save } from "@material-ui/icons";
 import clsx from "clsx";
-import React, { useEffect, useState, ChangeEvent, SyntheticEvent } from "react";
+import React, { useEffect, useState, ChangeEvent, KeyboardEvent, SyntheticEvent } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import CadastroUsuario from "../../models/CadastroUsuario";
@@ -136,6 +136,10 @@ function UsuarioComponent(props: Props) {
     let regex = /^\s*\d*\s*$/;
     if (regex.test(String(value)))
       setState({ ...state, user: { ...state.user, [name]: value } });
+  };
+
+  const handleKeyPress = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter") e.preventDefault();
   };
 
   const handleSubmit = async (e: SyntheticEvent) => {
@@ -392,6 +396,7 @@ function UsuarioComponent(props: Props) {
             value={state.user.nome || ""}
             onChange={handleInputChange}
             onBlur={() => validateName(state.user.nome)}
+            onKeyPress={handleKeyPress}
           />
           <FormHelperText id="nome-helper">{errors.nome}</FormHelperText>
         </FormControl>
@@ -405,6 +410,7 @@ function UsuarioComponent(props: Props) {
             value={state.user.email || ""}
             onChange={handleInputChange}
             onBlur={() => validateEmail(state.user.email)}
+            onKeyPress={handleKeyPress}
           />
           <FormHelperText id="email-helper">{errors.email}</FormHelperText>
         </FormControl>
@@ -417,6 +423,7 @@ function UsuarioComponent(props: Props) {
             value={state.user.cpf || ""}
             onChange={handleTelephoneCPFChange}
             onBlur={() => validateCPF(state.user.cpf)}
+            onKeyPress={handleKeyPress}
           />
           <FormHelperText id="cpf-helper">{errors.cpf}</FormHelperText>
         </FormControl>
@@ -429,6 +436,7 @@ function UsuarioComponent(props: Props) {
             value={state.user.telefone || ""}
             onChange={handleTelephoneCPFChange}
             onBlur={() => validateTelephone(state.user.telefone)}
+            onKeyPress={handleKeyPress}
           />
           <FormHelperText id="telefone-helper">
             {errors.telefone}
@@ -445,6 +453,7 @@ function UsuarioComponent(props: Props) {
             type="password"
             disabled={props.operation === "Atualizar"}
             onBlur={() => validatePassword(state.user.senha)}
+            onKeyPress={handleKeyPress}
           />
           <FormHelperText id="senha-helper">{errors.senha}</FormHelperText>
         </FormControl>
@@ -464,6 +473,7 @@ function UsuarioComponent(props: Props) {
                   state.user.senha
                 )
               }
+              onKeyPress={handleKeyPress}
             />
             <FormHelperText id="confirmaSenha-helper">
               {errors.confirmaSenha}
