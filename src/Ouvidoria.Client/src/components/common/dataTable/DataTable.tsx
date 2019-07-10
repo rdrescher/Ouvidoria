@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from "react";
-import MUIDataTable, {
-  MUIDataTableOptions,
-  MUIDataTableColumnDef
-} from "mui-datatables";
-import DataTableToolBarSelected from "./DataTableToolBarSelected";
-import DataTableToolBar from "./DataTableToolBar";
-import IResultado from "../../../models/Resultado";
 import {
+  makeStyles,
   Dialog,
+  DialogContent,
   DialogTitle,
   Divider,
-  DialogContent,
-  makeStyles,
   LinearProgress
 } from "@material-ui/core";
-import Operacao from "../../../types/Operacao";
+import MUIDataTable, {
+  MUIDataTableColumnDef,
+  MUIDataTableOptions
+} from "mui-datatables";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Dispatch, bindActionCreators } from "redux";
-import * as DialogActions from "../../../store/ducks/dialogDatatable/DialogActions";
+import { bindActionCreators, Dispatch } from "redux";
+import IResultado from "../../../models/Resultado";
 import { IApplicationState } from "../../../store";
+import * as DialogActions from "../../../store/ducks/dialogDatatable/DialogActions";
+import Operacao from "../../../types/Operacao";
+import DataTableToolBar from "./DataTableToolBar";
+import DataTableToolBarSelected from "./DataTableToolBarSelected";
 
 interface IState {
   data: object[];
@@ -113,7 +113,7 @@ const initialDialogState: IDialogsState = {
 
 type Props = IProps & IDispatchProps & IStateProps;
 
-const DataTable = (props: Props) => {
+function DataTable(props: Props) {
   const [state, setState] = useState<IState>(initialState);
   const [dialogs, setDialogs] = useState<IDialogsState>(initialDialogState);
   const classes = useStyles();
@@ -155,7 +155,7 @@ const DataTable = (props: Props) => {
     }
 
     getData();
-  }, []);
+  },        []);
 
   useEffect(() => {
     if (props.newData === null) return;
@@ -185,17 +185,18 @@ const DataTable = (props: Props) => {
         break;
       case "Deletar":
         setState((prevState: IState) => {
-          let deletedData = prevState.data.splice(dialogs.selectedIndex);
+          let newData = [...prevState.data];
+          newData.splice(dialogs.selectedIndex, 1);
           return {
             ...prevState,
-            data: deletedData
+            data: newData
           };
         });
         break;
       default:
         break;
     }
-  }, [props.newData]);
+  },        [props.newData]);
 
   useEffect(() => {
     if (!props.dialogIsOpen && dialogs.selectedIndex !== -10) {
@@ -204,7 +205,7 @@ const DataTable = (props: Props) => {
       props.openDialog(dialogs.operation, selectedData);
       props.handle(dialogs.operation, selectedData);
     }
-  }, [dialogs]);
+  },        [dialogs]);
 
   const handleDialogOpen = (operation: Operacao, data: unknown = null) => {
     setDialogs({
@@ -242,7 +243,7 @@ const DataTable = (props: Props) => {
       </Dialog>
     </>
   );
-};
+}
 
 const useStyles = makeStyles(() => ({
   divider: {

@@ -13,7 +13,7 @@ export default class EntityApi<TEntity>
         return await Http.post(`/api/${this.controller}`, entity);
     }
 
-    public async delete(id: number): Promise<IResultado> {
+    public async delete(id: number): Promise<IResultado<TEntity>> {
         return await Http.delete(`/api/${this.controller}/${id}`);
     }
 
