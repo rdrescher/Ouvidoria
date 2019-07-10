@@ -1,18 +1,18 @@
+import { ThumbDown, ThumbUp } from "@material-ui/icons";
+import { MUIDataTableColumnDef } from "mui-datatables";
 import React, { useState } from "react";
+import UsuarioComponent from "../../components/administracao/UsuarioComponent";
+import DataTable from "../../components/common/dataTable/DataTable";
+import ICadastroUsuario from "../../models/CadastroUsuario";
+import Resultado from "../../models/Resultado";
 import Usuario, { UsuarioPerfil } from "../../models/Usuario";
 import UsuarioApi from "../../services/UsuarioApi";
-import { ThumbDown, ThumbUp } from "@material-ui/icons";
 import Operacao from "../../types/Operacao";
-import UsuarioComponent from "../../components/administracao/UsuarioComponent";
-import { MUIDataTableColumnDef } from "mui-datatables";
-import DataTable from "../../components/common/dataTable/DataTable";
-import Resultado from "../../models/Resultado";
-import ICadastroUsuario from "../../models/CadastroUsuario";
 
 const headers: MUIDataTableColumnDef[] = [
   {
     name: "nome",
-    label: "Nome",
+    label: "Nome"
   },
   { name: "email", label: "Email" },
   {
@@ -110,9 +110,9 @@ export default function UsuarioView() {
       return {
         ...prevState,
         newUser: user
-      }
-    })
-  }
+      };
+    });
+  };
 
   return (
     <DataTable

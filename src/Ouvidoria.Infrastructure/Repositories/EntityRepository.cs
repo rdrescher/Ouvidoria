@@ -46,13 +46,18 @@ namespace Ouvidoria.Infrastructure.Repositories
 
         public virtual async Task Update(TEntity entity)
         {
-            entity.SetUpdatedDate();
+            var CreationDate = await GetCreationDate(entity.Id);
+            entity.SetDates(CreationDate);
             DbSet.Update(entity);
             await SaveChanges();
         }
 
+        private async Task<DateTime> GetCreationDate(int id) => 
+            await DbSet.Where(x => x.Id == id)
+                .Select(x => x.DataInsercao)
+                .FirstOrDefaultAsync();
+
         public void Dispose() => 
             Db?.Dispose();
-
     }
 }

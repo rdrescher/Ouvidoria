@@ -33,11 +33,13 @@ function NavbarComponent(props: IDispatchState) {
           >
             <Menu />
           </IconButton>
-          <Link to="/" className={clsx(classes.link, classes.grow)}>
+          <div className={classes.grow}>
             <Typography variant="h6" noWrap>
-              Ouvidoria
+              <Link to="/" className={classes.link}>
+                Ouvidoria
+              </Link>
             </Typography>
-          </Link>
+          </div>
           <IconButton
             aria-owns={"menu-appbar"}
             aria-haspopup="false"

@@ -76,6 +76,7 @@ const theme = createMuiTheme({
     },
     MuiDialog: {
       root: {
+        // tslint:disable-next-line:no-any
         zIndex: "10000 !important" as any
       }
     },

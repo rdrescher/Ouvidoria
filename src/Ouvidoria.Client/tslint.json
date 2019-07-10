@@ -36,7 +36,7 @@
         }
       }
     ],
-    "curly": true,
+    "curly": false,
     "cyclomatic-complexity": true,
     "deprecation": true,
     "encoding": true,
@@ -114,7 +114,6 @@
       "ban-keywords",
       "check-format"
     ],
-    "whitespace": true,
+    "whitespace": true
   }
 }
-  

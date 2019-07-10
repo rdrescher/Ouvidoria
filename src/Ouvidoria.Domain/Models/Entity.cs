@@ -10,8 +10,11 @@ namespace Ouvidoria.Domain.Models
 
         public virtual DateTime DataInsercao { get; protected set; }
 
-        public void SetUpdatedDate() =>
+        public void SetDates(DateTime CreatedDate)
+        {
+            this.DataInsercao = CreatedDate;
             this.DataAtualizacao = DateTime.Now;
+        }
         
     }
 }

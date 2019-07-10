@@ -1,33 +1,33 @@
-import React, { useState, ChangeEvent, SyntheticEvent, useEffect } from "react";
-import IUsuario, { UsuarioPerfil } from "../../models/Usuario";
-import CadastroUsuario from "../../models/CadastroUsuario";
-import Operacao from "../../types/Operacao";
 import {
-  Input,
-  Container,
-  FormControl,
-  InputLabel,
-  FormHelperText,
-  Fab,
-  Typography,
   makeStyles,
-  Theme,
-  CircularProgress,
-  NativeSelect,
-  FormControlLabel,
   Checkbox,
-  Divider
+  CircularProgress,
+  Container,
+  Divider,
+  Fab,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  Input,
+  InputLabel,
+  NativeSelect,
+  Theme,
+  Typography
 } from "@material-ui/core";
-import { Save, Done } from "@material-ui/icons";
-import Curso from "../../models/Curso";
 import { green } from "@material-ui/core/colors";
+import { Done, Save } from "@material-ui/icons";
+import clsx from "clsx";
+import React, { useEffect, useState, ChangeEvent, KeyboardEvent, SyntheticEvent } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators, Dispatch } from "redux";
+import CadastroUsuario from "../../models/CadastroUsuario";
+import Curso from "../../models/Curso";
+import IResultado from "../../models/Resultado";
+import IUsuario, { UsuarioPerfil } from "../../models/Usuario";
 import CursoApi from "../../services/CursoApi";
 import UsuarioApi from "../../services/UsuarioApi";
-import IResultado from "../../models/Resultado";
-import { connect } from "react-redux";
-import { Dispatch, bindActionCreators } from "redux";
 import * as DialogActions from "../../store/ducks/dialogDatatable/DialogActions";
-import clsx from "clsx";
+import Operacao from "../../types/Operacao";
 
 interface IDispatchProps {
   closeDialog(): void;
@@ -112,7 +112,7 @@ function UsuarioComponent(props: Props) {
       }
     }
     getClasses();
-  }, []);
+  },        []);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let name = e.target.name;
@@ -138,6 +138,10 @@ function UsuarioComponent(props: Props) {
       setState({ ...state, user: { ...state.user, [name]: value } });
   };
 
+  const handleKeyPress = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter") e.preventDefault();
+  };
+
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     const { user } = state;
@@ -148,11 +152,16 @@ function UsuarioComponent(props: Props) {
     if (!validateName(user.nome)) valid = false;
     if (!validateEmail(user.email)) valid = false;
     if (!validateTelephone(user.telefone)) valid = false;
-    if (!validateCPF(user.cpf)) valid = false;
+    if (!validateCPF(user.cpf)) {
+      valid = false;
+    }
     if (props.operation === "Criar") {
-      if (!validatePassword(user.senha)) valid = false;
-      if (!validateConfirmPassword(user.confirmaSenha, user.senha))
+      if (!validatePassword(user.senha)) {
         valid = false;
+      }
+      if (!validateConfirmPassword(user.confirmaSenha, user.senha)) {
+        valid = false;
+      }
     }
 
     if (!valid) return;
@@ -162,9 +171,11 @@ function UsuarioComponent(props: Props) {
     });
 
     let result: IResultado<IUsuario>;
-    if (props.operation === "Criar")
+    if (props.operation === "Criar") {
       result = await UsuarioApi.create(state.user);
-    else result = await UsuarioApi.update(state.user.id, state.user);
+    } else {
+      result = await UsuarioApi.update(state.user.id, state.user);
+    }
 
     setState((prevState: IState) => {
       return { ...prevState, loading: false };
@@ -172,7 +183,7 @@ function UsuarioComponent(props: Props) {
 
     if (!result.success) {
       setState((prevState: IState) => {
-        return { ...prevState, errors: result.messages };
+        return { ...prevState, errors: result.messages, loading: false };
       });
     } else {
       setState((prevState: IState) => {
@@ -181,7 +192,7 @@ function UsuarioComponent(props: Props) {
       props.handleUpdateData(result.data!);
       setTimeout(() => {
         props.closeDialog();
-      }, 2000);
+      },         2000);
     }
   };
 
@@ -273,27 +284,35 @@ function UsuarioComponent(props: Props) {
         });
         return false;
       } else {
-        let Soma = 0;
-        let Resto: number;
+        let soma = 0;
+        let resto: number;
         let valid = true;
         if (cpf === "00000000000") {
           valid = false;
         } else {
-          for (let i = 1; i <= 9; i++)
-            Soma = Soma + parseInt(cpf.substring(i - 1, i)) * (11 - i);
-          Resto = (Soma * 10) % 11;
+          for (let i = 1; i <= 9; i++) {
+            soma = soma + parseInt(cpf.substring(i - 1, i)) * (11 - i);
+          }
+          resto = (soma * 10) % 11;
 
-          if (Resto === 10 || Resto === 11) Resto = 0;
-          if (Resto !== parseInt(cpf.substring(9, 10))) {
+          if (resto === 10 || resto === 11) {
+            resto = 0;
+          }
+          if (resto !== parseInt(cpf.substring(9, 10))) {
             valid = false;
           } else {
-            Soma = 0;
-            for (let i = 1; i <= 10; i++)
-              Soma = Soma + parseInt(cpf.substring(i - 1, i)) * (12 - i);
-            Resto = (Soma * 10) % 11;
+            soma = 0;
+            for (let i = 1; i <= 10; i++) {
+              soma = soma + parseInt(cpf.substring(i - 1, i)) * (12 - i);
+            }
+            resto = (soma * 10) % 11;
 
-            if (Resto === 10 || Resto === 11) Resto = 0;
-            if (Resto !== parseInt(cpf.substring(10, 11))) valid = false;
+            if (resto === 10 || resto === 11) {
+              resto = 0;
+            }
+            if (resto !== parseInt(cpf.substring(10, 11))) {
+              valid = false;
+            }
           }
         }
         if (!valid) {
@@ -377,6 +396,7 @@ function UsuarioComponent(props: Props) {
             value={state.user.nome || ""}
             onChange={handleInputChange}
             onBlur={() => validateName(state.user.nome)}
+            onKeyPress={handleKeyPress}
           />
           <FormHelperText id="nome-helper">{errors.nome}</FormHelperText>
         </FormControl>
@@ -390,6 +410,7 @@ function UsuarioComponent(props: Props) {
             value={state.user.email || ""}
             onChange={handleInputChange}
             onBlur={() => validateEmail(state.user.email)}
+            onKeyPress={handleKeyPress}
           />
           <FormHelperText id="email-helper">{errors.email}</FormHelperText>
         </FormControl>
@@ -402,6 +423,7 @@ function UsuarioComponent(props: Props) {
             value={state.user.cpf || ""}
             onChange={handleTelephoneCPFChange}
             onBlur={() => validateCPF(state.user.cpf)}
+            onKeyPress={handleKeyPress}
           />
           <FormHelperText id="cpf-helper">{errors.cpf}</FormHelperText>
         </FormControl>
@@ -414,6 +436,7 @@ function UsuarioComponent(props: Props) {
             value={state.user.telefone || ""}
             onChange={handleTelephoneCPFChange}
             onBlur={() => validateTelephone(state.user.telefone)}
+            onKeyPress={handleKeyPress}
           />
           <FormHelperText id="telefone-helper">
             {errors.telefone}
@@ -430,6 +453,7 @@ function UsuarioComponent(props: Props) {
             type="password"
             disabled={props.operation === "Atualizar"}
             onBlur={() => validatePassword(state.user.senha)}
+            onKeyPress={handleKeyPress}
           />
           <FormHelperText id="senha-helper">{errors.senha}</FormHelperText>
         </FormControl>
@@ -449,6 +473,7 @@ function UsuarioComponent(props: Props) {
                   state.user.senha
                 )
               }
+              onKeyPress={handleKeyPress}
             />
             <FormHelperText id="confirmaSenha-helper">
               {errors.confirmaSenha}

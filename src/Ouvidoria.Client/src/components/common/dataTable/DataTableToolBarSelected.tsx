@@ -1,9 +1,9 @@
-import React from "react";
-import { Delete, Edit } from "@material-ui/icons";
-import Tooltip from "@material-ui/core/Tooltip";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import { red } from "@material-ui/core/colors";
 import { Fab } from "@material-ui/core";
+import { red } from "@material-ui/core/colors";
+import { makeStyles, Theme } from "@material-ui/core/styles";
+import Tooltip from "@material-ui/core/Tooltip";
+import { Delete, Edit } from "@material-ui/icons";
+import React from "react";
 import Operacao from "../../../types/Operacao";
 
 interface IProps {
@@ -18,11 +18,11 @@ export default function CustomToolbarSelect(props: IProps) {
 
   const handleEdit = () => {
     props.onHandleClick("Atualizar", props.selectedData);
-  }
+  };
 
   const handleDelete = () => {
-    props.onHandleClick("Deletar", null);
-  }
+    props.onHandleClick("Deletar", props.selectedData);
+  };
 
   return (
     <div className={classes.div}>
