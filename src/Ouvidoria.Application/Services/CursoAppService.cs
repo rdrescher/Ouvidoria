@@ -30,7 +30,7 @@ namespace Ouvidoria.Application.Services
             cursoDTO = MapToDTO(curso);
 
             return Notificador.HasNotification() ?
-                Resultado<CursoDTO>.Failed(Notificador.GetNotifications().FirstOrDefault().Mensagem) :
+                Resultado<CursoDTO>.Failed(Notificador.GetNotifications().Select(x => x.Mensagem).ToArray()) :
                 Resultado<CursoDTO>.Successfull(cursoDTO);
         }
 
@@ -38,7 +38,7 @@ namespace Ouvidoria.Application.Services
         {
             await Service.Delete(id);
             return Notificador.HasNotification() ?
-                Resultado.Failed(Notificador.GetNotifications().FirstOrDefault().Mensagem) :
+                Resultado.Failed(Notificador.GetNotifications().Select(x => x.Mensagem).ToArray()) :
                 Resultado.Successfull();
         }
 
@@ -49,8 +49,7 @@ namespace Ouvidoria.Application.Services
             if (cursos == null || cursos.Count == 0)
                 return Resultado<List<CursoDTO>>.Failed("Nenhum curso encontrado");
 
-            var cursosDTO = base.Mapper.Map<List<CursoDTO>>(cursos);
-            return Resultado<List<CursoDTO>>.Successfull(cursosDTO);
+            return Resultado<List<CursoDTO>>.Successfull(cursos);
         }
 
         public async Task<Resultado<CursoDTO>> Update(CursoDTO cursoDTO)
@@ -62,7 +61,7 @@ namespace Ouvidoria.Application.Services
             var cursosDTO = MapToDTO(curso);
 
             return Notificador.HasNotification() ?
-                Resultado<CursoDTO>.Failed(Notificador.GetNotifications().FirstOrDefault().Mensagem) :
+                Resultado<CursoDTO>.Failed(Notificador.GetNotifications().Select(x => x.Mensagem).ToArray()) :
                 Resultado<CursoDTO>.Successfull(cursoDTO);
         }
     }

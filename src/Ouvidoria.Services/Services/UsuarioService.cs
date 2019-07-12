@@ -81,5 +81,8 @@ namespace Ouvidoria.Services
         {
             repository.Dispose();
         }
+
+        public async Task<Usuario> GetUserById(int id) => 
+            await repository.GetById(id);
     }
 }

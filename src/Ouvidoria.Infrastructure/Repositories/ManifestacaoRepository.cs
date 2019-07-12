@@ -4,10 +4,10 @@ using Ouvidoria.Infrastructure.Context;
 
 namespace Ouvidoria.Infrastructure.Repositories
 {
-    public class DepartamentoRepository : EntityRepository<Departamento>, IDepartamentoRepository
+    public class ManifestacaoRepository : EntityRepository<Manifestacao>, IManifestacaoRepository
     {
-        public DepartamentoRepository(OuvidoriaContext context) : base(context)
-        { }
-        
+        public ManifestacaoRepository(OuvidoriaContext context) : base(context)
+        {
+        }
     }
 }
