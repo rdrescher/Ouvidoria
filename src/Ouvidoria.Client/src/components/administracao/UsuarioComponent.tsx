@@ -192,7 +192,7 @@ function UsuarioComponent(props: Props) {
       props.handleUpdateData(result.data!);
       setTimeout(() => {
         props.closeDialog();
-      },         2000);
+      },         1000);
     }
   };
 

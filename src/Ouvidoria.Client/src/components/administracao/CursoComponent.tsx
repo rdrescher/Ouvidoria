@@ -106,7 +106,7 @@ function CursoComponent(props: Props) {
       props.handleUpdateData(result.data!);
       setTimeout(() => {
         props.closeDialog();
-      },         2000);
+      },         1000);
     } else {
       setState((prevState: IState) => {
         return { ...prevState, serverErrors: result.messages, loading: false };

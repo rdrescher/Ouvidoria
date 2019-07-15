@@ -42,15 +42,9 @@ namespace Ouvidoria.Application.Services
                 Resultado.Successfull();
         }
 
-        public async Task<Resultado<List<CursoDTO>>> GetClasses()
-        {
-            var cursos = base.Mapper.Map<List<CursoDTO>>(await Service.GetClasses());
+        public async Task<Resultado<List<CursoDTO>>> GetClasses() =>
+            Resultado<List<CursoDTO>>.Successfull(base.MapToDTO(await Service.GetClasses()));
 
-            if (cursos == null || cursos.Count == 0)
-                return Resultado<List<CursoDTO>>.Failed("Nenhum curso encontrado");
-
-            return Resultado<List<CursoDTO>>.Successfull(cursos);
-        }
 
         public async Task<Resultado<CursoDTO>> Update(CursoDTO cursoDTO)
         {

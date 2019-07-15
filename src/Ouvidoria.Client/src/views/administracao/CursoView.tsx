@@ -8,7 +8,6 @@ import CursoApi from "../../services/CursoApi";
 import Operacao from "../../types/Operacao";
 
 const headers: MUIDataTableColumnDef[] = [
-  { label: "Id", name: "id" },
   { label: "Nome", name: "nome" }
 ];
 
