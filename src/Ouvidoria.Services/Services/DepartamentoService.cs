@@ -41,6 +41,14 @@ namespace Ouvidoria.Services
             await repository.Delete(id);
         }
 
+        public async Task Update(Departamento departamento)
+        {
+            if (!base.Validate(new DepartamentoValidation(), departamento)) return;
+            if (!await IsValidOwner(departamento.IdUsuarioResponsavel)) return;
+            await repository.Update(departamento);
+            departamento = await repository.GetWithOwner(departamento.Id);
+        }
+
         public void Dispose()
         {
             repository.Dispose();
@@ -52,14 +60,14 @@ namespace Ouvidoria.Services
         private async Task<bool> IsValidOwner(int? id)
         {
             if (id == null) return true;
-            if (await usuarioService.GetUserById(id.Value) != null) return true;
+            if (await usuarioService.GetUserById(id.Value) is Usuario user && user.Ativo) return true;
 
-            Notify("O usuário responsável informado é inválido");
+            Notify("O usuário responsável informado é inválido ou está inativo");
             return false;
         }
         private async Task<bool> HasManifestationsRegistered(int id)
         {
-            if(!(await manifestacaoService.GetByDepartment(id)).Any()) return false;
+            if (!(await manifestacaoService.GetByDepartment(id)).Any()) return false;
             Notify("O Departamento não pôde ser excluído pois há manifestações cadastradas em relação a ele");
             return true;
         }

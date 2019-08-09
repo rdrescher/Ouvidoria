@@ -42,5 +42,16 @@ namespace Ouvidoria.Application.Services
                 Resultado.Failed(Notificador.GetNotifications().Select(x => x.Mensagem).ToArray()) :
                 Resultado.Successfull();
         }
+
+        public async Task<Resultado<DepartamentoDTO>> Update(CadastroDepartamentoDTO cadastroDepartamentoDTO)
+        {
+            var Departamento = base.Mapper.Map<Departamento>(cadastroDepartamentoDTO);
+            await Service.Update(Departamento);
+            var DepartamentoDTO = base.MapToDTO(Departamento);
+
+            return Notificador.HasNotification() ?
+                Resultado<DepartamentoDTO>.Failed(Notificador.GetNotifications().Select(x => x.Mensagem).ToArray()) :
+                Resultado<DepartamentoDTO>.Successfull(DepartamentoDTO);
+        }
     }
 }

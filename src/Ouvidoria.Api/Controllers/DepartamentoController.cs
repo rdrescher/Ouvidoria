@@ -29,14 +29,14 @@ namespace Ouvidoria.Api.Controllers
                  Ok(Resultado<DepartamentoDTO>.Failed(ModelState.Values.Select(x => x.Errors).ToString()));
 
 
-        // [HttpPut("{id:int}")]
-        // public async Task<ActionResult<Resultado<UsuarioDTO>>> Put(int id, CadastroDepartamentoDTO cadastroDepartamentoDTO)
-        // {
-        //     if(id != cadastroDepartamentoDTO.id) return BadRequest();
-        //     return ModelState.IsValid ?
-        //         Ok(await service.Update(cadastroDepartamentoDTO)) :
-        //         Ok(Resultado<CursoDTO>.Failed(ModelState.Values.Select(x => x.Errors).ToString()));
-        // }
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<Resultado<DepartamentoDTO>>> Put(int id, CadastroDepartamentoDTO cadastroDepartamentoDTO)
+        {
+            if(id != cadastroDepartamentoDTO.id) return BadRequest();
+            return ModelState.IsValid ?
+                Ok(await service.Update(cadastroDepartamentoDTO)) :
+                Ok(Resultado<DepartamentoDTO>.Failed(ModelState.Values.Select(x => x.Errors).ToString()));
+        }
 
         [HttpDelete("{id:int}")]
         public async Task<ActionResult<Resultado>> Delete(int id) =>

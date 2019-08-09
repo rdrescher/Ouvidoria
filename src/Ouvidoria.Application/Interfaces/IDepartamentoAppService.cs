@@ -11,5 +11,6 @@ namespace Ouvidoria.Application.Interfaces
         Task<Resultado<List<DepartamentoDTO>>> GetDepartments();
         Task<Resultado<DepartamentoDTO>> Create(CadastroDepartamentoDTO cadastroDepartamentoDTO);
         Task<Resultado> Delete(int id);
+        Task<Resultado<DepartamentoDTO>> Update(CadastroDepartamentoDTO cadastroDepartamentoDTO);
     }
 }

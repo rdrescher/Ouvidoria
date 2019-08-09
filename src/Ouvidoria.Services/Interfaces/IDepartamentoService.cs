@@ -10,5 +10,6 @@ namespace Ouvidoria.Services.Interfaces
         Task<List<Departamento>> GetDepartments();
         Task Create(Departamento departamento);
         Task Delete(int id);
+        Task Update(Departamento departamento);
     }
 }
