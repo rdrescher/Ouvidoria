@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Ouvidoria.Application.DTOs;
+using Ouvidoria.Application.DTO;
 using Ouvidoria.Application.Interfaces;
 using Ouvidoria.Application.Utils;
 using Ouvidoria.Domain.Interfaces;

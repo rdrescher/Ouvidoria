@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Ouvidoria.Application.DTOs;
+using Ouvidoria.Application.DTO;
 using Ouvidoria.Application.Utils;
 using Ouvidoria.Domain.Models;
 
@@ -11,6 +11,6 @@ namespace Ouvidoria.Application.Interfaces
         Task<Resultado<List<DepartamentoDTO>>> GetDepartments();
         Task<Resultado<DepartamentoDTO>> Create(CadastroDepartamentoDTO cadastroDepartamentoDTO);
         Task<Resultado> Delete(int id);
-        Task<Resultado<DepartamentoDTO>> Update(CadastroDepartamentoDTO cadastroDepartamentoDTO);
+        Task<Resultado<DepartamentoDTO>> Update(AtualizacaoDepartamentoDTO cadastroDepartamentoDTO);
     }
 }

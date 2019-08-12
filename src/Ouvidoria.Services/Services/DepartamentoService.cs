@@ -31,6 +31,7 @@ namespace Ouvidoria.Services
         {
             if (!base.Validate(new DepartamentoValidation(), departamento)) return;
             if (!await IsValidOwner(departamento.IdUsuarioResponsavel)) return;
+            
             await repository.Create(departamento);
             departamento = await repository.GetWithOwner(departamento.Id);
         }
@@ -45,17 +46,18 @@ namespace Ouvidoria.Services
         {
             if (!base.Validate(new DepartamentoValidation(), departamento)) return;
             if (!await IsValidOwner(departamento.IdUsuarioResponsavel)) return;
+
             await repository.Update(departamento);
             departamento = await repository.GetWithOwner(departamento.Id);
         }
+
+        public async Task<List<Departamento>> GetDepartments() =>
+            await repository.GetAllWithOwner();
 
         public void Dispose()
         {
             repository.Dispose();
         }
-
-        public async Task<List<Departamento>> GetDepartments() =>
-            await repository.GetAllWithOwner();
 
         private async Task<bool> IsValidOwner(int? id)
         {
@@ -68,6 +70,7 @@ namespace Ouvidoria.Services
         private async Task<bool> HasManifestationsRegistered(int id)
         {
             if (!(await manifestacaoService.GetByDepartment(id)).Any()) return false;
+
             Notify("O Departamento não pôde ser excluído pois há manifestações cadastradas em relação a ele");
             return true;
         }

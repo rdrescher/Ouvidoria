@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Ouvidoria.Application.DTOs
+namespace Ouvidoria.Application.DTO
 {
     public class CursoDTO : EntityDTO
     {

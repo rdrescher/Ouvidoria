@@ -1,5 +1,5 @@
 using Ouvidoria.Application.Interfaces;
-using Ouvidoria.Application.DTOs;
+using Ouvidoria.Application.DTO;
 using Ouvidoria.Domain.Models;
 using AutoMapper;
 using System.Collections.Generic;

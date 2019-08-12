@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Ouvidoria.Application.DTOs;
+using Ouvidoria.Application.DTO;
 using Ouvidoria.Application.Interfaces;
 using Ouvidoria.Application.Utils;
 using Ouvidoria.Domain.Interfaces;
@@ -43,9 +43,9 @@ namespace Ouvidoria.Application.Services
                 Resultado.Successfull();
         }
 
-        public async Task<Resultado<DepartamentoDTO>> Update(CadastroDepartamentoDTO cadastroDepartamentoDTO)
+        public async Task<Resultado<DepartamentoDTO>> Update(AtualizacaoDepartamentoDTO atualizacaoDepartamentoDTO)
         {
-            var Departamento = base.Mapper.Map<Departamento>(cadastroDepartamentoDTO);
+            var Departamento = base.Mapper.Map<Departamento>(atualizacaoDepartamentoDTO);
             await Service.Update(Departamento);
             var DepartamentoDTO = base.MapToDTO(Departamento);
 

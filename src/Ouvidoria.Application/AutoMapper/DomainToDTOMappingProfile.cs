@@ -1,5 +1,5 @@
 using AutoMapper;
-using Ouvidoria.Application.DTOs;
+using Ouvidoria.Application.DTO;
 using Ouvidoria.Domain.Models;
 
 namespace Ouvidoria.Application.AutoMapper

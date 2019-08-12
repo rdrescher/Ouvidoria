@@ -1,4 +1,4 @@
-namespace Ouvidoria.Application.DTOs
+namespace Ouvidoria.Application.DTO
 {
     public class DepartamentoDTO : EntityDTO
     {

@@ -12,10 +12,16 @@ namespace Ouvidoria.Infrastructure.Repositories
         public DepartamentoRepository(OuvidoriaContext context) : base(context)
         { }
 
-        public async Task<List<Departamento>> GetAllWithOwner() => 
-            await base.DbSet.Include(x => x.Usuario).ToListAsync();
+        public async Task<List<Departamento>> GetAllWithOwner() =>
+            await base.DbSet
+                .AsNoTracking()
+                .Include(x => x.Usuario)
+                .ToListAsync();
 
         public async Task<Departamento> GetWithOwner(int id) =>
-            await base.DbSet.Include(x => x.Usuario).FirstOrDefaultAsync(x => x.Id == id);
+            await base.DbSet
+                .AsNoTracking()
+                .Include(x => x.Usuario)
+                .FirstOrDefaultAsync(x => x.Id == id);
     }
 }

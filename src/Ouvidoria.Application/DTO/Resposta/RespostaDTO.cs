@@ -1,6 +1,6 @@
 using System;
 
-namespace Ouvidoria.Application.DTOs
+namespace Ouvidoria.Application.DTO
 {
     public class RespostaDTO : EntityDTO
     {

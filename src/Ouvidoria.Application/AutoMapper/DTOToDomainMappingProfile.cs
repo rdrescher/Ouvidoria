@@ -1,5 +1,5 @@
 using AutoMapper;
-using Ouvidoria.Application.DTOs;
+using Ouvidoria.Application.DTO;
 using Ouvidoria.Domain.Models;
 
 namespace Ouvidoria.Application.AutoMapper
@@ -8,12 +8,13 @@ namespace Ouvidoria.Application.AutoMapper
     {
         public DTOToDomainMappingProfile()
         {
-            CreateMap<CursoDTO, Curso>()
-                .ConstructUsing(c => new Curso(c.nome));
+            CreateMap<AtualizacaoDepartamentoDTO, Departamento>();
             CreateMap<CadastroDepartamentoDTO, Departamento>()
                 .ConstructUsing(d => new Departamento(d.nome, d.idUsuarioResponsavel));
             CreateMap<CadastroUsuarioDTO, Usuario>()
                 .ConstructUsing(u => new Usuario(u.nome, u.email, u.telefone, u.cpf, u.senha, u.idCurso, u.usuarioPerfil));
+            CreateMap<CursoDTO, Curso>()
+                .ConstructUsing(c => new Curso(c.nome));
             CreateMap<DepartamentoDTO, Departamento>();
             CreateMap<ManifestacaoDTO, Manifestacao>();
             CreateMap<PerguntaDTO, Pergunta>();

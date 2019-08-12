@@ -1,6 +1,6 @@
-namespace Ouvidoria.Application.DTOs
+namespace Ouvidoria.Application.DTO
 {
-    public class CadastroDepartamentoDTO : EntityDTO
+    public class CadastroDepartamentoDTO
     {
         public string nome { get; set; }
         public int? idUsuarioResponsavel { get; set; }

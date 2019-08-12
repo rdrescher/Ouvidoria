@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Ouvidoria.Application.DTOs
+namespace Ouvidoria.Application.DTO
 {
     public class QuestionarioDTO : EntityDTO
     {
