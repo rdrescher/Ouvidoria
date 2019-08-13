@@ -2,14 +2,12 @@ import { MUIDataTableColumnDef } from "mui-datatables";
 import React, { useState } from "react";
 import CursoComponent from "../../components/administracao/CursoComponent";
 import DataTable from "../../components/common/dataTable/DataTable";
-import Curso from "../../models/Curso";
+import Curso from "../../models/Curso/Curso";
 import Resultado from "../../models/Resultado";
 import CursoApi from "../../services/CursoApi";
 import Operacao from "../../types/Operacao";
 
-const headers: MUIDataTableColumnDef[] = [
-  { label: "Nome", name: "nome" }
-];
+const headers: MUIDataTableColumnDef[] = [{ label: "Nome", name: "nome" }];
 
 interface IState {
   operation: Operacao;

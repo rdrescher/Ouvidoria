@@ -17,13 +17,19 @@ import {
 import { green } from "@material-ui/core/colors";
 import { Done, Save } from "@material-ui/icons";
 import clsx from "clsx";
-import React, { useEffect, useState, ChangeEvent, KeyboardEvent, SyntheticEvent } from "react";
+import React, {
+  useEffect,
+  useState,
+  ChangeEvent,
+  KeyboardEvent,
+  SyntheticEvent
+} from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
-import CadastroUsuario from "../../models/CadastroUsuario";
-import Curso from "../../models/Curso";
-import IResultado from "../../models/Resultado";
-import IUsuario, { UsuarioPerfil } from "../../models/Usuario";
+import Curso from "../../models/Curso/Curso";
+import Resultado from "../../models/Resultado";
+import CadastroUsuario from "../../models/Usuario/CadastroUsuario";
+import Usuario, { UsuarioPerfil } from "../../models/Usuario/Usuario";
 import CursoApi from "../../services/CursoApi";
 import UsuarioApi from "../../services/UsuarioApi";
 import * as DialogActions from "../../store/ducks/dialogDatatable/DialogActions";
@@ -36,7 +42,7 @@ interface IDispatchProps {
 interface IProps {
   user: CadastroUsuario;
   operation: Operacao;
-  handleUpdateData: (user: IUsuario) => void;
+  handleUpdateData: (user: Usuario) => void;
 }
 
 interface IState {
@@ -170,7 +176,7 @@ function UsuarioComponent(props: Props) {
       return { ...prevState, loading: true };
     });
 
-    let result: IResultado<IUsuario>;
+    let result: Resultado<Usuario>;
     if (props.operation === "Criar") {
       result = await UsuarioApi.create(state.user);
     } else {

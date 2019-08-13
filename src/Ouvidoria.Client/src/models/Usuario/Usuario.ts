@@ -1,7 +1,6 @@
-import ICurso from "./Curso";
+import ICurso from "../Curso/Curso";
 
-export default interface IUsuario
-{
+export default interface IUsuario {
     id: number;
     nome: string;
     email: string;
@@ -13,8 +12,7 @@ export default interface IUsuario
     curso: ICurso;
 }
 
-export enum UsuarioPerfil
-{
+export enum UsuarioPerfil {
     "Administrador",
-    "Usuario" 
+    "Usuario"
 }

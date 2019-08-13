@@ -1,5 +1,6 @@
 export default interface IDepartamentoDTO {
     id: number;
     nome: string;
-    usuarioResponsavel: string;
+    idUsuarioResponsavel: number | null;
+    usuarioResponsavel?: string;
 }

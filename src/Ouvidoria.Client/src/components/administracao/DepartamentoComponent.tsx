@@ -23,16 +23,18 @@ import React, {
 } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
-import Curso from "../../models/Curso/Curso";
+import AtualizacaoDepartamento from "../../models/Departamento/AtualizacaoDepartamento";
+import CadastroDepartamento from "../../models/Departamento/CadastroDepartamento";
+import Departamento from "../../models/Departamento/Departamento";
 import Resultado from "../../models/Resultado";
-import CursoApi from "../../services/CursoApi";
+import DepartamentoApi from "../../services/DepartamentoApi";
 import * as DialogActions from "../../store/ducks/dialogDatatable/DialogActions";
 import Operacao from "../../types/Operacao";
 
 interface IProps {
-  class: Curso;
+  department: Departamento;
   operation: Operacao;
-  handleUpdateData: (_class: Curso) => void;
+  handleUpdateData: (department: Departamento) => void;
 }
 
 interface IDispatchProps {
@@ -40,7 +42,7 @@ interface IDispatchProps {
 }
 
 interface IState {
-  class: Curso;
+  department: Departamento;
   loading: boolean;
   success: boolean;
   serverErrors: string[];
@@ -48,7 +50,12 @@ interface IState {
 }
 
 const initialState: IState = {
-  class: { id: 0, nome: "" },
+  department: {
+    id: 0,
+    nome: "",
+    usuarioResponsavel: "",
+    idUsuarioResponsavel: null
+  },
   loading: false,
   success: false,
   serverErrors: [],
@@ -57,24 +64,58 @@ const initialState: IState = {
 
 type Props = IProps & IDispatchProps;
 
-function CursoComponent(props: Props) {
-  const [state, setState] = useState<IState>(initialState);
-  const classes = useStyles();
+function DepartamentoComponent(props: Props) {
+  const [state, setState] = useState(initialState);
+  const classes = useStyles(1);
 
   useEffect(() => {
     setState((prevState: IState) => {
       return {
         ...prevState,
-        class: props.class
+        department: props.department
       };
     });
   },        []);
 
+  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    setState((prevState: IState) => {
+      return {
+        ...prevState,
+        department: { ...prevState.department, nome: value }
+      };
+    });
+  };
+
+  const handleKeyPress = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter") e.preventDefault();
+  };
+
+  const validateName = (name: string): boolean => {
+    if (name.length === 0) {
+      setState((prevState: IState) => {
+        return { ...prevState, formError: "Insira o nome do departamento" };
+      });
+      return false;
+    } else if (name.length < 2 || name.length > 50) {
+      setState((prevState: IState) => {
+        return {
+          ...prevState,
+          formError:
+            "O nome do departamento deve possuir entre dois e cinquênta caracteres"
+        };
+      });
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     let valid = true;
-    if (state.class === props.class && props.operation !== "Deletar") return;
-    if (!validateName(state.class.nome) && props.operation !== "Deletar")
+    if (state.department === props.department && props.operation !== "Deletar")
+      return;
+    if (!validateName(state.department.nome) && props.operation !== "Deletar")
       valid = false;
 
     if (!valid) return;
@@ -83,16 +124,21 @@ function CursoComponent(props: Props) {
       return { ...prevState, loading: true };
     });
 
-    let result: Resultado<Curso>;
+    let result: Resultado<Departamento>;
     switch (props.operation) {
       case "Criar":
-        result = await CursoApi.entity.create(state.class);
+        result = await DepartamentoApi.create(
+          state.department as CadastroDepartamento
+        );
         break;
       case "Atualizar":
-        result = await CursoApi.entity.update(props.class.id, state.class);
+        result = await DepartamentoApi.update(
+          props.department.id,
+          state.department as AtualizacaoDepartamento
+        );
         break;
       case "Deletar":
-        result = await CursoApi.entity.delete(props.class.id);
+        result = await DepartamentoApi.entity.delete(props.department.id);
         break;
       default:
         result = { data: null, messages: [], success: false };
@@ -114,46 +160,13 @@ function CursoComponent(props: Props) {
     }
   };
 
-  const validateName = (name: string): boolean => {
-    if (name.length === 0) {
-      setState((prevState: IState) => {
-        return { ...prevState, formError: "Insira o nome do curso" };
-      });
-      return false;
-    } else if (name.length < 2 || name.length > 50) {
-      setState((prevState: IState) => {
-        return {
-          ...prevState,
-          formError:
-            "O nome do curso deve possuir entre dois e cinquênta caracteres"
-        };
-      });
-      return false;
-    }
-    return true;
-  };
-
-  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value;
-    setState((prevState: IState) => {
-      return {
-        ...prevState,
-        class: { ...prevState.class, nome: value }
-      };
-    });
-  };
-
-  const handleKeyPress = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter") e.preventDefault();
-  };
-
   return (
     <>
       <Container maxWidth="lg">
         <form className={classes.form}>
           {(props.operation === "Deletar" && (
             <Typography variant="body2">
-              Você tem certeza que deseja excluir curso {props.class.nome}{" "}
+              Você tem certeza que deseja excluir curso {props.department.nome}{" "}
               permanentemente?
             </Typography>
           )) || (
@@ -163,10 +176,10 @@ function CursoComponent(props: Props) {
                 id="nome"
                 aria-describedby="nome-helper"
                 fullWidth
-                value={state.class.nome}
+                value={state.department.nome}
                 onChange={handleNameChange}
                 onKeyPress={handleKeyPress}
-                onBlur={() => validateName(state.class.nome)}
+                onBlur={() => validateName(state.department.nome)}
               />
               <FormHelperText id="nome-helper">
                 {state.formError}
@@ -291,4 +304,4 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
 export default connect(
   null,
   mapDispatchToProps
-)(CursoComponent);
+)(DepartamentoComponent);

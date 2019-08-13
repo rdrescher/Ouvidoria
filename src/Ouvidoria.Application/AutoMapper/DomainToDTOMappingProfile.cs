@@ -17,7 +17,7 @@ namespace Ouvidoria.Application.AutoMapper
             CreateMap<Usuario, UsuarioDTO>();
             CreateMap<Departamento, DepartamentoDTO>()
                 .ForMember(c => c.usuarioResponsavel,
-                           c => c.MapFrom(d => d.Usuario != null ? d.Usuario.Nome : ""));
+                                c => c.MapFrom(d => d.Usuario != null ? d.Usuario.Nome : ""));
         }
     }
 }

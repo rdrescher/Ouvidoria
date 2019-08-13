@@ -1,18 +1,17 @@
-import Usuario from "../models/Usuario";
-import EntityApi from "./EntityApi";
-import ICadastroUsuario from "../models/CadastroUsuario";
-import IResultado from "../models/Resultado";
 import Http from "../core/http";
-import IUsuario from "../models/Usuario";
+import IResultado from "../models/Resultado";
+import CadastroUsuario from "../models/Usuario/CadastroUsuario";
+import Usuario from "../models/Usuario/Usuario";
+import EntityApi from "./EntityApi";
 
 export default class UsuarioApi {
     public static readonly entity = new EntityApi<Usuario>("Usuario");
 
-    public static async create(user: ICadastroUsuario): Promise<IResultado<IUsuario>> {
+    public static async create(user: CadastroUsuario): Promise<IResultado<Usuario>> {
         return await Http.post(`/api/Usuario`, user);
     }
 
-    public static async update(id: number, user: ICadastroUsuario): Promise<IResultado<IUsuario>> {
+    public static async update(id: number, user: CadastroUsuario): Promise<IResultado<Usuario>> {
         return await Http.put(`/api/Usuario/${id}`, user);
     }
 }

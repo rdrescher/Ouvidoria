@@ -1,4 +1,4 @@
-import Curso from "../models/Curso";
+import Curso from "../models/Curso/Curso";
 import EntityApi from "./EntityApi";
 
 export default class CursoApi {

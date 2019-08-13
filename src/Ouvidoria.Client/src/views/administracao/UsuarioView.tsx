@@ -3,9 +3,9 @@ import { MUIDataTableColumnDef } from "mui-datatables";
 import React, { useState } from "react";
 import UsuarioComponent from "../../components/administracao/UsuarioComponent";
 import DataTable from "../../components/common/dataTable/DataTable";
-import ICadastroUsuario from "../../models/CadastroUsuario";
 import Resultado from "../../models/Resultado";
-import Usuario, { UsuarioPerfil } from "../../models/Usuario";
+import CadastroUsuario from "../../models/Usuario/CadastroUsuario";
+import Usuario, { UsuarioPerfil } from "../../models/Usuario/Usuario";
 import UsuarioApi from "../../services/UsuarioApi";
 import Operacao from "../../types/Operacao";
 
@@ -33,7 +33,7 @@ const headers: MUIDataTableColumnDef[] = [
     name: "curso",
     label: "Curso",
     options: {
-      customBodyRender: value => value.nome as string,
+      customBodyRender: value => (value !== null ? (value.nome as string) : ""),
       sort: false
     }
   },
@@ -59,13 +59,13 @@ const headers: MUIDataTableColumnDef[] = [
 
 interface IState {
   operation: Operacao;
-  selectedUser: ICadastroUsuario;
+  selectedUser: CadastroUsuario;
   newUser: Usuario | null;
 }
 
 const initialState: IState = {
   operation: "Criar",
-  selectedUser: {} as ICadastroUsuario,
+  selectedUser: {} as CadastroUsuario,
   newUser: null
 };
 
@@ -82,10 +82,10 @@ export default function UsuarioView() {
       setState({
         ...state,
         operation: operation,
-        selectedUser: data as ICadastroUsuario
+        selectedUser: data as CadastroUsuario
       });
     } else {
-      let SelectedUser: ICadastroUsuario = {
+      let selectedUser: CadastroUsuario = {
         nome: user.nome,
         email: user.email,
         ativo: user.ativo,
@@ -100,7 +100,7 @@ export default function UsuarioView() {
       setState({
         ...state,
         operation: operation,
-        selectedUser: SelectedUser
+        selectedUser
       });
     }
   };
@@ -126,7 +126,7 @@ export default function UsuarioView() {
       newData={state.newUser}
       dialogContent={
         <UsuarioComponent
-          user={state.selectedUser as ICadastroUsuario}
+          user={state.selectedUser as CadastroUsuario}
           operation={state.operation}
           handleUpdateData={updateData}
         />
