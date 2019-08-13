@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Ouvidoria.CrossCutting.IoC;
 using Ouvidoria.Application.Extensions;
 using AutoMapper;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Ouvidoria.Api
 {
@@ -30,7 +31,18 @@ namespace Ouvidoria.Api
                         .AllowCredentials()
                 );
             });
-            //services.AddAutoMapper(typeof(Startup));
+            
+            services.AddSwaggerGen(s =>
+            {
+                s.SwaggerDoc("v1", new Info
+                {
+                    Version = "v1",
+                    Title = "Ouvidoria",
+                    Description = "Sistema de Ouvidoria da Faculdade Antonio Meneghetti",
+                    Contact = new Contact { Name = "Ouvidoria - AMF", Email = "ouvidoria@faculdadeam.edu.br", Url = "http://www.eduardopires.net.br" },
+                });
+            });
+
             services.AddAutoMapperSetup(typeof(Startup));
             services.AddDependencies(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -51,6 +63,11 @@ namespace Ouvidoria.Api
             app.UseCors("Development");
             app.UseHttpsRedirection();
             app.UseMvc();
+            app.UseSwagger();
+            app.UseSwaggerUI(s =>
+            {
+                s.SwaggerEndpoint("/swagger/v1/swagger.json", "Ouvidoria - AMF | API v1.0");
+            });
         }
     }
 }
