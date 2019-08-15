@@ -3,15 +3,15 @@ using AutoMapper;
 using Ouvidoria.Application.AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Ouvidoria.Application.Extensions
+namespace Ouvidoria.Api.Configurations
 {
-    public static class AutoMapperSetup
+    public static class AutoMapperConfig
     {
-        public static void AddAutoMapperSetup(this IServiceCollection services, Type type)
+        public static void AutoMapperServiceConfig(this IServiceCollection services)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            var mappingConfig = AutoMapperConfig.RegisterMappings();
+            var mappingConfig = AutoMapperSetup.RegisterMappings();
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
         }

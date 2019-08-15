@@ -2,7 +2,7 @@ using AutoMapper;
 
 namespace Ouvidoria.Application.AutoMapper
 {
-    public class AutoMapperConfig
+    public class AutoMapperSetup
     {
         public static MapperConfiguration RegisterMappings()
         {
