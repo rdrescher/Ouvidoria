@@ -34,6 +34,8 @@ import CursoApi from "../../services/CursoApi";
 import UsuarioApi from "../../services/UsuarioApi";
 import * as DialogActions from "../../store/ducks/dialogDatatable/DialogActions";
 import Operacao from "../../types/Operacao";
+import InputField from "../common/formFields/InputField";
+import SelectField from "../common/formFields/SelectField";
 
 interface IDispatchProps {
   closeDialog(): void;
@@ -144,10 +146,6 @@ function UsuarioComponent(props: Props) {
       setState({ ...state, user: { ...state.user, [name]: value } });
   };
 
-  const handleKeyPress = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter") e.preventDefault();
-  };
-
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     const { user } = state;
@@ -155,17 +153,17 @@ function UsuarioComponent(props: Props) {
 
     if (user === props.user || state.success) return;
 
-    if (!validateName(user.nome)) valid = false;
-    if (!validateEmail(user.email)) valid = false;
-    if (!validateTelephone(user.telefone)) valid = false;
-    if (!validateCPF(user.cpf)) {
+    if (!validateName()) valid = false;
+    if (!validateEmail()) valid = false;
+    if (!validateTelephone()) valid = false;
+    if (!validateCPF()) {
       valid = false;
     }
     if (props.operation === "Criar") {
-      if (!validatePassword(user.senha)) {
+      if (!validatePassword()) {
         valid = false;
       }
-      if (!validateConfirmPassword(user.confirmaSenha, user.senha)) {
+      if (!validateConfirmPassword()) {
         valid = false;
       }
     }
@@ -202,7 +200,8 @@ function UsuarioComponent(props: Props) {
     }
   };
 
-  const validateName = (name: string): boolean => {
+  const validateName = (): boolean => {
+    let name = state.user.nome;
     if (!name) {
       setErrors((prevState: IErrors) => {
         return { ...prevState, nome: "Por favor, informe o nome" };
@@ -226,7 +225,8 @@ function UsuarioComponent(props: Props) {
     return true;
   };
 
-  const validateEmail = (email: string): boolean => {
+  const validateEmail = (): boolean => {
+    let { email } = state.user;
     if (!email) {
       setErrors((prevState: IErrors) => {
         return { ...prevState, email: "Por favor, informe o email" };
@@ -248,7 +248,8 @@ function UsuarioComponent(props: Props) {
     return true;
   };
 
-  const validateTelephone = (phone: string): boolean => {
+  const validateTelephone = (): boolean => {
+    let phone = state.user.telefone;
     let regex = /^\d+$/;
     if (phone && !regex.test(String(phone))) {
       setErrors((prevState: IErrors) => {
@@ -273,7 +274,8 @@ function UsuarioComponent(props: Props) {
     return true;
   };
 
-  const validateCPF = (cpf: string): boolean => {
+  const validateCPF = (): boolean => {
+    let { cpf } = state.user;
     let regex = /^\d+$/;
     if (!cpf) {
       setErrors((prevState: IErrors) => {
@@ -338,7 +340,8 @@ function UsuarioComponent(props: Props) {
     }
   };
 
-  const validatePassword = (password: string): boolean => {
+  const validatePassword = (): boolean => {
+    let password = state.user.senha;
     if (!password) {
       setErrors((prevState: IErrors) => {
         return { ...prevState, senha: "Por favor, informe a senha" };
@@ -361,10 +364,10 @@ function UsuarioComponent(props: Props) {
     return true;
   };
 
-  const validateConfirmPassword = (
-    confirmPassword: string,
-    password: string
-  ): boolean => {
+  const validateConfirmPassword = (): boolean => {
+    let confirmPassword = state.user.confirmaSenha;
+    let password = state.user.senha;
+    console.log(password, confirmPassword);
     if (!confirmPassword) {
       setErrors((prevState: IErrors) => {
         return {
@@ -393,115 +396,70 @@ function UsuarioComponent(props: Props) {
   return (
     <Container maxWidth="lg">
       <form>
-        <FormControl fullWidth error={!!errors.nome}>
-          <InputLabel htmlFor="nome">Nome</InputLabel>
-          <Input
-            name="nome"
-            aria-describedby="nome-helper"
-            fullWidth
-            value={state.user.nome || ""}
-            onChange={handleInputChange}
-            onBlur={() => validateName(state.user.nome)}
-            onKeyPress={handleKeyPress}
-          />
-          <FormHelperText id="nome-helper">{errors.nome}</FormHelperText>
-        </FormControl>
-        <FormControl fullWidth error={!!errors.email}>
-          <InputLabel htmlFor="email">E-mail</InputLabel>
-          <Input
-            name="email"
-            aria-describedby="email-helper"
-            fullWidth
-            type="email"
-            value={state.user.email || ""}
-            onChange={handleInputChange}
-            onBlur={() => validateEmail(state.user.email)}
-            onKeyPress={handleKeyPress}
-          />
-          <FormHelperText id="email-helper">{errors.email}</FormHelperText>
-        </FormControl>
-        <FormControl fullWidth error={!!errors.cpf}>
-          <InputLabel htmlFor="cpf">CPF</InputLabel>
-          <Input
-            name="cpf"
-            aria-describedby="cpf-helper"
-            fullWidth
-            value={state.user.cpf || ""}
-            onChange={handleTelephoneCPFChange}
-            onBlur={() => validateCPF(state.user.cpf)}
-            onKeyPress={handleKeyPress}
-          />
-          <FormHelperText id="cpf-helper">{errors.cpf}</FormHelperText>
-        </FormControl>
-        <FormControl fullWidth error={!!errors.telefone}>
-          <InputLabel htmlFor="telefone">Telefone</InputLabel>
-          <Input
-            name="telefone"
-            aria-describedby="telefone-helper"
-            fullWidth
-            value={state.user.telefone || ""}
-            onChange={handleTelephoneCPFChange}
-            onBlur={() => validateTelephone(state.user.telefone)}
-            onKeyPress={handleKeyPress}
-          />
-          <FormHelperText id="telefone-helper">
-            {errors.telefone}
-          </FormHelperText>
-        </FormControl>
-        <FormControl fullWidth error={!!errors.senha}>
-          <InputLabel htmlFor="senha">Senha</InputLabel>
-          <Input
-            name="senha"
-            aria-describedby="senha-helper"
-            fullWidth
-            value={state.user.senha || ""}
-            onChange={handleInputChange}
-            type="password"
-            disabled={props.operation === "Atualizar"}
-            onBlur={() => validatePassword(state.user.senha)}
-            onKeyPress={handleKeyPress}
-          />
-          <FormHelperText id="senha-helper">{errors.senha}</FormHelperText>
-        </FormControl>
+        <InputField
+          name="nome"
+          label="Nome"
+          error={errors.nome}
+          value={state.user.nome}
+          onChange={handleInputChange}
+          onBlur={validateName}
+        />
+        <InputField
+          name="email"
+          label="E-mail"
+          type="email"
+          error={errors.email}
+          value={state.user.email}
+          onChange={handleInputChange}
+          onBlur={validateEmail}
+        />
+        <InputField
+          name="cpf"
+          label="CPF"
+          error={errors.cpf}
+          value={state.user.cpf}
+          onChange={handleTelephoneCPFChange}
+          onBlur={validateCPF}
+        />
+        <InputField
+          name="telefone"
+          label="Telefone"
+          error={errors.telefone}
+          value={state.user.telefone}
+          onChange={handleTelephoneCPFChange}
+          onBlur={validateTelephone}
+        />
+        <InputField
+          name="senha"
+          label="Senha"
+          error={errors.senha}
+          value={state.user.senha}
+          type="password"
+          onChange={handleInputChange}
+          disabled={props.operation === "Atualizar"}
+          onBlur={validatePassword}
+        />
         {props.operation === "Criar" && (
-          <FormControl fullWidth error={!!errors.confirmaSenha}>
-            <InputLabel htmlFor="confirmaSenha">Confirmar Senha</InputLabel>
-            <Input
-              name="confirmaSenha"
-              aria-describedby="senha-helper"
-              fullWidth
-              value={state.user.confirmaSenha || ""}
-              onChange={handleInputChange}
-              type="password"
-              onBlur={() =>
-                validateConfirmPassword(
-                  state.user.confirmaSenha,
-                  state.user.senha
-                )
-              }
-              onKeyPress={handleKeyPress}
-            />
-            <FormHelperText id="confirmaSenha-helper">
-              {errors.confirmaSenha}
-            </FormHelperText>
-          </FormControl>
+          <InputField
+            name="confirmaSenha"
+            label="Confirmar Senha"
+            error={errors.confirmaSenha}
+            value={state.user.confirmaSenha}
+            type="password"
+            onChange={handleInputChange}
+            onBlur={validateConfirmPassword}
+          />
         )}
-        <FormControl fullWidth>
-          <InputLabel htmlFor="idCurso">Curso</InputLabel>
-          <NativeSelect
-            name="idCurso"
-            fullWidth
-            value={state.user.idCurso}
-            onChange={handleSelectChange}
-          >
-            {state.classes.map(_class => (
-              <option value={_class.id} key={_class.id}>
-                {_class.nome}
-              </option>
-            ))}
-          </NativeSelect>
-          <FormHelperText>{""}</FormHelperText>
-        </FormControl>
+        <SelectField
+          name="idCurso"
+          label="Curso"
+          value={state.user.idCurso}
+          onChange={handleSelectChange}
+          data={state.classes.map(_class => {
+            return { id: _class.id, description: _class.nome };
+          })}
+        />
+
         <FormControl fullWidth>
           <InputLabel htmlFor="usuarioPerfil">Perfil</InputLabel>
           <NativeSelect

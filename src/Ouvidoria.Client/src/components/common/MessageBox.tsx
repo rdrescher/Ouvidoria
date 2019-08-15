@@ -7,13 +7,13 @@ interface IProps {
   mensagem: string;
 }
 
-export default function AvisoComponent(props: IProps) {
+export default function MessageBox(props: IProps) {
   const [open, setOpen] = useState<boolean>(false);
-  const classes = useStyles();
+  const classes = useStyles(0);
 
   useEffect(() => {
     setOpen(props.aberto);
-  }, [props]);
+  },        [props]);
 
   const handleClose = () => {
     setOpen(false);
