@@ -23,19 +23,21 @@ namespace Ouvidoria.Application.Services
 
         public async Task<Resultado<UsuarioDTO>> Create(CadastroUsuarioDTO cadastroUsuarioDTO)
         {
-            if(cadastroUsuarioDTO.senha != cadastroUsuarioDTO.confirmaSenha)
+            if (cadastroUsuarioDTO.senha != cadastroUsuarioDTO.confirmaSenha)
                 return Resultado<UsuarioDTO>.Failed("As senhas não são correspondentes");
             var usuario = base.Mapper.Map<Usuario>(cadastroUsuarioDTO);
             await Service.Create(usuario);
             var usuarioDTO = MapToDTO(usuario);
-           
+
             return Notificador.HasNotification() ?
                 Resultado<UsuarioDTO>.Failed(Notificador.GetNotifications().Select(x => x.Mensagem).ToArray()) :
                 Resultado<UsuarioDTO>.Successfull(usuarioDTO);
         }
 
+        public async Task<Resultado<List<GenericList>>> GetGenericList() =>
+            Resultado<List<GenericList>>.Successfull(base.MapToGenericList(await Service.GetUsers()));
         public async Task<Resultado<List<UsuarioDTO>>> GetUsers() =>
-            Resultado<List<UsuarioDTO>>.Successfull(base.Mapper.Map<List<UsuarioDTO>>(await Service.GetUsers()));
+            Resultado<List<UsuarioDTO>>.Successfull(base.MapToDTO(await Service.GetUsers()));
 
         public async Task<Resultado<UsuarioDTO>> Update(CadastroUsuarioDTO cadastroUsuarioDTO)
         {

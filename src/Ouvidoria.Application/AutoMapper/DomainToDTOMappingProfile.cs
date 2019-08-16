@@ -8,6 +8,7 @@ namespace Ouvidoria.Application.AutoMapper
     {
         public DomainToDTOMappingProfile()
         {
+            #region DTOs
             CreateMap<Curso, CursoDTO>();
             CreateMap<Departamento, CadastroDepartamentoDTO>();
             CreateMap<Manifestacao, ManifestacaoDTO>();
@@ -18,6 +19,14 @@ namespace Ouvidoria.Application.AutoMapper
             CreateMap<Departamento, DepartamentoDTO>()
                 .ForMember(c => c.usuarioResponsavel,
                                 c => c.MapFrom(d => d.Usuario != null ? d.Usuario.Nome : ""));
+            #endregion
+
+            #region GenericLists
+            CreateMap<Curso, GenericList>()
+                .ConstructUsing(c => new GenericList(c.Id, c.Nome));
+            CreateMap<Usuario, GenericList>()
+                .ConstructUsing(u => new GenericList(u.Id, u.Nome));
+            #endregion
         }
     }
 }

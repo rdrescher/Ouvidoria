@@ -11,5 +11,6 @@ namespace Ouvidoria.Application.Interfaces
         Task<Resultado<List<UsuarioDTO>>> GetUsers();
         Task<Resultado<UsuarioDTO>> Create(CadastroUsuarioDTO cadastroUsuarioDTO);
         Task<Resultado<UsuarioDTO>> Update(CadastroUsuarioDTO cadastroUsuarioDTO);
+        Task<Resultado<List<GenericList>>> GetGenericList();
     }
 }

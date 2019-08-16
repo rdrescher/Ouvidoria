@@ -25,5 +25,8 @@ namespace Ouvidoria.Application.Services
 
         public List<TEntityDTO> MapToDTO(List<TEntity> entity) =>
             this.Mapper.Map<List<TEntityDTO>>(entity);
+
+        public List<GenericList> MapToGenericList(List<TEntity> entity) =>
+            this.Mapper.Map<List<GenericList>>(entity);
     }
 }

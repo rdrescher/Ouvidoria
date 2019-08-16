@@ -1,19 +1,22 @@
 import { Container, Typography } from "@material-ui/core";
-import React, { useState, ChangeEvent, SyntheticEvent } from "react";
+import React, { useEffect, useState, ChangeEvent, SyntheticEvent } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import AtualizacaoDepartamento from "../../models/Departamento/AtualizacaoDepartamento";
 import CadastroDepartamento from "../../models/Departamento/CadastroDepartamento";
 import Departamento from "../../models/Departamento/Departamento";
+import GenericList from "../../models/GenericList";
 import Resultado from "../../models/Resultado";
 import DepartamentoApi from "../../services/DepartamentoApi";
+import UsuarioApi from "../../services/UsuarioApi";
 import * as DialogActions from "../../store/ducks/dialogDatatable/DialogActions";
 import * as MessageBoxActions from "../../store/ducks/messageBox/MessageBoxActions";
-import * as Validations from "../../utils/Validations";
 import Operacao from "../../utils/Operacao";
-import InputField from "../common/formFields/InputField";
+import * as Validations from "../../utils/Validations";
 import ErrorMessages from "../common/formFields/ErrorMessages";
+import InputField from "../common/formFields/InputField";
 import SaveButton from "../common/formFields/SaveButton";
+import SelectField from "../common/formFields/SelectField";
 
 interface IProps {
   department: Departamento;
@@ -31,6 +34,7 @@ interface IState {
   loading: boolean;
   serverErrors: string[];
   formError: string;
+  userList: GenericList[];
 }
 
 const initialState: IState = {
@@ -42,7 +46,8 @@ const initialState: IState = {
   },
   loading: false,
   serverErrors: [],
-  formError: ""
+  formError: "",
+  userList: []
 };
 
 type Props = IProps & IDispatchProps;
@@ -52,6 +57,22 @@ function DepartamentoComponent(props: Props) {
     ...initialState,
     department: props.department
   });
+
+  useEffect(() => {
+    async function getUserList() {
+      let result = await UsuarioApi.GetGenericList();
+      if (result.success) {
+        setState((prevState: IState) => {
+          return {
+            ...prevState,
+            userList: result.data!
+          };
+        });
+      }
+    }
+
+    getUserList();
+  },        []);
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
@@ -135,6 +156,20 @@ function DepartamentoComponent(props: Props) {
     }
   };
 
+  const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    let name = e.target.name;
+    let value = e.target.value;
+    setState((prevState: IState) => {
+      return {
+        ...prevState,
+        department: {
+          ...prevState.department,
+          [name]: value || null
+        }
+      };
+    });
+  };
+
   return (
     <>
       <Container maxWidth="lg">
@@ -145,14 +180,24 @@ function DepartamentoComponent(props: Props) {
               {props.department.nome} permanentemente?
             </Typography>
           )) || (
-            <InputField
-              name="nome"
-              label="Nome"
-              value={state.department.nome}
-              onChange={handleNameChange}
-              error={state.formError}
-              onBlur={validateName}
-            />
+            <>
+              <InputField
+                name="nome"
+                label="Nome"
+                value={state.department.nome}
+                onChange={handleNameChange}
+                error={state.formError}
+                onBlur={validateName}
+              />
+              <SelectField
+                name="idUsuarioResponsavel"
+                label="Usuário Responsável"
+                data={state.userList}
+                value={state.department.idUsuarioResponsavel}
+                onChange={handleSelectChange}
+                nullable={true}
+              />
+            </>
           )}
           {!!state.serverErrors.length && (
             <ErrorMessages errors={state.serverErrors} />

@@ -8,7 +8,7 @@ import {
 import React, { useEffect, useState, ChangeEvent, SyntheticEvent } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
-import Curso from "../../models/Curso/Curso";
+import GenericList from "../../models/GenericList";
 import Resultado from "../../models/Resultado";
 import CadastroUsuario from "../../models/Usuario/CadastroUsuario";
 import Usuario, { UsuarioPerfil } from "../../models/Usuario/Usuario";
@@ -17,13 +17,12 @@ import UsuarioApi from "../../services/UsuarioApi";
 import * as DialogActions from "../../store/ducks/dialogDatatable/DialogActions";
 import * as MessageBoxActions from "../../store/ducks/messageBox/MessageBoxActions";
 import Operacao from "../../utils/Operacao";
-import InputField from "../common/formFields/InputField";
-import SelectField from "../common/formFields/SelectField";
-import SelectDictionary from "../../utils/SelectDictionary";
-import SaveButton from "../common/formFields/SaveButton";
-import ErrorMessages from "../common/formFields/ErrorMessages";
-import CheckBoxField from "../common/formFields/CheckBoxField";
 import * as Validations from "../../utils/Validations";
+import CheckBoxField from "../common/formFields/CheckBoxField";
+import ErrorMessages from "../common/formFields/ErrorMessages";
+import InputField from "../common/formFields/InputField";
+import SaveButton from "../common/formFields/SaveButton";
+import SelectField from "../common/formFields/SelectField";
 
 interface IDispatchProps {
   closeDialog(): void;
@@ -39,7 +38,7 @@ interface IProps {
 interface IState {
   user: CadastroUsuario;
   loading: boolean;
-  classes: SelectDictionary[];
+  classes: GenericList[];
   errors: string[];
 }
 
@@ -87,33 +86,26 @@ function UsuarioComponent(props: Props) {
 
   useEffect(() => {
     async function getClasses() {
-      let result = await CursoApi.entity.get();
-      let classes: Curso[];
-      let classDictionary: SelectDictionary[] = [];
+      let result = await CursoApi.GetGenericList();
+      let classList: GenericList[] = [];
 
       if (result.success) {
-        classes = result.data!;
-        classDictionary = classes.map(_class => {
-          return {
-            id: _class.id,
-            description: _class.nome
-          } as SelectDictionary;
-        });
+        classList = result.data!;
       }
 
       setState((prevState: IState) => {
-        return { ...prevState, classes: classDictionary };
+        return { ...prevState, classes: classList };
       });
     }
     getClasses();
-  }, []);
+  },        []);
 
   useEffect(() => {
     if (!!props.user.nome)
       setState((prevState: IState) => {
         return { ...prevState, user: props.user };
       });
-  }, [props]);
+  },        [props]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let name = e.target.name;
@@ -123,8 +115,8 @@ function UsuarioComponent(props: Props) {
 
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     let name = e.target.name;
-    let value = String(e.target.value) === "-1" ? null : String(e.target.value);
-    setState({ ...state, user: { ...state.user, [name]: value } });
+    let value = e.target.value;
+    setState({ ...state, user: { ...state.user, [name]: value || null } });
   };
 
   const handleActiveChange = () => {

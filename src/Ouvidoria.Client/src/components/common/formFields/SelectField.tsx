@@ -1,18 +1,18 @@
 import {
   FormControl,
+  FormHelperText,
   InputLabel,
-  NativeSelect,
-  FormHelperText
+  NativeSelect
 } from "@material-ui/core";
 import React, { ChangeEvent } from "react";
-import SelectDictionary from "../../../utils/SelectDictionary";
+import GenericList from "../../../models/GenericList";
 
 interface IProps {
   name: string;
   label: string;
   value: string | number | null | undefined;
   onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
-  data: SelectDictionary[];
+  data: GenericList[];
   nullable?: boolean;
 }
 
@@ -23,12 +23,12 @@ export default function SelectField(props: IProps) {
       <NativeSelect
         name={props.name}
         fullWidth
-        value={props.value}
+        value={props.value || ""}
         onChange={props.onChange}
       >
         {props.nullable && (
-          <option value="-1" selected>
-            Selecione
+          <option value="">
+            {""}
           </option>
         )}
         {props.data.map(item => (

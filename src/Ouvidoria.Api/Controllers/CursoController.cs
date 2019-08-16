@@ -41,5 +41,9 @@ namespace Ouvidoria.Api.Controllers
         [HttpDelete("{id:int}")]
         public async Task<ActionResult<Resultado>> Delete(int id) =>
             Ok(await service.Delete(id));
+
+        [HttpGet("[action]")]
+        public async Task<ActionResult<Resultado<List<GenericList>>>> GetGenericList() =>
+            Ok(await service.GetGenericList());
     }
 }

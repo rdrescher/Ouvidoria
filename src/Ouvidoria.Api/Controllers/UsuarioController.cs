@@ -36,5 +36,9 @@ namespace Ouvidoria.Api.Controllers
                 Ok(await service.Update(cadastroUsuarioDTO)) :
                 Ok(Resultado<CursoDTO>.Failed(ModelState.Values.Select(x => x.Errors).ToString()));
         }
+
+        [HttpGet("[action]")]
+        public async Task<ActionResult<Resultado<List<GenericList>>>> GetGenericList() =>
+            Ok(await service.GetGenericList());
     }
 }

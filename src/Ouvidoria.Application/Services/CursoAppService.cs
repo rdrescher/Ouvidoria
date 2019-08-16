@@ -45,6 +45,8 @@ namespace Ouvidoria.Application.Services
         public async Task<Resultado<List<CursoDTO>>> GetClasses() =>
             Resultado<List<CursoDTO>>.Successfull(base.MapToDTO(await Service.GetClasses()));
 
+        public async Task<Resultado<List<GenericList>>> GetGenericList() =>
+            Resultado<List<GenericList>>.Successfull(base.MapToGenericList(await Service.GetClasses()));
 
         public async Task<Resultado<CursoDTO>> Update(CursoDTO cursoDTO)
         {
