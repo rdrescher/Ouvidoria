@@ -2,7 +2,7 @@ import React from "react";
 import { Tooltip, IconButton } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
-import Operacao from "../../../types/Operacao";
+import Operacao from "../../../utils/Operacao";
 
 interface IProps {
   handleCreate: (operacao: Operacao, data: unknown) => void;

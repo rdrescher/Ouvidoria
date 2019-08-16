@@ -7,7 +7,6 @@ import {
   Typography
 } from "@material-ui/core";
 import { AccountCircle, Menu } from "@material-ui/icons";
-import clsx from "clsx";
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";

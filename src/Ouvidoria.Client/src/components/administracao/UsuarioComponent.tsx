@@ -1,29 +1,11 @@
 import {
-  makeStyles,
-  Checkbox,
-  CircularProgress,
   Container,
-  Divider,
-  Fab,
   FormControl,
-  FormControlLabel,
   FormHelperText,
-  Input,
   InputLabel,
-  NativeSelect,
-  Theme,
-  Typography
+  NativeSelect
 } from "@material-ui/core";
-import { green } from "@material-ui/core/colors";
-import { Done, Save } from "@material-ui/icons";
-import clsx from "clsx";
-import React, {
-  useEffect,
-  useState,
-  ChangeEvent,
-  KeyboardEvent,
-  SyntheticEvent
-} from "react";
+import React, { useEffect, useState, ChangeEvent, SyntheticEvent } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import Curso from "../../models/Curso/Curso";
@@ -33,12 +15,19 @@ import Usuario, { UsuarioPerfil } from "../../models/Usuario/Usuario";
 import CursoApi from "../../services/CursoApi";
 import UsuarioApi from "../../services/UsuarioApi";
 import * as DialogActions from "../../store/ducks/dialogDatatable/DialogActions";
-import Operacao from "../../types/Operacao";
+import * as MessageBoxActions from "../../store/ducks/messageBox/MessageBoxActions";
+import Operacao from "../../utils/Operacao";
 import InputField from "../common/formFields/InputField";
 import SelectField from "../common/formFields/SelectField";
+import SelectDictionary from "../../utils/SelectDictionary";
+import SaveButton from "../common/formFields/SaveButton";
+import ErrorMessages from "../common/formFields/ErrorMessages";
+import CheckBoxField from "../common/formFields/CheckBoxField";
+import * as Validations from "../../utils/Validations";
 
 interface IDispatchProps {
   closeDialog(): void;
+  show(message: string): void;
 }
 
 interface IProps {
@@ -50,8 +39,7 @@ interface IProps {
 interface IState {
   user: CadastroUsuario;
   loading: boolean;
-  success: boolean;
-  classes: Curso[];
+  classes: SelectDictionary[];
   errors: string[];
 }
 
@@ -73,54 +61,59 @@ const initialErrorsState: IErrors = {
   confirmaSenha: ""
 };
 
-const initialUserState: CadastroUsuario = {
-  ativo: true,
-  cpf: "",
-  email: "",
-  id: 0,
-  idCurso: 0,
-  nome: "",
-  senha: "",
-  confirmaSenha: "",
-  telefone: "",
-  usuarioPerfil: 1
+const initialState: IState = {
+  user: {
+    ativo: true,
+    cpf: "",
+    email: "",
+    id: 0,
+    idCurso: null,
+    nome: "",
+    senha: "",
+    confirmaSenha: "",
+    telefone: "",
+    usuarioPerfil: 1
+  },
+  classes: [],
+  errors: [],
+  loading: false
 };
 
 type Props = IProps & IDispatchProps;
 
 function UsuarioComponent(props: Props) {
-  const [state, setState] = useState<IState>({
-    user: props.user,
-    loading: false,
-    success: false,
-    classes: [],
-    errors: []
-  });
+  const [state, setState] = useState<IState>(initialState);
   const [errors, setErrors] = useState<IErrors>(initialErrorsState);
-  const classes = useStyles();
 
   useEffect(() => {
     async function getClasses() {
       let result = await CursoApi.entity.get();
       let classes: Curso[];
-      if (!result.success) {
-        classes = [];
-      } else {
+      let classDictionary: SelectDictionary[] = [];
+
+      if (result.success) {
         classes = result.data!;
-        initialUserState.idCurso = classes[0].id;
-      }
-      if (!state.user.nome) {
-        setState((prevState: IState) => {
-          return { ...prevState, classes: classes, user: initialUserState };
-        });
-      } else {
-        setState((prevState: IState) => {
-          return { ...prevState, classes: classes };
+        classDictionary = classes.map(_class => {
+          return {
+            id: _class.id,
+            description: _class.nome
+          } as SelectDictionary;
         });
       }
+
+      setState((prevState: IState) => {
+        return { ...prevState, classes: classDictionary };
+      });
     }
     getClasses();
-  },        []);
+  }, []);
+
+  useEffect(() => {
+    if (!!props.user.nome)
+      setState((prevState: IState) => {
+        return { ...prevState, user: props.user };
+      });
+  }, [props]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let name = e.target.name;
@@ -130,7 +123,7 @@ function UsuarioComponent(props: Props) {
 
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     let name = e.target.name;
-    let value = e.target.value;
+    let value = String(e.target.value) === "-1" ? null : String(e.target.value);
     setState({ ...state, user: { ...state.user, [name]: value } });
   };
 
@@ -150,22 +143,19 @@ function UsuarioComponent(props: Props) {
     e.preventDefault();
     const { user } = state;
     let valid = true;
+    let result: Resultado<Usuario>;
+    let operationMessage = "";
 
-    if (user === props.user || state.success) return;
+    if (user === props.user) return;
 
     if (!validateName()) valid = false;
     if (!validateEmail()) valid = false;
     if (!validateTelephone()) valid = false;
-    if (!validateCPF()) {
-      valid = false;
-    }
+    if (!validateCPF()) valid = false;
+
     if (props.operation === "Criar") {
-      if (!validatePassword()) {
-        valid = false;
-      }
-      if (!validateConfirmPassword()) {
-        valid = false;
-      }
+      if (!validatePassword()) valid = false;
+      if (!validateConfirmPassword()) valid = false;
     }
 
     if (!valid) return;
@@ -174,11 +164,12 @@ function UsuarioComponent(props: Props) {
       return { ...prevState, loading: true };
     });
 
-    let result: Resultado<Usuario>;
     if (props.operation === "Criar") {
       result = await UsuarioApi.create(state.user);
+      operationMessage = "criado";
     } else {
       result = await UsuarioApi.update(state.user.id, state.user);
+      operationMessage = "atualizado";
     }
 
     setState((prevState: IState) => {
@@ -190,13 +181,9 @@ function UsuarioComponent(props: Props) {
         return { ...prevState, errors: result.messages, loading: false };
       });
     } else {
-      setState((prevState: IState) => {
-        return { ...prevState, success: true };
-      });
       props.handleUpdateData(result.data!);
-      setTimeout(() => {
-        props.closeDialog();
-      },         1000);
+      props.closeDialog();
+      props.show(`Usuário ${operationMessage} com sucesso`);
     }
   };
 
@@ -209,11 +196,11 @@ function UsuarioComponent(props: Props) {
 
       return false;
     } else {
-      if (name.length < 2 || name.length > 100) {
+      if (!Validations.hasCorrectSize(name, 3, 100)) {
         setErrors((prevState: IErrors) => {
           return {
             ...prevState,
-            nome: "O nome deve conter entre 2 e 100 caracteres"
+            nome: "O nome deve conter entre 3 e 100 caracteres"
           };
         });
         return false;
@@ -232,16 +219,13 @@ function UsuarioComponent(props: Props) {
         return { ...prevState, email: "Por favor, informe o email" };
       });
       return false;
-    } else {
-      let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-      if (!regex.test(String(email).toLowerCase())) {
-        setErrors((prevState: IErrors) => {
-          return { ...prevState, email: "O email deve ser válido" };
-        });
-        return false;
-      }
+    } else if (!Validations.isValidEmail(email)) {
+      setErrors((prevState: IErrors) => {
+        return { ...prevState, email: "O email deve ser válido" };
+      });
+      return false;
     }
+
     setErrors((prevState: IErrors) => {
       return { ...prevState, email: "" };
     });
@@ -250,8 +234,7 @@ function UsuarioComponent(props: Props) {
 
   const validateTelephone = (): boolean => {
     let phone = state.user.telefone;
-    let regex = /^\d+$/;
-    if (phone && !regex.test(String(phone))) {
+    if (phone && !Validations.onlyNumbers(phone)) {
       setErrors((prevState: IErrors) => {
         return {
           ...prevState,
@@ -259,7 +242,7 @@ function UsuarioComponent(props: Props) {
         };
       });
       return false;
-    } else if (phone && (phone.length < 9 || phone.length > 15)) {
+    } else if (phone && !Validations.hasCorrectSize(phone, 10, 15)) {
       setErrors((prevState: IErrors) => {
         return {
           ...prevState,
@@ -276,14 +259,13 @@ function UsuarioComponent(props: Props) {
 
   const validateCPF = (): boolean => {
     let { cpf } = state.user;
-    let regex = /^\d+$/;
     if (!cpf) {
       setErrors((prevState: IErrors) => {
         return { ...prevState, cpf: "Por favor, informe o cpf" };
       });
       return false;
     } else {
-      if (!regex.test(String(cpf))) {
+      if (!Validations.onlyNumbers(cpf)) {
         setErrors((prevState: IErrors) => {
           return {
             ...prevState,
@@ -291,52 +273,19 @@ function UsuarioComponent(props: Props) {
           };
         });
         return false;
-      } else {
-        let soma = 0;
-        let resto: number;
-        let valid = true;
-        if (cpf === "00000000000") {
-          valid = false;
-        } else {
-          for (let i = 1; i <= 9; i++) {
-            soma = soma + parseInt(cpf.substring(i - 1, i)) * (11 - i);
-          }
-          resto = (soma * 10) % 11;
-
-          if (resto === 10 || resto === 11) {
-            resto = 0;
-          }
-          if (resto !== parseInt(cpf.substring(9, 10))) {
-            valid = false;
-          } else {
-            soma = 0;
-            for (let i = 1; i <= 10; i++) {
-              soma = soma + parseInt(cpf.substring(i - 1, i)) * (12 - i);
-            }
-            resto = (soma * 10) % 11;
-
-            if (resto === 10 || resto === 11) {
-              resto = 0;
-            }
-            if (resto !== parseInt(cpf.substring(10, 11))) {
-              valid = false;
-            }
-          }
-        }
-        if (!valid) {
-          setErrors((prevState: IErrors) => {
-            return {
-              ...prevState,
-              cpf: "O CPF informado é inválido"
-            };
-          });
-          return false;
-        }
+      } else if (!Validations.isValidCPF(cpf)) {
         setErrors((prevState: IErrors) => {
-          return { ...prevState, cpf: "" };
+          return {
+            ...prevState,
+            cpf: "O CPF informado é inválido"
+          };
         });
-        return true;
+        return false;
       }
+      setErrors((prevState: IErrors) => {
+        return { ...prevState, cpf: "" };
+      });
+      return true;
     }
   };
 
@@ -348,11 +297,11 @@ function UsuarioComponent(props: Props) {
       });
       return false;
     } else {
-      if (password.length < 6) {
+      if (!Validations.hasCorrectSize(password, 6, 20)) {
         setErrors((prevState: IErrors) => {
           return {
             ...prevState,
-            senha: "A senha deve conter ao menos 6 caracteres"
+            senha: "A senha deve conter entre 6 e 20 caracteres"
           };
         });
         return false;
@@ -367,7 +316,6 @@ function UsuarioComponent(props: Props) {
   const validateConfirmPassword = (): boolean => {
     let confirmPassword = state.user.confirmaSenha;
     let password = state.user.senha;
-    console.log(password, confirmPassword);
     if (!confirmPassword) {
       setErrors((prevState: IErrors) => {
         return {
@@ -450,14 +398,14 @@ function UsuarioComponent(props: Props) {
             onBlur={validateConfirmPassword}
           />
         )}
+
         <SelectField
           name="idCurso"
           label="Curso"
           value={state.user.idCurso}
           onChange={handleSelectChange}
-          data={state.classes.map(_class => {
-            return { id: _class.id, description: _class.nome };
-          })}
+          data={state.classes}
+          nullable={true}
         />
 
         <FormControl fullWidth>
@@ -478,127 +426,24 @@ function UsuarioComponent(props: Props) {
           </NativeSelect>
           <FormHelperText>{""}</FormHelperText>
         </FormControl>
-        <FormControl fullWidth>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={state.user.ativo === true ? true : false}
-                onChange={handleActiveChange}
-                value={state.user.ativo}
-                name="ativo"
-              />
-            }
-            label="Cadastro ativo"
-          />
-        </FormControl>
-
-        {!!state.errors.length && (
-          <div className={classes.errors}>
-            <Typography variant="h6">Erro ao salvar</Typography>
-            <Divider className={classes.divider} />
-            {state.errors.map(error => (
-              <Typography key={error} variant="body2">
-                {error}
-              </Typography>
-            ))}
-          </div>
-        )}
-
-        <div className={classes.buttons}>
-          <div className={classes.wrapper}>
-            <Fab
-              variant="extended"
-              color="primary"
-              aria-label="salvar"
-              size="small"
-              onClick={handleSubmit}
-              disabled={state.loading}
-              className={clsx({
-                [classes.buttonSuccess]: state.success
-              })}
-            >
-              {(!state.success && (
-                <>
-                  <Save className={classes.btnMargin} />
-                  <Typography
-                    variant="inherit"
-                    className={classes.contentSpacer}
-                  >
-                    Salvar
-                  </Typography>
-                </>
-              )) || (
-                <>
-                  <Done className={classes.btnMargin} />
-                  <Typography
-                    variant="inherit"
-                    className={classes.contentSpacer}
-                  >
-                    Sucesso ao salvar
-                  </Typography>
-                </>
-              )}
-            </Fab>
-            {state.loading && (
-              <CircularProgress size={24} className={classes.buttonProgress} />
-            )}
-          </div>
-        </div>
+        <CheckBoxField
+          name="ativo"
+          label="Usuário Ativo "
+          value={state.user.ativo}
+          onChange={handleActiveChange}
+        />
+        {!!state.errors.length && <ErrorMessages errors={state.errors} />}
+        <SaveButton loading={state.loading} onSubmit={handleSubmit} />
       </form>
     </Container>
   );
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  buttons: {
-    marginBottom: "1.25em",
-    marginTop: ".5em",
-    display: "flex",
-    justifyContent: "flex-end"
-  },
-  btnMargin: {
-    marginRight: theme.spacing(1)
-  },
-  contentSpacer: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1)
-  },
-  buttonProgress: {
-    color: green[500],
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    marginTop: -12,
-    marginLeft: -12
-  },
-  wrapper: {
-    margin: theme.spacing(1),
-    position: "relative"
-  },
-  errors: {
-    backgroundColor: "rgba(239, 83, 80, 0.5)",
-    color: "rgba(0, 0, 0, 0.6)",
-    width: "100%",
-    border: 1,
-    borderRadius: 5,
-    marginTop: 20,
-    padding: 10,
-    paddingRight: 20,
-    paddingLeft: 20
-  },
-  divider: {
-    marginBottom: 15
-  },
-  buttonSuccess: {
-    backgroundColor: green[500],
-    "&:hover": {
-      backgroundColor: green[700]
-    }
-  }
-}));
-
 const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators(DialogActions, dispatch);
+  bindActionCreators(
+    Object.assign({}, MessageBoxActions, DialogActions),
+    dispatch
+  );
 
 export default connect(
   null,

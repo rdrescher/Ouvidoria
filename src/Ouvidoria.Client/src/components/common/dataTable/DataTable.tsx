@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
   makeStyles,
   Dialog,
@@ -16,7 +17,7 @@ import { bindActionCreators, Dispatch } from "redux";
 import IResultado from "../../../models/Resultado";
 import { IApplicationState } from "../../../store";
 import * as DialogActions from "../../../store/ducks/dialogDatatable/DialogActions";
-import Operacao from "../../../types/Operacao";
+import Operacao from "../../../utils/Operacao";
 import DataTableToolBar from "./DataTableToolBar";
 import DataTableToolBarSelected from "./DataTableToolBarSelected";
 
@@ -114,32 +115,34 @@ const initialDialogState: IDialogsState = {
 type Props = IProps & IDispatchProps & IStateProps;
 
 function DataTable(props: Props) {
-  const [state, setState] = useState<IState>(initialState);
+  const [state, setState] = useState<IState>({
+    ...initialState,
+    columns: props.columns,
+    options: {
+      ...initialState.options,
+      customToolbarSelect: selected => (
+        <DataTableToolBarSelected
+          edit={props.edit}
+          delete={props.delete}
+          onHandleClick={handleDialogOpen}
+          selectedData={selected.data[0]}
+        />
+      ),
+      customToolbar: () =>
+        props.create ? (
+          <DataTableToolBar handleCreate={handleDialogOpen} />
+        ) : null,
+      selectableRows: props.edit || props.delete ? "single" : "none"
+    }
+  });
   const [dialogs, setDialogs] = useState<IDialogsState>(initialDialogState);
-  const classes = useStyles();
+  const classes = useStyles()
 
   useEffect(() => {
     setState((prevState: IState) => {
       return {
         ...prevState,
-        loading: true,
-        columns: props.columns,
-        options: {
-          ...prevState.options,
-          customToolbarSelect: selected => (
-            <DataTableToolBarSelected
-              edit={props.edit}
-              delete={props.delete}
-              onHandleClick={handleDialogOpen}
-              selectedData={selected.data[0]}
-            />
-          ),
-          customToolbar: () =>
-            props.create ? (
-              <DataTableToolBar handleCreate={handleDialogOpen} />
-            ) : null,
-          selectableRows: props.edit || props.delete ? "single" : "none"
-        }
+        loading: true
       };
     });
 
@@ -155,7 +158,7 @@ function DataTable(props: Props) {
     }
 
     getData();
-  },        []);
+  }, []);
 
   useEffect(() => {
     if (props.newData === null) return;
@@ -196,7 +199,7 @@ function DataTable(props: Props) {
       default:
         break;
     }
-  },        [props.newData]);
+  }, [props.newData]);
 
   useEffect(() => {
     if (!props.dialogIsOpen && dialogs.selectedIndex !== -10) {
@@ -205,7 +208,7 @@ function DataTable(props: Props) {
       props.openDialog(dialogs.operation, selectedData);
       props.handle(dialogs.operation, selectedData);
     }
-  },        [dialogs]);
+  }, [dialogs]);
 
   const handleDialogOpen = (operation: Operacao, data: unknown = null) => {
     setDialogs({

@@ -10,6 +10,6 @@ export default interface ICadastroUsuario
     senha: string;
     confirmaSenha: string;
     ativo: boolean;
-    idCurso: number;
+    idCurso: number | null | undefined;
     usuarioPerfil: UsuarioPerfil;
 }

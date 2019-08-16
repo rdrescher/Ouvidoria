@@ -5,7 +5,7 @@ import DataTable from "../../components/common/dataTable/DataTable";
 import Departamento from "../../models/Departamento/Departamento";
 import Resultado from "../../models/Resultado";
 import DepartamentoApi from "../../services/DepartamentoApi";
-import Operacao from "../../types/Operacao";
+import Operacao from "../../utils/Operacao";
 
 const headers: MUIDataTableColumnDef[] = [
   { label: "Nome", name: "nome" },

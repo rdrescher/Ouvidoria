@@ -7,7 +7,7 @@ import Resultado from "../../models/Resultado";
 import CadastroUsuario from "../../models/Usuario/CadastroUsuario";
 import Usuario, { UsuarioPerfil } from "../../models/Usuario/Usuario";
 import UsuarioApi from "../../services/UsuarioApi";
-import Operacao from "../../types/Operacao";
+import Operacao from "../../utils/Operacao";
 
 const headers: MUIDataTableColumnDef[] = [
   {

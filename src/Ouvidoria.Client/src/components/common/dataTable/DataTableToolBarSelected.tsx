@@ -4,7 +4,7 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import { Delete, Edit } from "@material-ui/icons";
 import React from "react";
-import Operacao from "../../../types/Operacao";
+import Operacao from "../../../utils/Operacao";
 
 interface IProps {
   delete: boolean;

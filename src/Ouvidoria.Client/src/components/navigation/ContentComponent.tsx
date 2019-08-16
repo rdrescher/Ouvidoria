@@ -15,6 +15,7 @@ import QuestionarioView from "../../views/manifestacoes/QuestionarioView";
 import ReclamacaoView from "../../views/manifestacoes/ReclamacaoView";
 import SolicitacaoView from "../../views/manifestacoes/SolicitacaoView";
 import SugestaoView from "../../views/manifestacoes/SugestaoView";
+import MessageBox from "../common/MessageBox";
 
 interface IStateProps {
   sidebarIsOpen: boolean;
@@ -42,6 +43,7 @@ function ContentComponent(props: IStateProps) {
           <Route exact path="/usuarios" component={UsuarioView} />
           <Route exact path="/" component={DashboardView} />
         </Switch>
+        <MessageBox />
       </main>
     </Container>
   );
