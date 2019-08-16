@@ -1,125 +1,163 @@
-import {
-  makeStyles,
-  Container,
-  Fab,
-  FormControl,
-  FormHelperText,
-  Input,
-  InputLabel,
-  Theme
-} from "@material-ui/core";
-import { Save } from "@material-ui/icons";
-import React, {
-  useEffect,
-  useState,
-  ChangeEvent,
-  SyntheticEvent,
-  KeyboardEvent
-} from "react";
-import ICurso from "../../models/Curso";
+import { Container, Typography } from "@material-ui/core";
+import React, { useState, ChangeEvent, SyntheticEvent } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators, Dispatch } from "redux";
+import Curso from "../../models/Curso/Curso";
+import Resultado from "../../models/Resultado";
 import CursoApi from "../../services/CursoApi";
-import Operacao from "../../types/Operacao";
-import IResultado from "../../models/Resultado";
+import * as DialogActions from "../../store/ducks/dialogDatatable/DialogActions";
+import Operacao from "../../utils/Operacao";
+import * as MessageBoxActions from "../../store/ducks/messageBox/MessageBoxActions";
+import * as Validations from "../../utils/Validations";
+import InputField from "../common/formFields/InputField";
+import SaveButton from "../common/formFields/SaveButton";
+import ErrorMessages from "../common/formFields/ErrorMessages";
 
 interface IProps {
-  curso: ICurso;
-  operacao: Operacao;
-  fechaModal: (e: SyntheticEvent, operacao: string) => void;
+  class: Curso;
+  operation: Operacao;
+  handleUpdateData: (_class: Curso) => void;
 }
 
-interface IError {
-  mensagem: string;
-  possuiErro: boolean;
+interface IDispatchProps {
+  closeDialog(): void;
+  show(message: string): void;
 }
 
-export default function CursoComponent(props: IProps) {
-  const [curso, setCurso] = useState<ICurso>(props.curso);
-  const [erro, setErro] = useState<IError>({
-    mensagem: "",
-    possuiErro: false
+interface IState {
+  class: Curso;
+  loading: boolean;
+  serverErrors: string[];
+  formError: string;
+}
+
+const initialState: IState = {
+  class: { id: 0, nome: "" },
+  loading: false,
+  serverErrors: [],
+  formError: ""
+};
+
+type Props = IProps & IDispatchProps;
+
+function CursoComponent(props: Props) {
+  const [state, setState] = useState<IState>({
+    ...initialState,
+    class: props.class
   });
-
-  const classes = useStyles();
-
-  useEffect(() => {
-    setCurso(props.curso);
-  }, [props]);
-
-  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setCurso({ ...curso, nome: e.target.value });
-  };
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    if (curso === props.curso) return;
-    if (curso.nome.length === 0) {
-      setErro({ mensagem: "Insira o nome do curso", possuiErro: true });
-    } else if (curso.nome.length < 2 || curso.nome.length > 50) {
-      setErro({
-        mensagem:
-          "O nome do curso deve possuir entre dois e cinquênta caracteres",
-        possuiErro: true
+    let valid = true;
+    let result: Resultado<Curso>;
+    let operationMessage = "";
+
+    if (state.class === props.class && props.operation !== "Deletar") return;
+    if (!validateName() && props.operation !== "Deletar") valid = false;
+
+    if (!valid) return;
+
+    setState((prevState: IState) => {
+      return { ...prevState, loading: true };
+    });
+
+    switch (props.operation) {
+      case "Criar":
+        result = await CursoApi.entity.create(state.class);
+        operationMessage = "criado";
+        break;
+      case "Atualizar":
+        result = await CursoApi.entity.update(props.class.id, state.class);
+        operationMessage = "atualizado";
+        break;
+      case "Deletar":
+        result = await CursoApi.entity.delete(props.class.id);
+        operationMessage = "excluído";
+        break;
+      default:
+        result = { data: null, messages: [], success: false };
+        break;
+    }
+
+    if (result.success) {
+      setState((prevState: IState) => {
+        return { ...prevState, loading: false };
       });
+      props.handleUpdateData(result.data!);
+      props.closeDialog();
+      props.show(`Curso ${operationMessage} com sucesso!`);
     } else {
-      let retorno: IResultado<ICurso>;
-      if (props.operacao === "Criar") {
-        retorno = await CursoApi.entity.create(curso);
-      } else {
-        retorno = await CursoApi.entity.update(props.curso.id, curso);
-      }
-      if (retorno.success) {
-        setErro({ mensagem: "", possuiErro: false });
-        props.fechaModal(e, props.operacao);
-      } else {
-        setErro({ mensagem: retorno.message, possuiErro: true });
-      }
+      setState((prevState: IState) => {
+        return { ...prevState, serverErrors: result.messages, loading: false };
+      });
     }
   };
 
-  const handleKeyPress = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter") e.preventDefault();
+  const validateName = (): boolean => {
+    let name = state.class.nome;
+    if (!name) {
+      setState((prevState: IState) => {
+        return { ...prevState, formError: "Insira o nome do curso" };
+      });
+      return false;
+    } else if (!Validations.hasCorrectSize(name, 2, 50)) {
+      setState((prevState: IState) => {
+        return {
+          ...prevState,
+          formError: "O nome do curso deve possuir entre 2 e 50 caracteres"
+        };
+      });
+      return false;
+    }
+    return true;
+  };
+
+  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    setState((prevState: IState) => {
+      return {
+        ...prevState,
+        class: { ...prevState.class, nome: value }
+      };
+    });
   };
 
   return (
-    <Container maxWidth="lg">
-      <form>
-        <FormControl fullWidth error={erro.possuiErro}>
-          <InputLabel htmlFor="nome">Nome</InputLabel>
-          <Input
-            id="nome"
-            aria-describedby="nome-helper"
-            fullWidth
-            value={curso.nome}
-            onChange={handleNameChange}
-            onKeyPress={handleKeyPress}
-          />
-          <FormHelperText id="nome-helper">{erro.mensagem}</FormHelperText>
-        </FormControl>
-        <div className={classes.buttons}>
-          <Fab
-            variant="extended"
-            color="primary"
-            aria-label="salvar"
-            size="medium"
-            onClick={handleSubmit}
-          >
-            <Save className={classes.btnMargin} />
-            Salvar
-          </Fab>
-        </div>
-      </form>
-    </Container>
+    <>
+      <Container maxWidth="lg">
+        <form style={{ marginTop: 30, marginBottom: 10 }}>
+          {(props.operation === "Deletar" && (
+            <Typography variant="body1">
+              Você tem certeza que deseja excluir curso {props.class.nome}{" "}
+              permanentemente?
+            </Typography>
+          )) || (
+            <InputField
+              name="nome"
+              label="Curso"
+              value={state.class.nome}
+              onChange={handleNameChange}
+              onBlur={validateName}
+              error={state.formError}
+            />
+          )}
+          {!!state.serverErrors.length && (
+            <ErrorMessages errors={state.serverErrors} />
+          )}
+          <SaveButton loading={state.loading} onSubmit={handleSubmit} />
+        </form>
+      </Container>
+    </>
   );
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  buttons: {
-    marginBottom: "1.25em",
-    marginTop: ".5em",
-    display: "flex",
-    justifyContent: "flex-end"
-  },
-  btnMargin: {
-    marginRight: theme.spacing(1)
-  }
-}));
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(
+    Object.assign({}, MessageBoxActions, DialogActions),
+    dispatch
+  );
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(CursoComponent);

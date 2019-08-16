@@ -1,7 +1,8 @@
 using Ouvidoria.Application.Interfaces;
-using Ouvidoria.Application.DTOs;
+using Ouvidoria.Application.DTO;
 using Ouvidoria.Domain.Models;
 using AutoMapper;
+using System.Collections.Generic;
 
 namespace Ouvidoria.Application.Services
 {
@@ -18,5 +19,14 @@ namespace Ouvidoria.Application.Services
 
         public TEntityDTO MapToDTO(TEntity entity) =>
             this.Mapper.Map<TEntityDTO>(entity);
+
+        public List<TEntity> MapToDomain(List<TEntityDTO> entityDTO) =>
+            this.Mapper.Map<List<TEntity>>(entityDTO);
+
+        public List<TEntityDTO> MapToDTO(List<TEntity> entity) =>
+            this.Mapper.Map<List<TEntityDTO>>(entity);
+
+        public List<GenericList> MapToGenericList(List<TEntity> entity) =>
+            this.Mapper.Map<List<GenericList>>(entity);
     }
 }

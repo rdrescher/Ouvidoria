@@ -31,7 +31,6 @@ namespace Ouvidoria.Services
         {
             if (!base.Validate(new CursoValidation(), curso)) return;
             if (await this.ClassNameAlreadyExists(curso.Nome)) return;
-            if (!await ClassExists(curso.Id)) return;
 
             await repository.Update(curso);
         }
@@ -45,13 +44,6 @@ namespace Ouvidoria.Services
             return true;
         }
 
-        private async Task<bool> ClassExists(int id)
-        {
-            if (await repository.GetById(id) != null) return true;
-            Notify("Curso não encontrado");
-            return false;
-        }
-
         public async Task Delete(int id)
         {
             if ((await repository.GetStudentsByClass(id)).Any())
@@ -61,5 +53,8 @@ namespace Ouvidoria.Services
             }
             await repository.Delete(id);
         }
+
+        public async Task<Curso> GetById(int id) =>
+            await repository.GetById(id);
     }
 }

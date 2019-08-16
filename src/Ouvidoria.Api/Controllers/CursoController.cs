@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Ouvidoria.Application.DTOs;
+using Ouvidoria.Application.DTO;
 using Ouvidoria.Application.Interfaces;
 using Ouvidoria.Application.Utils;
 
@@ -41,5 +41,9 @@ namespace Ouvidoria.Api.Controllers
         [HttpDelete("{id:int}")]
         public async Task<ActionResult<Resultado>> Delete(int id) =>
             Ok(await service.Delete(id));
+
+        [HttpGet("[action]")]
+        public async Task<ActionResult<Resultado<List<GenericList>>>> GetGenericList() =>
+            Ok(await service.GetGenericList());
     }
 }

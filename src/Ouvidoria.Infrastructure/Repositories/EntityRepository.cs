@@ -41,18 +41,23 @@ namespace Ouvidoria.Infrastructure.Repositories
         public async Task<int> SaveChanges() => 
             await Db.SaveChangesAsync();
 
-        public async Task<IEnumerable<TEntity>> Search(Expression<Func<TEntity, bool>> predicate) =>
+        public async Task<List<TEntity>> Search(Expression<Func<TEntity, bool>> predicate) =>
             await DbSet.AsNoTracking().Where(predicate).ToListAsync();
 
         public virtual async Task Update(TEntity entity)
         {
-            entity.SetUpdatedDate();
+            var CreationDate = await GetCreationDate(entity.Id);
+            entity.SetDates(CreationDate);
             DbSet.Update(entity);
             await SaveChanges();
         }
 
+        private async Task<DateTime> GetCreationDate(int id) => 
+            await DbSet.Where(x => x.Id == id)
+                .Select(x => x.DataInsercao)
+                .FirstOrDefaultAsync();
+
         public void Dispose() => 
             Db?.Dispose();
-
     }
 }

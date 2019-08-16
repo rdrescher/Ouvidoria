@@ -4,8 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Ouvidoria.CrossCutting.IoC;
-using Ouvidoria.Application.Extensions;
-using AutoMapper;
+using Ouvidoria.Api.Configurations;
 
 namespace Ouvidoria.Api
 {
@@ -18,7 +17,6 @@ namespace Ouvidoria.Api
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors(options =>
@@ -30,13 +28,13 @@ namespace Ouvidoria.Api
                         .AllowCredentials()
                 );
             });
-            //services.AddAutoMapper(typeof(Startup));
-            services.AddAutoMapperSetup(typeof(Startup));
+            
+            services.SwaggerServiceConfig();
+            services.AutoMapperServiceConfig();
             services.AddDependencies(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -51,6 +49,7 @@ namespace Ouvidoria.Api
             app.UseCors("Development");
             app.UseHttpsRedirection();
             app.UseMvc();
+            app.SwaggerApplicationConfig();
         }
     }
 }

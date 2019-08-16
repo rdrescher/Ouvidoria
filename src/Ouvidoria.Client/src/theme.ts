@@ -20,7 +20,6 @@ const theme = createMuiTheme({
     text: {
       secondary: white
     },
-
   },
   overrides: {
     MuiAppBar: {
@@ -46,6 +45,9 @@ const theme = createMuiTheme({
     MuiTypography: {
       h6: {
         fontWeight: 400
+      },
+      colorInherit: {
+        color: "rgba(0, 0, 0, 0.54)"
       }
     },
     MuiDivider: {
@@ -58,25 +60,34 @@ const theme = createMuiTheme({
         color: "#999"
       }
     },
-    MuiMenu: {
-      paper: {
-        top: "65px !important"
-      }
-    },
     MuiTableCell: {
       head: {
-        color: "black"
+        color: "black",
+        lineHeight: "0.3125rem"
+      },
+      body: {
+        padding: "6px 24px 6px 16px"
       }
     },
     MuiInputLabel: {
       root: {
-        color: "rgba(0.0, 0, 0.2, 0.3)"
+        color: "rgba(0.0, 0, 0.2, 0.5)"
       }
     },
     MuiDialog: {
       root: {
         // tslint:disable-next-line:no-any
         zIndex: "10000 !important" as any
+      }
+    },
+    MuiIconButton: {
+      colorInherit: {
+        color: "rgba(0, 0, 0, 0.54)"
+      },
+    },
+    MuiTablePagination: {
+      input: {
+        color: "rgba(0, 0, 0, 0.54)"
       }
     }
   }

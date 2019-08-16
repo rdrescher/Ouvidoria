@@ -259,8 +259,6 @@ namespace Ouvidoria.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(11)");
 
-                    b.Property<int?>("CursoId");
-
                     b.Property<DateTime>("DataAtualizacao")
                         .HasColumnType("datetime");
 
@@ -288,7 +286,7 @@ namespace Ouvidoria.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CursoId");
+                    b.HasIndex("IdCurso");
 
                     b.ToTable("Usuario");
                 });
@@ -361,8 +359,8 @@ namespace Ouvidoria.Infrastructure.Migrations
             modelBuilder.Entity("Ouvidoria.Domain.Models.Usuario", b =>
                 {
                     b.HasOne("Ouvidoria.Domain.Models.Curso", "Curso")
-                        .WithMany()
-                        .HasForeignKey("CursoId");
+                        .WithMany("Usuarios")
+                        .HasForeignKey("IdCurso");
                 });
 #pragma warning restore 612, 618
         }

@@ -29,6 +29,10 @@ namespace Ouvidoria.Infrastructure.Mappings
             builder.Property(c => c.Telefone)
                 .HasColumnType("varchar(15)");
 
+            builder.HasOne(c => c.Curso)
+                .WithMany(c => c.Usuarios)
+                .HasForeignKey(c => c.IdCurso);
+
             builder.Property(c => c.DataInsercao)
                 .IsRequired()
                 .HasColumnType("datetime");

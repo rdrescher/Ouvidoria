@@ -12,4 +12,40 @@
         "**/.vscode": true,
     },
     "workbench.iconTheme": "material-icon-theme",
+    "workbench.colorCustomizations": {
+        "[Monokai Pro (Filter Octagon)]": {
+            "list.warningForeground": "#ff7b00",
+        }
+      },
+      "editor.tokenColorCustomizations": {
+        "[Monokai Pro (Filter Octagon)]": {
+          "functions": "#f7da8a",
+          "comments": "#6A9955",
+          "keywords": "#4EC9B0",
+          "variables": "#ADD5FF",
+          "types": "#4EC9B0",
+          "strings": "#ffd76d",
+          "textMateRules": [
+            {
+              "scope": [
+                "keyword",
+                "keyword.control",
+                "keyword.operator",
+                "keyword.other.template.begin",
+                "keyword.other.template.end",
+                "storage",
+                "storage.type.extends",
+                "storage.modifier",
+                "constant",
+                
+              ],
+              "settings": {
+                "foreground": "#569cd6"
+              }
+            }
+          ],
+          "numbers": "#c39ac9",
+        }
+      },
+      "workbench.colorTheme": "Monokai Pro (Filter Octagon)",
 }
