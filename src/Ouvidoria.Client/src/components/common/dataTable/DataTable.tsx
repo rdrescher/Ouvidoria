@@ -5,7 +5,8 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  LinearProgress
+  LinearProgress,
+  Grow
 } from "@material-ui/core";
 import MUIDataTable, {
   MUIDataTableColumnDef,
@@ -20,6 +21,7 @@ import * as DialogActions from "../../../store/ducks/dialogDatatable/DialogActio
 import Operacao from "../../../utils/Operacao";
 import DataTableToolBar from "./DataTableToolBar";
 import DataTableToolBarSelected from "./DataTableToolBarSelected";
+import { TransitionProps } from "@material-ui/core/transitions";
 
 interface IState {
   data: object[];
@@ -112,6 +114,12 @@ const initialDialogState: IDialogsState = {
   selectedIndex: -10
 };
 
+const Transition = React.forwardRef<unknown, TransitionProps>(
+  function Transition(props, ref) {
+    return <Grow ref={ref} {...props} />;
+  }
+);
+
 type Props = IProps & IDispatchProps & IStateProps;
 
 function DataTable(props: Props) {
@@ -136,7 +144,7 @@ function DataTable(props: Props) {
     }
   });
   const [dialogs, setDialogs] = useState<IDialogsState>(initialDialogState);
-  const classes = useStyles()
+  const classes = useStyles();
 
   useEffect(() => {
     setState((prevState: IState) => {
@@ -239,6 +247,7 @@ function DataTable(props: Props) {
         aria-labelledby="form-dialog-title"
         maxWidth="sm"
         fullWidth
+        TransitionComponent={Transition}
       >
         <DialogTitle id="form-dialog-title">{dialogs.operation}</DialogTitle>
         <Divider className={classes.divider} />
