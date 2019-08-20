@@ -10,7 +10,7 @@ namespace Ouvidoria.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DepartamentoController: ControllerBase
+    public class DepartamentoController: BaseController
     {
         private readonly IDepartamentoAppService service;
         public DepartamentoController(IDepartamentoAppService service)

@@ -19,20 +19,11 @@ namespace Ouvidoria.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
-            {
-                options.AddPolicy("Development",
-                    builder => builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials()
-                );
-            });
-            
+            services.AddDependencies(Configuration);
+            services.IdentityServiceConfig();
             services.SwaggerServiceConfig();
             services.AutoMapperServiceConfig();
-            services.AddDependencies(Configuration);
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.ApiServiceConfig();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -43,13 +34,13 @@ namespace Ouvidoria.Api
             }
             else
             {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseAuthentication();
             app.UseCors("Development");
-            app.UseHttpsRedirection();
-            app.UseMvc();
             app.SwaggerApplicationConfig();
+            app.ApiApplicationConfig();
         }
     }
 }

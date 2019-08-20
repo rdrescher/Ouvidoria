@@ -10,14 +10,14 @@ using Ouvidoria.Infrastructure.Context;
 namespace Ouvidoria.Infrastructure.Migrations
 {
     [DbContext(typeof(OuvidoriaContext))]
-    [Migration("20190625203029_Ajustes-Usuario-Curso")]
-    partial class AjustesUsuarioCurso
+    [Migration("20190820005433_Domain")]
+    partial class Domain
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -290,7 +290,7 @@ namespace Ouvidoria.Infrastructure.Migrations
 
                     b.HasIndex("IdCurso");
 
-                    b.ToTable("Usuario");
+                    b.ToTable("AspNetUsers");
                 });
 
             modelBuilder.Entity("Ouvidoria.Domain.Models.Departamento", b =>

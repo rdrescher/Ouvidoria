@@ -10,6 +10,7 @@ namespace Ouvidoria.Application.AutoMapper
             {
                 cfg.AddProfile(new DomainToDTOMappingProfile());
                 cfg.AddProfile(new DTOToDomainMappingProfile());
+                cfg.AddProfile(new DTOToIdentityMappingProfile());
             });
         }
     }

@@ -1,14 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Ouvidoria.Domain.Models;
+using Ouvidoria.CrossCutting.Identity.Models;
 
-namespace Ouvidoria.Infrastructure.Mappings
+namespace Ouvidoria.CrossCutting.Identity.Mappings
 {
-    public class UsuarioMapping: IEntityTypeConfiguration<Usuario>
+    public class UsuarioMapping: IEntityTypeConfiguration<AspNetUser>
     {
-        public void Configure(EntityTypeBuilder<Usuario> builder)
+        public void Configure(EntityTypeBuilder<AspNetUser> builder)
         {
-            builder.HasKey(c => c.Id);
 
             builder.Property(c => c.Nome)
                 .IsRequired()
@@ -18,17 +17,8 @@ namespace Ouvidoria.Infrastructure.Mappings
                 .IsRequired()
                 .HasColumnType("varchar(11)");
 
-            builder.Property(c => c.Email)
-                .IsRequired()
-                .HasColumnType("varchar(100)");
-
-            builder.Property(c => c.Telefone)
-                .HasColumnName("PhoneNumber")
+            builder.Property(c => c.PhoneNumber)
                 .HasColumnType("varchar(15)");
-
-            builder.HasOne(c => c.Curso)
-                .WithMany(c => c.Usuarios)
-                .HasForeignKey(c => c.IdCurso);
 
             builder.Property(c => c.DataInsercao)
                 .IsRequired()
@@ -37,8 +27,6 @@ namespace Ouvidoria.Infrastructure.Mappings
             builder.Property(c => c.DataAtualizacao)
                 .IsRequired()
                 .HasColumnType("datetime");
-
-            builder.ToTable("AspNetUsers");
         }
     }
 }

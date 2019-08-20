@@ -5,6 +5,7 @@
     <ProjectReference Include="..\Ouvidoria.Services\Ouvidoria.Services.csproj" />
     <ProjectReference Include="..\Ouvidoria.Infrastructure\Ouvidoria.Infrastructure.csproj" />
     <ProjectReference Include="..\Ouvidoria.Application\Ouvidoria.Application.csproj" />
+    <ProjectReference Include="..\Ouvidoria.CrossCutting.Identity\Ouvidoria.CrossCutting.Identity.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

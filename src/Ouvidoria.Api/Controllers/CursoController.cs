@@ -11,7 +11,7 @@ namespace Ouvidoria.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CursoController : ControllerBase
+    public class CursoController : BaseController
     {
         private readonly ICursoAppService service;
         public CursoController(ICursoAppService service)

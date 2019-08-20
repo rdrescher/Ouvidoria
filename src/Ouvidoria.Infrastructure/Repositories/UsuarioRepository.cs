@@ -19,8 +19,9 @@ namespace Ouvidoria.Infrastructure.Repositories
 
         public async Task<string> GetPassword(int id)
         {
+            //TODO
             return await base.DbSet.Where(x => x.Id == id)
-                .Select(x => x.Senha)
+                .Select(x => x.Nome)
                 .FirstOrDefaultAsync();
         }
     }

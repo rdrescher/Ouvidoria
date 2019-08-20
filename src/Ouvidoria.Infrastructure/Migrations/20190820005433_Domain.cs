@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Ouvidoria.Infrastructure.Migrations
 {
-    public partial class Init : Migration
+    public partial class Domain : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -23,34 +23,14 @@ namespace Ouvidoria.Infrastructure.Migrations
                     table.PrimaryKey("PK_Curso", x => x.Id);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Usuario",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    DataAtualizacao = table.Column<DateTime>(type: "datetime", nullable: false),
-                    DataInsercao = table.Column<DateTime>(type: "datetime", nullable: false),
-                    Nome = table.Column<string>(type: "varchar(100)", nullable: false),
-                    Email = table.Column<string>(type: "varchar(100)", nullable: false),
-                    Telefone = table.Column<string>(type: "varchar(15)", nullable: true),
-                    CPF = table.Column<string>(type: "varchar(11)", nullable: false),
-                    Senha = table.Column<string>(type: "varchar(1000)", nullable: false),
-                    Ativo = table.Column<bool>(nullable: false),
-                    IdCurso = table.Column<int>(nullable: true),
-                    UsuarioPerfil = table.Column<int>(nullable: false),
-                    CursoId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Usuario", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Usuario_Curso_CursoId",
-                        column: x => x.CursoId,
-                        principalTable: "Curso",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
+            migrationBuilder.AddForeignKey(
+                name: "FK_Usuario_Curso_IdCurso",
+                table: "AspNetUsers",
+                column: "IdCurso",
+                principalTable: "Curso",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict
+            );
 
             migrationBuilder.CreateTable(
                 name: "Departamento",
@@ -67,9 +47,9 @@ namespace Ouvidoria.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Departamento", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Departamento_Usuario_IdUsuarioResponsavel",
+                        name: "FK_Departamento_AspNetUsers_IdUsuarioResponsavel",
                         column: x => x.IdUsuarioResponsavel,
-                        principalTable: "Usuario",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -92,9 +72,9 @@ namespace Ouvidoria.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Questionario", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Questionario_Usuario_IdUsuarioCriador",
+                        name: "FK_Questionario_AspNetUsers_IdUsuarioCriador",
                         column: x => x.IdUsuarioCriador,
-                        principalTable: "Usuario",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -124,9 +104,9 @@ namespace Ouvidoria.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Manifestacao_Usuario_IdUsuario",
+                        name: "FK_Manifestacao_AspNetUsers_IdUsuario",
                         column: x => x.IdUsuario,
-                        principalTable: "Usuario",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -175,9 +155,9 @@ namespace Ouvidoria.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_QuestionarioResposta_Usuario_IdUsuario",
+                        name: "FK_QuestionarioResposta_AspNetUsers_IdUsuario",
                         column: x => x.IdUsuario,
-                        principalTable: "Usuario",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -294,11 +274,6 @@ namespace Ouvidoria.Infrastructure.Migrations
                 name: "IX_Resposta_IdQuestionarioResposta",
                 table: "Resposta",
                 column: "IdQuestionarioResposta");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Usuario_CursoId",
-                table: "Usuario",
-                column: "CursoId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -323,9 +298,6 @@ namespace Ouvidoria.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Questionario");
-
-            migrationBuilder.DropTable(
-                name: "Usuario");
 
             migrationBuilder.DropTable(
                 name: "Curso");

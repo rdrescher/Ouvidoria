@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Ouvidoria.Services\Ouvidoria.Services.csproj" />
     <ProjectReference Include="..\Ouvidoria.Domain\Ouvidoria.Domain.csproj" />
+    <ProjectReference Include="..\Ouvidoria.CrossCutting.Identity\Ouvidoria.CrossCutting.Identity.csproj" />
   </ItemGroup>
 
   <ItemGroup>

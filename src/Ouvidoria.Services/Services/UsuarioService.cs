@@ -27,7 +27,6 @@ namespace Ouvidoria.Services
             if (await this.EmailAlreadyExists(usuario.Email)) return;
             if (await this.CPFAlreadyExists(usuario.CPF)) return;
             if (!await this.IsValidClass(usuario.IdCurso)) return;
-            usuario.HashPassword();
 
             await repository.Create(usuario);
         }

@@ -9,6 +9,7 @@ using Ouvidoria.Domain.Notificacoes;
 using Microsoft.EntityFrameworkCore;
 using Ouvidoria.Application.Interfaces;
 using Ouvidoria.Application.Services;
+using Ouvidoria.CrossCutting.Identity.Context;
 
 namespace Ouvidoria.CrossCutting.IoC
 {
@@ -53,6 +54,8 @@ namespace Ouvidoria.CrossCutting.IoC
 
             //DataContext
             services.AddDbContext<OuvidoriaContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             return services;

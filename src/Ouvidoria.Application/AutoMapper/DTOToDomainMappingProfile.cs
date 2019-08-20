@@ -12,7 +12,7 @@ namespace Ouvidoria.Application.AutoMapper
             CreateMap<CadastroDepartamentoDTO, Departamento>()
                 .ConstructUsing(d => new Departamento(d.nome, d.idUsuarioResponsavel));
             CreateMap<CadastroUsuarioDTO, Usuario>()
-                .ConstructUsing(u => new Usuario(u.nome, u.email, u.telefone, u.cpf, u.senha, u.idCurso, u.usuarioPerfil));
+                .ConstructUsing(u => new Usuario(u.nome, u.email, u.telefone, u.cpf, u.idCurso));
             CreateMap<CursoDTO, Curso>()
                 .ConstructUsing(c => new Curso(c.nome));
             CreateMap<DepartamentoDTO, Departamento>();
