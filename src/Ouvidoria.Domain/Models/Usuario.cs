@@ -37,9 +37,6 @@ namespace Ouvidoria.Domain.Models
         public virtual List<Questionario> Questionarios { get; private set; }
         public virtual List<QuestionarioResposta> QuestionarioResposta { get; private set; }
 
-        public void AjustToUpdate(string password)
-        {
-            this.Curso = null;
-        }
+        public void ClearClassToUpdate() => this.Curso = null;
     }
 }

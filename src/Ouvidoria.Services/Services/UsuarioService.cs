@@ -21,14 +21,14 @@ namespace Ouvidoria.Services
             this.cursoService = cursoService;
         }
 
-        public async Task Create(Usuario usuario)
+        public async Task<bool> IsValidUser(Usuario usuario)
         {
-            if (!base.Validate(new UsuarioValidation(), usuario)) return;
-            if (await this.EmailAlreadyExists(usuario.Email)) return;
-            if (await this.CPFAlreadyExists(usuario.CPF)) return;
-            if (!await this.IsValidClass(usuario.IdCurso)) return;
+            if (!base.Validate(new UsuarioValidation(), usuario)) return false;
+            if (await this.EmailAlreadyExists(usuario.Email)) return false;
+            if (await this.CPFAlreadyExists(usuario.CPF)) return false;
+            if (!await this.IsValidClass(usuario.IdCurso)) return false;
 
-            await repository.Create(usuario);
+            return true;
         }
 
         public async Task<List<Usuario>> GetUsers() =>
@@ -37,13 +37,12 @@ namespace Ouvidoria.Services
 
         public async Task Update(Usuario usuario)
         {
-            var senha = await repository.GetPassword(usuario.Id);
-            usuario.AjustToUpdate(senha);
 
             if (!base.Validate(new UsuarioValidation(), usuario)) return;
             if (await this.EmailAlreadyExists(usuario.Email, usuario.Id)) return;
             if (await this.CPFAlreadyExists(usuario.CPF, usuario.Id)) return;
             if (!await this.IsValidClass(usuario.IdCurso)) return;
+            usuario.ClearClassToUpdate();
 
             await repository.Update(usuario);
         }
@@ -58,7 +57,7 @@ namespace Ouvidoria.Services
 
         private async Task<bool> EmailAlreadyExists(string email, int id = 0)
         {
-            if ((await repository.Search(c => c.Email.Equals(email)  && c.Id != id)).Any())
+            if ((await repository.Search(c => c.Email.Equals(email) && c.Id != id)).Any())
             {
                 Notify("Já existe um usuário com esse e-mail");
                 return true;
@@ -76,12 +75,13 @@ namespace Ouvidoria.Services
             return false;
         }
 
-        public void Dispose()
-        {
-            repository.Dispose();
-        }
+        public void Dispose() => repository.Dispose();
 
-        public async Task<Usuario> GetUserById(int id) => 
+        public async Task<Usuario> GetUserById(int id) =>
             await repository.GetById(id);
+
+        public async Task<bool> IsActiveUser(string email) =>
+            (await repository.Search(u => u.Email == email)).FirstOrDefault().Ativo;
+
     }
 }

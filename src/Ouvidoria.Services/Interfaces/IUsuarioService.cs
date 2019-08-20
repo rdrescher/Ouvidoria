@@ -9,7 +9,8 @@ namespace Ouvidoria.Services.Interfaces
     {
         Task<List<Usuario>> GetUsers();
         Task<Usuario> GetUserById(int id);
-        Task Create(Usuario usuario);
+        Task<bool> IsValidUser(Usuario usuario);
         Task Update(Usuario usuario);
+        Task<bool> IsActiveUser(string email);
     }
 }

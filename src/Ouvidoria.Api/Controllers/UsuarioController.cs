@@ -22,12 +22,6 @@ namespace Ouvidoria.Api.Controllers
         public async Task<ActionResult<Resultado<List<UsuarioDTO>>>> Get() =>
             Ok(await service.GetUsers());
 
-        [HttpPost]
-        public async Task<ActionResult<Resultado<UsuarioDTO>>> Post(CadastroUsuarioDTO cadastroUsuarioDTO) =>
-            ModelState.IsValid ?
-                Ok(await service.Create(cadastroUsuarioDTO)) :
-                Ok(Resultado<UsuarioDTO>.Failed(ModelState.Values.Select(x => x.Errors).ToString()));
-
         [HttpPut("{id:int}")]
         public async Task<ActionResult<Resultado<UsuarioDTO>>> Put(int id, CadastroUsuarioDTO cadastroUsuarioDTO)
         {
