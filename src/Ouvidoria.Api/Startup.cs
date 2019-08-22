@@ -20,7 +20,7 @@ namespace Ouvidoria.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDependencies(Configuration);
-            services.IdentityServiceConfig();
+            services.IdentityServiceConfig(Configuration);
             services.SwaggerServiceConfig();
             services.AutoMapperServiceConfig();
             services.ApiServiceConfig();
