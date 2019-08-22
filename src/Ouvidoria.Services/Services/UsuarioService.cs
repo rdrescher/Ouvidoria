@@ -37,12 +37,10 @@ namespace Ouvidoria.Services
 
         public async Task Update(Usuario usuario)
         {
-
+            var user = await repository.GetEmailCPF(usuario.Id);
+            usuario.AdjustToUpdate(user.email, user.cpf);
             if (!base.Validate(new UsuarioValidation(), usuario)) return;
-            if (await this.EmailAlreadyExists(usuario.Email, usuario.Id)) return;
-            if (await this.CPFAlreadyExists(usuario.CPF, usuario.Id)) return;
             if (!await this.IsValidClass(usuario.IdCurso)) return;
-            usuario.ClearClassToUpdate();
 
             await repository.Update(usuario);
         }
@@ -51,6 +49,7 @@ namespace Ouvidoria.Services
         {
             if (idCurso == null) return true;
             if (await cursoService.GetById(idCurso.Value) != null) return true;
+            
             Notify("O curso informado é inválido");
             return false;
         }

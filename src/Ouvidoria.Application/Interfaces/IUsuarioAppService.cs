@@ -11,7 +11,7 @@ namespace Ouvidoria.Application.Interfaces
         Task<Resultado<List<UsuarioDTO>>> GetUsers();
         Task<bool> IsValidUser(CadastroUsuarioDTO cadastroUsuario);
         Task<bool> IsActiveUser(string email);
-        Task<Resultado<UsuarioDTO>> Update(CadastroUsuarioDTO cadastroUsuarioDTO);
+        Task<Resultado<UsuarioDTO>> Update(AtualizacaoUsuarioDTO cadastroUsuarioDTO);
         Task<Resultado<List<GenericList>>> GetGenericList();
     }
 }

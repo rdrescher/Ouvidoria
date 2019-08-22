@@ -29,9 +29,9 @@ namespace Ouvidoria.Application.Services
         public async Task<Resultado<List<UsuarioDTO>>> GetUsers() =>
             Resultado<List<UsuarioDTO>>.Successfull(base.MapToDTO(await Service.GetUsers()));
 
-        public async Task<Resultado<UsuarioDTO>> Update(CadastroUsuarioDTO cadastroUsuarioDTO)
+        public async Task<Resultado<UsuarioDTO>> Update(AtualizacaoUsuarioDTO atualizacaoUsuario)
         {
-            var usuario = base.Mapper.Map<Usuario>(cadastroUsuarioDTO);
+            var usuario = base.Mapper.Map<Usuario>(atualizacaoUsuario);
             await Service.Update(usuario);
             var usuarioDTO = base.MapToDTO(usuario);
 

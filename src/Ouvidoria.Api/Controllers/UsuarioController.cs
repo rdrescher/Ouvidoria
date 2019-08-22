@@ -10,7 +10,7 @@ namespace Ouvidoria.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsuarioController: BaseController
+    public class UsuarioController : BaseController
     {
         private readonly IUsuarioAppService service;
         public UsuarioController(IUsuarioAppService service)
@@ -23,12 +23,12 @@ namespace Ouvidoria.Api.Controllers
             Ok(await service.GetUsers());
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<Resultado<UsuarioDTO>>> Put(int id, CadastroUsuarioDTO cadastroUsuarioDTO)
+        public async Task<ActionResult<Resultado<UsuarioDTO>>> Put(int id, AtualizacaoUsuarioDTO atualizacaoUsuario)
         {
-            if(id != cadastroUsuarioDTO.id) return BadRequest();
-            return ModelState.IsValid ?
-                Ok(await service.Update(cadastroUsuarioDTO)) :
-                Ok(Resultado<CursoDTO>.Failed(ModelState.Values.Select(x => x.Errors).ToString()));
+            if (id != atualizacaoUsuario.id) return BadRequest();
+            return ModelState.IsValid
+                ? Ok(await service.Update(atualizacaoUsuario))
+                : Ok(Resultado<CursoDTO>.Failed(ModelState.Values.Select(x => x.Errors).ToString()));
         }
 
         [HttpGet("[action]")]

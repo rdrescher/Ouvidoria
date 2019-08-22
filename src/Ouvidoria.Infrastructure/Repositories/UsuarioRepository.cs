@@ -15,5 +15,11 @@ namespace Ouvidoria.Infrastructure.Repositories
 
         public async Task<List<Usuario>> GetAllWithClass() =>
             await base.DbSet.Include(x => x.Curso).ToListAsync();
+
+        public async Task<(string email, string cpf)> GetEmailCPF(int id)
+        {
+            var user = await DbSet.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
+            return (user.Email, user.CPF);
+        }
     }
 }

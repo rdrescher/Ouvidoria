@@ -9,6 +9,7 @@ namespace Ouvidoria.Application.AutoMapper
         public DTOToDomainMappingProfile()
         {
             CreateMap<AtualizacaoDepartamentoDTO, Departamento>();
+            CreateMap<AtualizacaoUsuarioDTO, Usuario>();
             CreateMap<CadastroDepartamentoDTO, Departamento>()
                 .ConstructUsing(d => new Departamento(d.nome, d.idUsuarioResponsavel));
             CreateMap<CadastroUsuarioDTO, Usuario>()
