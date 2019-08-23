@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Ouvidoria.Application.Interfaces;
 using Ouvidoria.Application.Services;
 using Ouvidoria.CrossCutting.Identity.Context;
+using Microsoft.AspNetCore.Authorization;
+using Equinox.Infra.CrossCutting.Identity.Authorization;
 
 namespace Ouvidoria.CrossCutting.IoC
 {
@@ -19,6 +21,9 @@ namespace Ouvidoria.CrossCutting.IoC
         {
             //Notificator
             services.AddScoped<INotificador, Notificador>();
+
+            //Policy
+            services.AddSingleton<IAuthorizationHandler, ClaimsRequirementHandler>();
 
             //Application Services
             services.AddScoped<ICursoAppService, CursoAppService>();
@@ -52,7 +57,7 @@ namespace Ouvidoria.CrossCutting.IoC
             services.AddScoped<IRespostaRepository, RespostaRepository>();
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
-            //DataContext
+            //DbContexts
             services.AddDbContext<OuvidoriaContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<ApplicationContext>(options =>

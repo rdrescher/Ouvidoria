@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -18,7 +20,9 @@ using Ouvidoria.Domain.Interfaces;
 
 namespace Ouvidoria.Api.Controllers
 {
+    [AllowAnonymous]
     [Route("api/[controller]")]
+    [ApiController]
     public class AutenticacaoController : BaseController
     {
         private readonly IMapper _map;
@@ -37,16 +41,16 @@ namespace Ouvidoria.Api.Controllers
             IOptions<JWTSettings> jwtSettings
         )
         {
-            this._userManager = userManager;
-            this._signInManager = signInManager;
-            this._map = map;
-            this._usuarioService = usuarioService;
-            this._notificador = notificador;
-            this._jwtSettings = jwtSettings.Value;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _map = map;
+            _usuarioService = usuarioService;
+            _notificador = notificador;
+            _jwtSettings = jwtSettings.Value;
         }
 
         [HttpPost("[action]")]
-        public async Task<ActionResult<Resultado>> Cadastrar(CadastroUsuarioDTO cadastroUsuario)
+        public async Task<ActionResult<Resultado<LoginResponseDTO>>> Cadastrar(CadastroUsuarioDTO cadastroUsuario)
         {
             if (!ModelState.IsValid)
                 return Ok(Resultado.Failed("Dados incorretos"));
@@ -60,13 +64,13 @@ namespace Ouvidoria.Api.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
-                return Ok(Resultado.Successfull(GenerateJWT()));
+                return Ok(Resultado<LoginResponseDTO>.Successfull(await GenerateJWT(cadastroUsuario.email)));
             }
             return Ok(Resultado.Failed(GetRegisterErrors(result.Errors).ToArray()));
         }
 
         [HttpPost("[action]")]
-        public async Task<ActionResult<Resultado>> Login(LoginDTO login)
+        public async Task<ActionResult<Resultado<LoginResponseDTO>>> Login(LoginDTO login)
         {
             if (!ModelState.IsValid)
                 return Ok(Resultado.Failed("Dados Incorretos"));
@@ -77,7 +81,7 @@ namespace Ouvidoria.Api.Controllers
                 return Ok(Resultado.Failed("Usuário Inativo"));
 
             if (result.Succeeded)
-                return Ok(Resultado.Successfull(GenerateJWT()));
+                return Ok(Resultado<LoginResponseDTO>.Successfull(await GenerateJWT(login.Email)));
 
             if (result.IsLockedOut)
                 return Ok(Resultado.Failed("Usuário temporáriamente bloqueado por tentativas inválidas"));
@@ -91,19 +95,49 @@ namespace Ouvidoria.Api.Controllers
                 yield return item.Description;
         }
 
-        private string GenerateJWT()
+        private async Task<LoginResponseDTO> GenerateJWT(string email)
         {
+            var user = await _userManager.FindByEmailAsync(email);
+            var claims = await _userManager.GetClaimsAsync(user);
+
+            claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
+
+            var identityClaims = new ClaimsIdentity();
+            identityClaims.AddClaims(claims);
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
             var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
             {
                 Issuer = _jwtSettings.Issuer,
                 Audience = _jwtSettings.ValidIn,
+                Subject = identityClaims,
                 Expires = DateTime.UtcNow.AddHours(_jwtSettings.ExpirationTime),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             });
 
-            return tokenHandler.WriteToken(token);
+            var encodedToken = tokenHandler.WriteToken(token);
+
+            var response = new LoginResponseDTO
+            {
+                AccessToken = encodedToken,
+                ExpiresIn = TimeSpan.FromHours(_jwtSettings.ExpirationTime).TotalSeconds,
+                User = new UserTokenDTO
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Claims = claims.Select(c => new ClaimDTO { Type = c.Type, Value = c.Value })
+                }
+            };
+
+            return response;
         }
+
+        private static long ToUnixEpochDate(DateTime date)
+            => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
     }
 }

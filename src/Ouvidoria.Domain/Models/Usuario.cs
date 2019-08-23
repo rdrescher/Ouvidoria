@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Ouvidoria.Domain.Enums;
-using Ouvidoria.Domain.Utils;
 
 namespace Ouvidoria.Domain.Models
 {

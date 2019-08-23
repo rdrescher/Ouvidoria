@@ -15,37 +15,42 @@ namespace Ouvidoria.Api.Controllers
     [ApiController]
     public class CursoController : BaseController
     {
-        private readonly ICursoAppService service;
+        private readonly ICursoAppService _service;
         public CursoController(ICursoAppService service)
         {
-            this.service = service;
+            this._service = service;
         }
 
+        [Authorize(policy: "Administrador")]
         [HttpGet]
         public async Task<ActionResult<Resultado<List<CursoDTO>>>> Get() =>
-            Ok(await service.GetClasses());
+            Ok(await _service.GetClasses());
 
+        [Authorize(policy: "Administrador")]
         [HttpPost]
         public async Task<ActionResult<Resultado<CursoDTO>>> Post(CursoDTO cursoDTO) =>
             ModelState.IsValid ?
-                Ok(await service.Create(cursoDTO)) :
+                Ok(await _service.Create(cursoDTO)) :
                 Ok(Resultado<CursoDTO>.Failed(ModelState.Values.Select(x => x.Errors).FirstOrDefault().ToString()));
 
+        [Authorize(policy: "Administrador")]
         [HttpPut("{id:int}")]
         public async Task<ActionResult<Resultado<CursoDTO>>> Put(int id, CursoDTO cursoDTO)
         {
-            if(id != cursoDTO.id) return BadRequest();
+            if (id != cursoDTO.id) return BadRequest();
             return ModelState.IsValid ?
-                Ok(await service.Update(cursoDTO)) :
+                Ok(await _service.Update(cursoDTO)) :
                 Ok(Resultado<CursoDTO>.Failed(ModelState.Values.Select(x => x.Errors).FirstOrDefault().ToString()));
         }
 
+        [Authorize(policy: "Administrador")]
         [HttpDelete("{id:int}")]
         public async Task<ActionResult<Resultado>> Delete(int id) =>
-            Ok(await service.Delete(id));
+            Ok(await _service.Delete(id));
 
+        [AllowAnonymous]
         [HttpGet("[action]")]
         public async Task<ActionResult<Resultado<List<GenericList>>>> GetGenericList() =>
-            Ok(await service.GetGenericList());
+            Ok(await _service.GetGenericList());
     }
 }
