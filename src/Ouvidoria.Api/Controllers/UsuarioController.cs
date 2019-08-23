@@ -46,15 +46,24 @@ namespace Ouvidoria.Api.Controllers
                 var user = await _userManager.FindByIdAsync(result.Data.id.ToString());
                 var claims = await _userManager.GetClaimsAsync(user);
 
-                if (claims.Count > 0 && atualizacaoUsuario.UsuarioPerfil != UsuarioPerfil.Administrador)
+                if (claims.Count > 0 && atualizacaoUsuario.UsuarioPerfil == UsuarioPerfil.Usuario)
                 {
                     await _userManager.RemoveClaimsAsync(user, claims);
                 }
-                else if (claims.Count == 0 && atualizacaoUsuario.UsuarioPerfil == UsuarioPerfil.Administrador)
+                else if (atualizacaoUsuario.UsuarioPerfil != UsuarioPerfil.Usuario)
                 {
-                    var claim = new Claim(UsuarioPerfil.Administrador.ToString(),
-                                          UsuarioPerfil.Administrador.ToString());
-                    await _userManager.AddClaimAsync(user, claim);
+                    var claim = new Claim(atualizacaoUsuario.UsuarioPerfil.ToString(),
+                                          atualizacaoUsuario.UsuarioPerfil.ToString());
+
+                    if (claims.Count > 0 && !claims.Select(x => x.Type).Contains(claim.Type))
+                    {
+                        await _userManager.RemoveClaimsAsync(user, claims);
+                        await _userManager.AddClaimAsync(user, claim);
+                    }
+                    else if (claims.Count == 0)
+                    {
+                        await _userManager.AddClaimAsync(user, claim);
+                    }
                 }
             }
             return Ok(result);

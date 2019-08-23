@@ -34,6 +34,7 @@ namespace Ouvidoria.Application.Services
             var usuario = base.Mapper.Map<Usuario>(atualizacaoUsuario);
             await Service.Update(usuario);
             var usuarioViewModel = base.MapToViewModel(usuario);
+            usuarioViewModel.usuarioPerfil = atualizacaoUsuario.UsuarioPerfil;
 
             return Notificador.HasNotification() ?
                 Resultado<UsuarioViewModel>.Failed(Notificador.GetNotifications().Select(x => x.Mensagem).ToArray()) :
