@@ -3,13 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Ouvidoria.Application.DTO;
+using Ouvidoria.Application.ViewModel;
 using Ouvidoria.Application.Interfaces;
 using Ouvidoria.Application.Utils;
 
 namespace Ouvidoria.Api.Controllers
 {
-    [Authorize(policy: "Administrador")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DepartamentoController : BaseController
@@ -20,28 +20,35 @@ namespace Ouvidoria.Api.Controllers
             this._service = service;
         }
 
+        [Authorize(policy: "Administrador")]
         [HttpGet]
-        public async Task<ActionResult<Resultado<List<DepartamentoDTO>>>> Get() =>
+        public async Task<ActionResult<Resultado<List<DepartamentoViewModel>>>> Get() =>
             Ok(await _service.GetDepartments());
 
+        [Authorize(policy: "Administrador")]
         [HttpPost]
-        public async Task<ActionResult<Resultado<DepartamentoDTO>>> Post(CadastroDepartamentoDTO cadastroDepartamentoDTO) =>
+        public async Task<ActionResult<Resultado<DepartamentoViewModel>>> Post(CadastroDepartamentoViewModel cadastroDepartamentoViewModel) =>
             ModelState.IsValid ?
-                Ok(await _service.Create(cadastroDepartamentoDTO)) :
-                Ok(Resultado<DepartamentoDTO>.Failed(ModelState.Values.Select(x => x.Errors).ToString()));
+                Ok(await _service.Create(cadastroDepartamentoViewModel)) :
+                Ok(Resultado<DepartamentoViewModel>.Failed(ModelState.Values.Select(x => x.Errors).ToString()));
 
-
+        [Authorize(policy: "Administrador")]
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<Resultado<DepartamentoDTO>>> Put(int id, AtualizacaoDepartamentoDTO departamentoDTO)
+        public async Task<ActionResult<Resultado<DepartamentoViewModel>>> Put(int id, AtualizacaoDepartamentoViewModel departamentoViewModel)
         {
-            if (id != departamentoDTO.id) return BadRequest();
+            if (id != departamentoViewModel.id) return BadRequest();
             return ModelState.IsValid ?
-                Ok(await _service.Update(departamentoDTO)) :
-                Ok(Resultado<DepartamentoDTO>.Failed(ModelState.Values.Select(x => x.Errors).ToString()));
+                Ok(await _service.Update(departamentoViewModel)) :
+                Ok(Resultado<DepartamentoViewModel>.Failed(ModelState.Values.Select(x => x.Errors).ToString()));
         }
 
+        [Authorize(policy: "Administrador")]
         [HttpDelete("{id:int}")]
         public async Task<ActionResult<Resultado>> Delete(int id) =>
             Ok(await _service.Delete(id));
+
+        [HttpGet("[action]")]
+        public async Task<ActionResult<Resultado<List<GenericList>>>> GetGenericList() =>
+        Ok(await _service.GetGenericList());
     }
 }

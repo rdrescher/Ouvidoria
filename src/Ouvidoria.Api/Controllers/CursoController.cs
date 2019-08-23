@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Ouvidoria.Application.DTO;
+using Ouvidoria.Application.ViewModel;
 using Ouvidoria.Application.Interfaces;
 using Ouvidoria.Application.Utils;
 
@@ -23,24 +23,23 @@ namespace Ouvidoria.Api.Controllers
 
         [Authorize(policy: "Administrador")]
         [HttpGet]
-        public async Task<ActionResult<Resultado<List<CursoDTO>>>> Get() =>
+        public async Task<ActionResult<Resultado<List<CursoViewModel>>>> Get() =>
             Ok(await _service.GetClasses());
 
-        [Authorize(policy: "Administrador")]
         [HttpPost]
-        public async Task<ActionResult<Resultado<CursoDTO>>> Post(CursoDTO cursoDTO) =>
+        public async Task<ActionResult<Resultado<CursoViewModel>>> Post(CursoViewModel cursoViewModel) =>
             ModelState.IsValid ?
-                Ok(await _service.Create(cursoDTO)) :
-                Ok(Resultado<CursoDTO>.Failed(ModelState.Values.Select(x => x.Errors).FirstOrDefault().ToString()));
+                Ok(await _service.Create(cursoViewModel)) :
+                Ok(Resultado<CursoViewModel>.Failed(ModelState.Values.Select(x => x.Errors).FirstOrDefault().ToString()));
 
         [Authorize(policy: "Administrador")]
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<Resultado<CursoDTO>>> Put(int id, CursoDTO cursoDTO)
+        public async Task<ActionResult<Resultado<CursoViewModel>>> Put(int id, CursoViewModel cursoViewModel)
         {
-            if (id != cursoDTO.id) return BadRequest();
+            if (id != cursoViewModel.id) return BadRequest();
             return ModelState.IsValid ?
-                Ok(await _service.Update(cursoDTO)) :
-                Ok(Resultado<CursoDTO>.Failed(ModelState.Values.Select(x => x.Errors).FirstOrDefault().ToString()));
+                Ok(await _service.Update(cursoViewModel)) :
+                Ok(Resultado<CursoViewModel>.Failed(ModelState.Values.Select(x => x.Errors).FirstOrDefault().ToString()));
         }
 
         [Authorize(policy: "Administrador")]

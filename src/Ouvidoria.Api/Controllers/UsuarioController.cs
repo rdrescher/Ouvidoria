@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Ouvidoria.Application.DTO;
+using Ouvidoria.Application.ViewModel;
 using Ouvidoria.Application.Enums;
 using Ouvidoria.Application.Interfaces;
 using Ouvidoria.Application.Utils;
@@ -13,7 +13,6 @@ using Ouvidoria.CrossCutting.Identity.Models;
 
 namespace Ouvidoria.Api.Controllers
 {
-    [Authorize(policy: "Administrador")]
     [Route("api/[controller]")]
     [ApiController]
     public class UsuarioController : BaseController
@@ -28,16 +27,18 @@ namespace Ouvidoria.Api.Controllers
             _userManager = userManager;
         }
 
+        [Authorize(policy: "Administrador")]
         [HttpGet]
-        public async Task<ActionResult<Resultado<List<UsuarioDTO>>>> Get() =>
+        public async Task<ActionResult<Resultado<List<UsuarioViewModel>>>> Get() =>
             Ok(await _service.GetUsers());
 
+        [Authorize(policy: "Administrador")]
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<Resultado<UsuarioDTO>>> Put(int id, AtualizacaoUsuarioDTO atualizacaoUsuario)
+        public async Task<ActionResult<Resultado<UsuarioViewModel>>> Put(int id, AtualizacaoUsuarioViewModel atualizacaoUsuario)
         {
             if (id != atualizacaoUsuario.id) return BadRequest();
             if (!ModelState.IsValid)
-                return Ok(Resultado<CursoDTO>.Failed(ModelState.Values.Select(x => x.Errors).ToString()));
+                return Ok(Resultado<CursoViewModel>.Failed(ModelState.Values.Select(x => x.Errors).ToString()));
 
             var result = await _service.Update(atualizacaoUsuario);
             if (result.Success)
@@ -59,6 +60,7 @@ namespace Ouvidoria.Api.Controllers
             return Ok(result);
         }
 
+        [Authorize(policy: "Administrador")]
         [HttpGet("[action]")]
         public async Task<ActionResult<Resultado<List<GenericList>>>> GetGenericList() =>
             Ok(await _service.GetGenericList());

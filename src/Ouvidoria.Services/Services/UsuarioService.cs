@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Ouvidoria.Domain.DTO;
 using Ouvidoria.Domain.Interfaces;
 using Ouvidoria.Domain.Models;
 using Ouvidoria.Domain.Validations.Models;
@@ -32,6 +33,9 @@ namespace Ouvidoria.Services
         }
 
         public async Task<List<Usuario>> GetUsers() =>
+            await repository.GetAll();
+
+        public async Task<List<UsuarioDTO>> GetUsersWithClass() =>
             await repository.GetAllWithClass();
 
 

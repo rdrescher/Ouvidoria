@@ -1,12 +1,12 @@
 using Ouvidoria.Application.Interfaces;
-using Ouvidoria.Application.DTO;
+using Ouvidoria.Application.ViewModel;
 using Ouvidoria.Domain.Models;
 using AutoMapper;
 using System.Collections.Generic;
 
 namespace Ouvidoria.Application.Services
 {
-    public abstract class EntityAppService<TEntity, TEntityDTO> : IEntityAppService<TEntity, TEntityDTO> where TEntity : Entity where TEntityDTO : EntityDTO
+    public abstract class EntityAppService<TEntity, TEntityViewModel> : IEntityAppService<TEntity, TEntityViewModel> where TEntity : Entity where TEntityViewModel : EntityViewModel
     {
         protected readonly IMapper Mapper;
         public EntityAppService(IMapper map)
@@ -14,17 +14,17 @@ namespace Ouvidoria.Application.Services
             this.Mapper = map;
         }
 
-        public TEntity MapToDomain(TEntityDTO entityDTO) =>
-            this.Mapper.Map<TEntity>(entityDTO);
+        public TEntity MapToDomain(TEntityViewModel entityViewModel) =>
+            this.Mapper.Map<TEntity>(entityViewModel);
 
-        public TEntityDTO MapToDTO(TEntity entity) =>
-            this.Mapper.Map<TEntityDTO>(entity);
+        public TEntityViewModel MapToViewModel(TEntity entity) =>
+            this.Mapper.Map<TEntityViewModel>(entity);
 
-        public List<TEntity> MapToDomain(List<TEntityDTO> entityDTO) =>
-            this.Mapper.Map<List<TEntity>>(entityDTO);
+        public List<TEntity> MapToDomain(List<TEntityViewModel> entityViewModel) =>
+            this.Mapper.Map<List<TEntity>>(entityViewModel);
 
-        public List<TEntityDTO> MapToDTO(List<TEntity> entity) =>
-            this.Mapper.Map<List<TEntityDTO>>(entity);
+        public List<TEntityViewModel> MapToViewModel(List<TEntity> entity) =>
+            this.Mapper.Map<List<TEntityViewModel>>(entity);
 
         public List<GenericList> MapToGenericList(List<TEntity> entity) =>
             this.Mapper.Map<List<GenericList>>(entity);

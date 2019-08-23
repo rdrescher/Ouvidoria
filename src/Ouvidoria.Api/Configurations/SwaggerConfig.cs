@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
@@ -17,6 +18,21 @@ namespace Ouvidoria.Api.Configurations
                     Description = "Sistema de Ouvidoria da Faculdade Antonio Meneghetti",
                     Contact = new Contact { Name = "Ouvidoria - AMF", Email = "ouvidoria@faculdadeam.edu.br", Url = "http://www.faculdadeam.edu.br" },
                 });
+
+                var security = new Dictionary<string, IEnumerable<string>>
+                {
+                    {"Bearer", new string[] { }}
+                };
+
+                swg.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Description = "Insira seu JWT da seguinte maneira: Bearer {seu JWT}",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
+
+                swg.AddSecurityRequirement(security);
             });
 
             return services;

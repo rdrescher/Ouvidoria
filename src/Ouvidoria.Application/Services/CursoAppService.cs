@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Ouvidoria.Application.DTO;
+using Ouvidoria.Application.ViewModel;
 using Ouvidoria.Application.Interfaces;
 using Ouvidoria.Application.Utils;
 using Ouvidoria.Domain.Interfaces;
@@ -12,7 +12,7 @@ using Ouvidoria.Services.Interfaces;
 
 namespace Ouvidoria.Application.Services
 {
-    public class CursoAppService : EntityAppService<Curso, CursoDTO>, ICursoAppService
+    public class CursoAppService : EntityAppService<Curso, CursoViewModel>, ICursoAppService
     {
         private readonly ICursoService Service;
         private readonly INotificador Notificador;
@@ -22,16 +22,16 @@ namespace Ouvidoria.Application.Services
             this.Service = service;
         }
 
-        public async Task<Resultado<CursoDTO>> Create(CursoDTO cursoDTO)
+        public async Task<Resultado<CursoViewModel>> Create(CursoViewModel cursoViewModel)
         {
-            var curso = MapToDomain(cursoDTO);
+            var curso = MapToDomain(cursoViewModel);
             await Service.Create(curso);
 
-            cursoDTO = MapToDTO(curso);
+            cursoViewModel = MapToViewModel(curso);
 
             return Notificador.HasNotification() ?
-                Resultado<CursoDTO>.Failed(Notificador.GetNotifications().Select(x => x.Mensagem).ToArray()) :
-                Resultado<CursoDTO>.Successfull(cursoDTO);
+                Resultado<CursoViewModel>.Failed(Notificador.GetNotifications().Select(x => x.Mensagem).ToArray()) :
+                Resultado<CursoViewModel>.Successfull(cursoViewModel);
         }
 
         public async Task<Resultado> Delete(int id)
@@ -42,23 +42,23 @@ namespace Ouvidoria.Application.Services
                 Resultado.Successfull();
         }
 
-        public async Task<Resultado<List<CursoDTO>>> GetClasses() =>
-            Resultado<List<CursoDTO>>.Successfull(base.MapToDTO(await Service.GetClasses()));
+        public async Task<Resultado<List<CursoViewModel>>> GetClasses() =>
+            Resultado<List<CursoViewModel>>.Successfull(base.MapToViewModel(await Service.GetClasses()));
 
         public async Task<Resultado<List<GenericList>>> GetGenericList() =>
             Resultado<List<GenericList>>.Successfull(base.MapToGenericList(await Service.GetClasses()));
 
-        public async Task<Resultado<CursoDTO>> Update(CursoDTO cursoDTO)
+        public async Task<Resultado<CursoViewModel>> Update(CursoViewModel cursoViewModel)
         {
-            var curso = MapToDomain(cursoDTO);
+            var curso = MapToDomain(cursoViewModel);
 
             await Service.Update(curso);
 
-            var cursosDTO = MapToDTO(curso);
+            var cursosViewModel = MapToViewModel(curso);
 
             return Notificador.HasNotification() ?
-                Resultado<CursoDTO>.Failed(Notificador.GetNotifications().Select(x => x.Mensagem).ToArray()) :
-                Resultado<CursoDTO>.Successfull(cursoDTO);
+                Resultado<CursoViewModel>.Failed(Notificador.GetNotifications().Select(x => x.Mensagem).ToArray()) :
+                Resultado<CursoViewModel>.Successfull(cursoViewModel);
         }
     }
 }

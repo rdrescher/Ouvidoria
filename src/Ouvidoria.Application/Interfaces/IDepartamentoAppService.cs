@@ -1,16 +1,17 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Ouvidoria.Application.DTO;
+using Ouvidoria.Application.ViewModel;
 using Ouvidoria.Application.Utils;
 using Ouvidoria.Domain.Models;
 
 namespace Ouvidoria.Application.Interfaces
 {
-    public interface IDepartamentoAppService : IEntityAppService<Departamento, DepartamentoDTO>
+    public interface IDepartamentoAppService : IEntityAppService<Departamento, DepartamentoViewModel>
     {
-        Task<Resultado<List<DepartamentoDTO>>> GetDepartments();
-        Task<Resultado<DepartamentoDTO>> Create(CadastroDepartamentoDTO cadastroDepartamentoDTO);
+        Task<Resultado<List<DepartamentoViewModel>>> GetDepartments();
+        Task<Resultado<DepartamentoViewModel>> Create(CadastroDepartamentoViewModel cadastroDepartamentoViewModel);
         Task<Resultado> Delete(int id);
-        Task<Resultado<DepartamentoDTO>> Update(AtualizacaoDepartamentoDTO cadastroDepartamentoDTO);
+        Task<Resultado<DepartamentoViewModel>> Update(AtualizacaoDepartamentoViewModel cadastroDepartamentoViewModel);
+        Task<Resultado<List<GenericList>>> GetGenericList();
     }
 }

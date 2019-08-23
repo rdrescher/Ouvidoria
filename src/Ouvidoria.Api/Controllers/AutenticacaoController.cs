@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Ouvidoria.Api.Extensions;
-using Ouvidoria.Application.DTO;
+using Ouvidoria.Application.ViewModel;
 using Ouvidoria.Application.Interfaces;
 using Ouvidoria.Application.Utils;
 using Ouvidoria.CrossCutting.Identity.Models;
@@ -50,7 +50,7 @@ namespace Ouvidoria.Api.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<ActionResult<Resultado<LoginResponseDTO>>> Cadastrar(CadastroUsuarioDTO cadastroUsuario)
+        public async Task<ActionResult<Resultado<LoginResponseViewModel>>> Cadastrar(CadastroUsuarioViewModel cadastroUsuario)
         {
             if (!ModelState.IsValid)
                 return Ok(Resultado.Failed("Dados incorretos"));
@@ -64,13 +64,13 @@ namespace Ouvidoria.Api.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
-                return Ok(Resultado<LoginResponseDTO>.Successfull(await GenerateJWT(cadastroUsuario.email)));
+                return Ok(Resultado<LoginResponseViewModel>.Successfull(await GenerateJWT(cadastroUsuario.email)));
             }
             return Ok(Resultado.Failed(GetRegisterErrors(result.Errors).ToArray()));
         }
 
         [HttpPost("[action]")]
-        public async Task<ActionResult<Resultado<LoginResponseDTO>>> Login(LoginDTO login)
+        public async Task<ActionResult<Resultado<LoginResponseViewModel>>> Login(LoginViewModel login)
         {
             if (!ModelState.IsValid)
                 return Ok(Resultado.Failed("Dados Incorretos"));
@@ -81,7 +81,7 @@ namespace Ouvidoria.Api.Controllers
                 return Ok(Resultado.Failed("Usuário Inativo"));
 
             if (result.Succeeded)
-                return Ok(Resultado<LoginResponseDTO>.Successfull(await GenerateJWT(login.Email)));
+                return Ok(Resultado<LoginResponseViewModel>.Successfull(await GenerateJWT(login.Email)));
 
             if (result.IsLockedOut)
                 return Ok(Resultado.Failed("Usuário temporáriamente bloqueado por tentativas inválidas"));
@@ -95,7 +95,7 @@ namespace Ouvidoria.Api.Controllers
                 yield return item.Description;
         }
 
-        private async Task<LoginResponseDTO> GenerateJWT(string email)
+        private async Task<LoginResponseViewModel> GenerateJWT(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
             var claims = await _userManager.GetClaimsAsync(user);
@@ -120,17 +120,17 @@ namespace Ouvidoria.Api.Controllers
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             });
 
-            var encodedToken = tokenHandler.WriteToken(token);
+            var encodeViewModelken = tokenHandler.WriteToken(token);
 
-            var response = new LoginResponseDTO
+            var response = new LoginResponseViewModel
             {
-                AccessToken = encodedToken,
+                AccessToken = encodeViewModelken,
                 ExpiresIn = TimeSpan.FromHours(_jwtSettings.ExpirationTime).TotalSeconds,
-                User = new UserTokenDTO
+                User = new UserTokenViewModel
                 {
                     Id = user.Id,
                     Email = user.Email,
-                    Claims = claims.Select(c => new ClaimDTO { Type = c.Type, Value = c.Value })
+                    Claims = claims.Select(c => new ClaimViewModel { Type = c.Type, Value = c.Value })
                 }
             };
 

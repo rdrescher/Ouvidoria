@@ -1,9 +1,9 @@
-using Ouvidoria.Application.DTO;
+using Ouvidoria.Application.ViewModel;
 using Ouvidoria.Domain.Models;
 
 namespace Ouvidoria.Application.Interfaces
 {
-    public interface IRespostaAppService : IEntityAppService<Resposta, RespostaDTO>
+    public interface IRespostaAppService : IEntityAppService<Resposta, RespostaViewModel>
     {
          
     }

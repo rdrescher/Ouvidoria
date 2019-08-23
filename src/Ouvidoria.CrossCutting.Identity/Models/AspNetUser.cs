@@ -5,18 +5,18 @@ namespace Ouvidoria.CrossCutting.Identity.Models
 {
     public class AspNetUser : IdentityUser<int>
     {
-        public AspNetUser(string nome, string email, string cpf, string telefone, int? IdCurso, bool ativo)
+        public AspNetUser(string nome, string email, string cpf, string telefone, int? idCurso, bool ativo)
         {
-            this.Nome = nome;
-            this.Email = email;
-            this.CPF = cpf;
-            this.PhoneNumber = telefone;
-            this.IdCurso = IdCurso;
-            this.Ativo = ativo;
-            this.DataAtualizacao = DateTime.Now;
-            this.DataInsercao = DateTime.Now;
-            this.UserName = email;
-            this.EmailConfirmed = true;
+            Nome = nome;
+            Email = email;
+            CPF = cpf;
+            PhoneNumber = telefone;
+            IdCurso = idCurso;
+            Ativo = ativo;
+            DataAtualizacao = DateTime.Now;
+            DataInsercao = DateTime.Now;
+            UserName = email;
+            EmailConfirmed = true;
         }
 
         public AspNetUser()

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Ouvidoria.Application.DTO;
+using Ouvidoria.Application.ViewModel;
 using Ouvidoria.Application.Interfaces;
 using Ouvidoria.Application.Utils;
 using Ouvidoria.Domain.Interfaces;
@@ -11,7 +11,7 @@ using Ouvidoria.Services.Interfaces;
 
 namespace Ouvidoria.Application.Services
 {
-    public class DepartamentoAppService : EntityAppService<Departamento, DepartamentoDTO>, IDepartamentoAppService
+    public class DepartamentoAppService : EntityAppService<Departamento, DepartamentoViewModel>, IDepartamentoAppService
     {
         private readonly INotificador Notificador;
         private readonly IDepartamentoService Service;
@@ -21,19 +21,19 @@ namespace Ouvidoria.Application.Services
             this.Service = service;
         }
 
-        public async Task<Resultado<DepartamentoDTO>> Create(CadastroDepartamentoDTO cadastroDepartamentoDTO)
+        public async Task<Resultado<DepartamentoViewModel>> Create(CadastroDepartamentoViewModel cadastroDepartamentoViewModel)
         {
-            var Departamento = base.Mapper.Map<Departamento>(cadastroDepartamentoDTO);
+            var Departamento = base.Mapper.Map<Departamento>(cadastroDepartamentoViewModel);
             await Service.Create(Departamento);
-            var DepartamentoDTO = base.MapToDTO(Departamento);
+            var DepartamentoViewModel = base.MapToViewModel(Departamento);
 
             return Notificador.HasNotification() ?
-                Resultado<DepartamentoDTO>.Failed(Notificador.GetNotifications().Select(x => x.Mensagem).ToArray()) :
-                Resultado<DepartamentoDTO>.Successfull(DepartamentoDTO);
+                Resultado<DepartamentoViewModel>.Failed(Notificador.GetNotifications().Select(x => x.Mensagem).ToArray()) :
+                Resultado<DepartamentoViewModel>.Successfull(DepartamentoViewModel);
         }
 
-        public async Task<Resultado<List<DepartamentoDTO>>> GetDepartments() =>
-            Resultado<List<DepartamentoDTO>>.Successfull(base.MapToDTO(await Service.GetDepartments()));
+        public async Task<Resultado<List<DepartamentoViewModel>>> GetDepartments() =>
+            Resultado<List<DepartamentoViewModel>>.Successfull(base.MapToViewModel(await Service.GetDepartments()));
 
         public async Task<Resultado> Delete(int id)
         {
@@ -43,15 +43,18 @@ namespace Ouvidoria.Application.Services
                 Resultado.Successfull();
         }
 
-        public async Task<Resultado<DepartamentoDTO>> Update(AtualizacaoDepartamentoDTO atualizacaoDepartamentoDTO)
+        public async Task<Resultado<DepartamentoViewModel>> Update(AtualizacaoDepartamentoViewModel atualizacaoDepartamentoViewModel)
         {
-            var Departamento = base.Mapper.Map<Departamento>(atualizacaoDepartamentoDTO);
+            var Departamento = base.Mapper.Map<Departamento>(atualizacaoDepartamentoViewModel);
             await Service.Update(Departamento);
-            var DepartamentoDTO = base.MapToDTO(Departamento);
+            var DepartamentoViewModel = base.MapToViewModel(Departamento);
 
             return Notificador.HasNotification() ?
-                Resultado<DepartamentoDTO>.Failed(Notificador.GetNotifications().Select(x => x.Mensagem).ToArray()) :
-                Resultado<DepartamentoDTO>.Successfull(DepartamentoDTO);
+                Resultado<DepartamentoViewModel>.Failed(Notificador.GetNotifications().Select(x => x.Mensagem).ToArray()) :
+                Resultado<DepartamentoViewModel>.Successfull(DepartamentoViewModel);
         }
+
+        public async Task<Resultado<List<GenericList>>> GetGenericList() =>
+            Resultado<List<GenericList>>.Successfull(base.MapToGenericList(await Service.GetDepartments()));
     }
 }

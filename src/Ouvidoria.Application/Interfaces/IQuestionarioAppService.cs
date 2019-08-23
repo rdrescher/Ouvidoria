@@ -1,9 +1,9 @@
-using Ouvidoria.Application.DTO;
+using Ouvidoria.Application.ViewModel;
 using Ouvidoria.Domain.Models;
 
 namespace Ouvidoria.Application.Interfaces
 {
-    public interface IQuestionarioAppService : IEntityAppService<Questionario, QuestionarioDTO>
+    public interface IQuestionarioAppService : IEntityAppService<Questionario, QuestionarioViewModel>
     {
          
     }

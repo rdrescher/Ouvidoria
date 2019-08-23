@@ -19,6 +19,30 @@ namespace Ouvidoria.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("Ouvidoria.Domain.Models.Claim", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("IdUser")
+                        .HasColumnName("UserId");
+
+                    b.Property<string>("Tipo")
+                        .HasColumnName("ClaimType");
+
+                    b.Property<int?>("UsuarioId");
+
+                    b.Property<string>("Valor")
+                        .HasColumnName("ClaimValue");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("AspNetUserClaims");
+                });
+
             modelBuilder.Entity("Ouvidoria.Domain.Models.Curso", b =>
                 {
                     b.Property<int>("Id")
@@ -275,20 +299,22 @@ namespace Ouvidoria.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(100)");
 
-                    b.Property<string>("Senha")
-                        .IsRequired()
-                        .HasColumnType("varchar(1000)");
-
                     b.Property<string>("Telefone")
+                        .HasColumnName("PhoneNumber")
                         .HasColumnType("varchar(15)");
-
-                    b.Property<int>("UsuarioPerfil");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IdCurso");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("Ouvidoria.Domain.Models.Claim", b =>
+                {
+                    b.HasOne("Ouvidoria.Domain.Models.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId");
                 });
 
             modelBuilder.Entity("Ouvidoria.Domain.Models.Departamento", b =>
