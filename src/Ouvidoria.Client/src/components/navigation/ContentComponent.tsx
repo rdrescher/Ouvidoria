@@ -8,6 +8,7 @@ import { IApplicationState } from "../../store";
 import CursoView from "../../views/administracao/CursoView";
 import DepartamentoView from "../../views/administracao/DepartamentoView";
 import UsuarioView from "../../views/administracao/UsuarioView";
+import LoginView from "../../views/autenticacao/LoginView";
 import DashboardView from "../../views/manifestacoes/DashboardView";
 import DenunciaView from "../../views/manifestacoes/DenunciaView";
 import ElogioView from "../../views/manifestacoes/ElogioView";
@@ -41,6 +42,7 @@ function ContentComponent(props: IStateProps) {
           <Route exact path="/cursos" component={CursoView} />
           <Route exact path="/departamentos" component={DepartamentoView} />
           <Route exact path="/usuarios" component={UsuarioView} />
+          <Route exact path="/login" component={LoginView} />
           <Route exact path="/" component={DashboardView} />
         </Switch>
         <MessageBox />

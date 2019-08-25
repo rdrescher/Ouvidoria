@@ -11,6 +11,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { bindActionCreators, Dispatch } from "redux";
+import * as Session from "../../application/session";
 import * as NavigationActions from "../../store/ducks/navigation/NavigationActions";
 
 interface IDispatchState {
@@ -39,13 +40,30 @@ function NavbarComponent(props: IDispatchState) {
               </Link>
             </Typography>
           </div>
-          <IconButton
-            aria-owns={"menu-appbar"}
-            aria-haspopup="false"
-            className={classes.iconButton}
-          >
-            <AccountCircle />
-          </IconButton>
+          <div className={classes.user}>
+            {Session.isAuthenticated() ? (
+              <IconButton
+                aria-owns={"menu-appbar"}
+                aria-haspopup="false"
+                className={classes.iconButton}
+              >
+                <AccountCircle />
+              </IconButton>
+            ) : (
+              <>
+                <Typography variant="body1" className={classes.nested}>
+                  <Link to="/login" className={classes.link}>
+                    Logar
+                  </Link>
+                </Typography>
+                <Typography variant="body1" className={classes.nested}>
+                  <Link to="/login" className={classes.link}>
+                    Registrar
+                  </Link>
+                </Typography>
+              </>
+            )}
+          </div>
         </Toolbar>
       </AppBar>
     </>
@@ -76,5 +94,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   link: {
     color: "white",
     textDecoration: "none"
+  },
+  user: {
+    display: "flex"
+  },
+  nested: {
+    paddingLeft: theme.spacing(3)
   }
 }));

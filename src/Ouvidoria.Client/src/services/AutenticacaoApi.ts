@@ -1,4 +1,4 @@
-import http from "../core/http";
+import http from "../application/http";
 import Login from "../models/Autenticacao/Login";
 import LoginResponse from "../models/Autenticacao/LoginResponse";
 import Resultado from "../models/Resultado";

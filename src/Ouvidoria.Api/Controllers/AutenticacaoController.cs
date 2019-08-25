@@ -77,11 +77,13 @@ namespace Ouvidoria.Api.Controllers
 
             var result = await _signInManager.PasswordSignInAsync(login.Email, login.Senha, false, true);
 
-            if (!await _usuarioService.IsActiveUser(login.Email))
-                return Ok(Resultado.Failed("Usuário Inativo"));
-
             if (result.Succeeded)
+            {
+                if (!await _usuarioService.IsActiveUser(login.Email))
+                    return Ok(Resultado.Failed("Usuário inativo, entre em contato com ouvidoria@faculdadeam.edu.br para verificar sobre seu acesso"));
+
                 return Ok(Resultado<LoginResponseViewModel>.Successfull(await GenerateJWT(login.Email)));
+            }
 
             if (result.IsLockedOut)
                 return Ok(Resultado.Failed("Usuário temporáriamente bloqueado por tentativas inválidas"));

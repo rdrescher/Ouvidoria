@@ -1,4 +1,4 @@
-import http from "../core/http";
+import http from "../application/http";
 import Curso from "../models/Curso/Curso";
 import GenericList from "../models/GenericList";
 import Resultado from "../models/Resultado";

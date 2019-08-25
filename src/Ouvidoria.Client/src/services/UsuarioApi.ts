@@ -1,4 +1,4 @@
-import Http from "../core/http";
+import Http from "../application/http";
 import GenericList from "../models/GenericList";
 import Resultado from "../models/Resultado";
 import CadastroUsuario from "../models/Usuario/CadastroUsuario";

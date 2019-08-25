@@ -1,4 +1,4 @@
-import http from "../core/http";
+import http from "../application/http";
 import AtualizacaoDepartamento from "../models/Departamento/AtualizacaoDepartamento";
 import CadastroDepartamento from "../models/Departamento/CadastroDepartamento";
 import Departamento from "../models/Departamento/Departamento";
