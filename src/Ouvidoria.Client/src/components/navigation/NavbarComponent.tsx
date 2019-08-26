@@ -11,14 +11,22 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { bindActionCreators, Dispatch } from "redux";
-import * as Session from "../../application/session";
+import { IApplicationState } from "../../store";
 import * as NavigationActions from "../../store/ducks/navigation/NavigationActions";
+import * as SessionActions from "../../store/ducks/session/SessionActions";
 
 interface IDispatchState {
   toggleSidebar(): void;
+  logout(): void;
 }
 
-function NavbarComponent(props: IDispatchState) {
+interface IStateProps {
+  isAuthenticated: boolean;
+}
+
+type Props = IDispatchState & IStateProps;
+
+function NavbarComponent(props: Props) {
   const classes = useStyles();
 
   return (
@@ -41,11 +49,12 @@ function NavbarComponent(props: IDispatchState) {
             </Typography>
           </div>
           <div className={classes.user}>
-            {Session.isAuthenticated() ? (
+            {props.isAuthenticated ? (
               <IconButton
                 aria-owns={"menu-appbar"}
                 aria-haspopup="false"
                 className={classes.iconButton}
+                onClick={props.logout}
               >
                 <AccountCircle />
               </IconButton>
@@ -70,11 +79,18 @@ function NavbarComponent(props: IDispatchState) {
   );
 }
 
+const mapStateToProps = (state: IApplicationState) => ({
+  isAuthenticated: state.SessionReducer.isAuthenticated
+});
+
 const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators(NavigationActions, dispatch);
+  bindActionCreators(
+    Object.assign({}, NavigationActions, SessionActions),
+    dispatch
+  );
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(NavbarComponent);
 

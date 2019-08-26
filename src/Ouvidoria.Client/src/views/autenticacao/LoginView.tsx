@@ -1,18 +1,31 @@
-import { Button, Container, Paper, Typography } from "@material-ui/core";
+import { Container, Fab, Paper, Theme, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import React, { useState, ChangeEvent } from "react";
+import { connect } from "react-redux";
 import { Redirect } from "react-router";
-import * as Session from "../../application/session";
+import { Link } from "react-router-dom";
+import { bindActionCreators, Dispatch } from "redux";
 import Logo from "../../assets/img/amf.png";
 import InputField from "../../components/common/formFields/InputField";
+import SubmitButton from "../../components/common/formFields/SubmitButton";
 import Login from "../../models/Autenticacao/Login";
+import ILoginResponse from "../../models/Autenticacao/LoginResponse";
 import AutenticacaoApi from "../../services/AutenticacaoApi";
+import { IApplicationState } from "../../store";
+import * as SessionActions from "../../store/ducks/session/SessionActions";
 import * as Validations from "../../utils/Validations";
 
+interface IDispatchState {
+  login(login: ILoginResponse): void;
+}
+
+interface IStateProps {
+  isAuthenticated: boolean;
+}
 interface IState {
   user: Login;
   errors: Login;
-  authenticated: boolean;
+  loading: boolean;
 }
 
 const initialState: IState = {
@@ -24,10 +37,11 @@ const initialState: IState = {
     email: "",
     senha: ""
   },
-  authenticated: Session.isAuthenticated()
+  loading: false
 };
 
-export default function LoginView() {
+type Props = IStateProps & IDispatchState;
+function LoginView(props: Props) {
   const [state, setState] = useState(initialState);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -107,13 +121,17 @@ export default function LoginView() {
     if (!validateEmail()) return;
     if (!validatePassword()) return;
 
+    setState((prevState: IState) => {
+      return {
+        ...prevState,
+        loading: true
+      };
+    });
+
     let result = await AutenticacaoApi.Login(state.user);
 
     if (result.success) {
-      Session.login(result.data!);
-      setState((prevState: IState) => {
-        return { ...prevState, authenticated: true };
-      });
+      props.login(result.data!);
     } else {
       setState((prevState: IState) => {
         return {
@@ -121,14 +139,15 @@ export default function LoginView() {
           errors: {
             ...prevState.errors,
             email: result.messages[0]
-          }
+          },
+          loading: false
         };
       });
     }
   };
 
   const styles = useStyles();
-  return state.authenticated ? (
+  return props.isAuthenticated ? (
     <Redirect to="/" />
   ) : (
     <Container className={styles.container} maxWidth="sm">
@@ -155,19 +174,45 @@ export default function LoginView() {
           onBlur={validatePassword}
         />
         <div className={styles.buttons}>
-          <Button variant="contained" color="primary" onClick={handleSubmit}>
-            Logar
-          </Button>
-          <Button variant="contained" color="primary">
-            Cadastrar
-          </Button>
+          <SubmitButton
+            loading={state.loading}
+            label="Entrar"
+            onSubmit={handleSubmit}
+          />
+          <div className={styles.wrapper}>
+            <Link to="/">
+              <Fab
+                variant="extended"
+                color="primary"
+                aria-label="cadastrar"
+                size="small"
+                onClick={() => {}}
+              >
+                <Typography variant="inherit" className={styles.contentSpacer}>
+                  Cadastrar
+                </Typography>
+              </Fab>
+            </Link>
+          </div>
         </div>
       </Paper>
     </Container>
   );
 }
 
-const useStyles = makeStyles(() => ({
+const mapStateToProps = (state: IApplicationState) => ({
+  isAuthenticated: state.SessionReducer.isAuthenticated
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(SessionActions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LoginView);
+
+const useStyles = makeStyles((theme: Theme) => ({
   container: {
     marginTop: 30
   },
@@ -186,13 +231,27 @@ const useStyles = makeStyles(() => ({
     margin: 20
   },
   buttons: {
-    marginTop: 20,
+    marginTop: 10,
     marginBottom: 10,
     width: "100%",
     display: "flex",
     justifyContent: "space-evenly",
-    "& button": {
-      width: 110
+    "& > div": {
+      "& > a > button": {
+        width: "130px !important"
+      },
+      "& > button": {
+        width: "130px !important"
+      }
     }
+  },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    "& a": { textDecoration: "none" }
+  },
+  contentSpacer: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1)
   }
 }));

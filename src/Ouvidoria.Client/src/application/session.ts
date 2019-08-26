@@ -32,6 +32,12 @@ export function login(login: LoginResponse): void {
   setUser(login.user);
 }
 
+export function logout(): void {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  localStorage.removeItem("expiresIn");
+}
+
 function setToken(token: string): void {
   localStorage.setItem("token", token);
 }

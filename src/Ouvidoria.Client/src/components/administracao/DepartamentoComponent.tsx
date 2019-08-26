@@ -1,4 +1,4 @@
-import { Container, Typography } from "@material-ui/core";
+import { makeStyles, Container, Typography } from "@material-ui/core";
 import React, { useEffect, useState, ChangeEvent, SyntheticEvent } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
@@ -15,8 +15,8 @@ import Operacao from "../../utils/Operacao";
 import * as Validations from "../../utils/Validations";
 import ErrorMessages from "../common/formFields/ErrorMessages";
 import InputField from "../common/formFields/InputField";
-import SaveButton from "../common/formFields/SaveButton";
 import SelectField from "../common/formFields/SelectField";
+import SubmitButton from "../common/formFields/SubmitButton";
 
 interface IProps {
   department: Departamento;
@@ -57,6 +57,7 @@ function DepartamentoComponent(props: Props) {
     ...initialState,
     department: props.department
   });
+  const classes = useStyles();
 
   useEffect(() => {
     async function getUserList() {
@@ -72,7 +73,7 @@ function DepartamentoComponent(props: Props) {
     }
 
     getUserList();
-  },        []);
+  },               []);
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
@@ -173,7 +174,7 @@ function DepartamentoComponent(props: Props) {
   return (
     <>
       <Container maxWidth="lg">
-        <form style={{ marginTop: 30, marginBottom: 10 }}>
+        <form className={classes.form}>
           {(props.operation === "Deletar" && (
             <Typography variant="body2">
               Você tem certeza que deseja excluir departamento{" "}
@@ -202,7 +203,14 @@ function DepartamentoComponent(props: Props) {
           {!!state.serverErrors.length && (
             <ErrorMessages errors={state.serverErrors} />
           )}
-          <SaveButton loading={state.loading} onSubmit={handleSubmit} />
+          <div className={classes.buttons}>
+            <SubmitButton
+              loading={state.loading}
+              onSubmit={handleSubmit}
+              label="Salvar"
+              saveIcon={true}
+            />
+          </div>
         </form>
       </Container>
     </>
@@ -218,3 +226,16 @@ export default connect(
   null,
   mapDispatchToProps
 )(DepartamentoComponent);
+
+const useStyles = makeStyles(() => ({
+  buttons: {
+    marginBottom: "1.25em",
+    marginTop: ".5em",
+    display: "flex",
+    justifyContent: "flex-end"
+  },
+  form: {
+    marginTop: 30,
+    marginBottom: 10
+  }
+}));

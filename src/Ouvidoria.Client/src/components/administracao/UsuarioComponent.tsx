@@ -3,7 +3,8 @@ import {
   FormControl,
   FormHelperText,
   InputLabel,
-  NativeSelect
+  NativeSelect,
+  makeStyles
 } from "@material-ui/core";
 import React, { useEffect, useState, ChangeEvent, SyntheticEvent } from "react";
 import { connect } from "react-redux";
@@ -21,8 +22,8 @@ import * as Validations from "../../utils/Validations";
 import CheckBoxField from "../common/formFields/CheckBoxField";
 import ErrorMessages from "../common/formFields/ErrorMessages";
 import InputField from "../common/formFields/InputField";
-import SaveButton from "../common/formFields/SaveButton";
 import SelectField from "../common/formFields/SelectField";
+import SubmitButton from "../common/formFields/SubmitButton";
 
 interface IDispatchProps {
   closeDialog(): void;
@@ -83,6 +84,7 @@ type Props = IProps & IDispatchProps;
 function UsuarioComponent(props: Props) {
   const [state, setState] = useState<IState>(initialState);
   const [errors, setErrors] = useState<IErrors>(initialErrorsState);
+  const classes = useStyles();
 
   useEffect(() => {
     async function getClasses() {
@@ -98,14 +100,14 @@ function UsuarioComponent(props: Props) {
       });
     }
     getClasses();
-  },        []);
+  }, []);
 
   useEffect(() => {
     if (!!props.user.nome)
       setState((prevState: IState) => {
         return { ...prevState, user: props.user };
       });
-  },        [props]);
+  }, [props]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let name = e.target.name;
@@ -409,7 +411,7 @@ function UsuarioComponent(props: Props) {
             onChange={handleSelectChange}
           >
             {Object.keys(UsuarioPerfil)
-              .filter(profile => isNaN(Number(profile)) === false)
+              .filter(profile => !isNaN(Number(profile)))
               .map(profile => (
                 <option value={Number(profile)} key={Number(profile)}>
                   {UsuarioPerfil[Number(profile)]}
@@ -425,7 +427,14 @@ function UsuarioComponent(props: Props) {
           onChange={handleActiveChange}
         />
         {!!state.errors.length && <ErrorMessages errors={state.errors} />}
-        <SaveButton loading={state.loading} onSubmit={handleSubmit} />
+        <div className={classes.buttons}>
+          <SubmitButton
+            loading={state.loading}
+            onSubmit={handleSubmit}
+            label="Salvar"
+            saveIcon={true}
+          />
+        </div>
       </form>
     </Container>
   );
@@ -441,3 +450,16 @@ export default connect(
   null,
   mapDispatchToProps
 )(UsuarioComponent);
+
+const useStyles = makeStyles(() => ({
+  buttons: {
+    marginBottom: "1.25em",
+    marginTop: ".5em",
+    display: "flex",
+    justifyContent: "flex-end"
+  },
+  form: {
+    marginTop: 30,
+    marginBottom: 10
+  }
+}));

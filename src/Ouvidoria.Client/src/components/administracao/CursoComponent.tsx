@@ -1,4 +1,4 @@
-import { Container, Typography } from "@material-ui/core";
+import { makeStyles, Container, Typography } from "@material-ui/core";
 import React, { useState, ChangeEvent, SyntheticEvent } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
@@ -6,12 +6,12 @@ import Curso from "../../models/Curso/Curso";
 import Resultado from "../../models/Resultado";
 import CursoApi from "../../services/CursoApi";
 import * as DialogActions from "../../store/ducks/dialogDatatable/DialogActions";
-import Operacao from "../../utils/Operacao";
 import * as MessageBoxActions from "../../store/ducks/messageBox/MessageBoxActions";
+import Operacao from "../../utils/Operacao";
 import * as Validations from "../../utils/Validations";
-import InputField from "../common/formFields/InputField";
-import SaveButton from "../common/formFields/SaveButton";
 import ErrorMessages from "../common/formFields/ErrorMessages";
+import InputField from "../common/formFields/InputField";
+import SubmitButton from "../common/formFields/SubmitButton";
 
 interface IProps {
   class: Curso;
@@ -45,6 +45,7 @@ function CursoComponent(props: Props) {
     ...initialState,
     class: props.class
   });
+  const classes = useStyles();
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -125,7 +126,7 @@ function CursoComponent(props: Props) {
   return (
     <>
       <Container maxWidth="lg">
-        <form style={{ marginTop: 30, marginBottom: 10 }}>
+        <form className={classes.form}>
           {(props.operation === "Deletar" && (
             <Typography variant="body1">
               Você tem certeza que deseja excluir curso {props.class.nome}{" "}
@@ -144,7 +145,14 @@ function CursoComponent(props: Props) {
           {!!state.serverErrors.length && (
             <ErrorMessages errors={state.serverErrors} />
           )}
-          <SaveButton loading={state.loading} onSubmit={handleSubmit} />
+          <div className={classes.buttons}>
+            <SubmitButton
+              loading={state.loading}
+              onSubmit={handleSubmit}
+              label="Salvar"
+              saveIcon={true}
+            />
+          </div>
         </form>
       </Container>
     </>
@@ -161,3 +169,16 @@ export default connect(
   null,
   mapDispatchToProps
 )(CursoComponent);
+
+const useStyles = makeStyles(() => ({
+  buttons: {
+    marginBottom: "1.25em",
+    marginTop: ".5em",
+    display: "flex",
+    justifyContent: "flex-end"
+  },
+  form: {
+    marginTop: 30,
+    marginBottom: 10
+  }
+}));

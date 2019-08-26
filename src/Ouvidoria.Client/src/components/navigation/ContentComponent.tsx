@@ -51,8 +51,10 @@ function ContentComponent(props: IStateProps) {
   );
 }
 
+
+
 const mapStateToProps = (state: IApplicationState) => ({
-  sidebarIsOpen: state.NavigationReducer.sidebarIsOpen
+  sidebarIsOpen: state.NavigationReducer.sidebarIsOpen,
 });
 
 export default connect(
