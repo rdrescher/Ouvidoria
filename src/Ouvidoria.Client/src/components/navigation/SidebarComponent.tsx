@@ -4,16 +4,11 @@ import {
   Divider,
   Drawer,
   List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   Theme,
   Typography
 } from "@material-ui/core";
 import {
   Build,
-  ExpandLess,
-  ExpandMore,
   Home,
   Message,
   People,
@@ -26,37 +21,24 @@ import {
   ThumbUp,
   Work
 } from "@material-ui/icons";
-import clsx from "clsx";
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import AMFIcon from "../../assets/img/amf_white.png";
 import Background from "../../assets/img/bg-clear.png";
+import IUserToken from "../../models/Autenticacao/UserToken";
 import { IApplicationState } from "../../store";
+import SidebarExpandItem from "../common/fields/SidebarExpandItem";
+import SidebarItem from "../common/fields/SidebarItem";
 
 const drawerWidth = 240;
-type Menus =
-  | "Home"
-  | "Elogio"
-  | "Sugestão"
-  | "Solicitação"
-  | "Reclamação"
-  | "Denúncia"
-  | "Questionários"
-  | "Cursos"
-  | "Departamentos"
-  | "Usuários"
-  | "AdmQuestionarios"
-  | "Manifestações";
-
 interface IStateProps {
   sidebarIsOpen: boolean;
+  user: IUserToken | null;
 }
 
 function SidebarComponent(props: IStateProps) {
   const classes = useStyles();
   const sidebarIsOpen = props.sidebarIsOpen;
-  const [activeMenu, setActiveMenu] = useState<Menus>();
   const [manifestationIsOpen, setManifestationIsOpen] = useState<boolean>(
     false
   );
@@ -64,15 +46,11 @@ function SidebarComponent(props: IStateProps) {
     false
   );
 
-  function onMenuChange(menu: Menus) {
-    setActiveMenu(menu);
-  }
-
-  function onManifestationChange(): void {
+  function handleManifestationChange(): void {
     setManifestationIsOpen(!manifestationIsOpen);
   }
 
-  function onAdministrationChange(): void {
+  function handleAdministrationChange(): void {
     setAdministrationIsOpen(!administrationIsOpen);
   }
 
@@ -89,179 +67,98 @@ function SidebarComponent(props: IStateProps) {
     >
       <div className={classes.drawerHeader} />
       <img src={AMFIcon} className={classes.AMFIcon} alt="AMF" />
-      <Typography variant="h6" className={classes.titulo}>
+      <Typography variant="h6" className={classes.title}>
         Antonio Meneghetti Faculdade
       </Typography>
       <List>
         <Divider />
-        <Link to="/" className={classes.link}>
-          <ListItem
-            button
-            className={clsx({
-              [classes.selected]: activeMenu === "Home"
-            })}
-            onClick={() => onMenuChange("Home")}
-          >
-            <ListItemIcon>
-              <Home />
-            </ListItemIcon>
-            <ListItemText primary="Página Inicial" />
-          </ListItem>
-        </Link>
+        <SidebarItem path="/" label="Página Inicial" icon={<Home />} />
         <Divider />
-        <ListItem button onClick={onManifestationChange}>
-          <ListItemIcon>
-            <ThumbsUpDown />
-          </ListItemIcon>
-          <ListItemText primary="Manifestações" />
-          {manifestationIsOpen ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
+        <SidebarExpandItem
+          icon={<ThumbsUpDown />}
+          onClick={handleManifestationChange}
+          label="Manifestações"
+          isOpen={manifestationIsOpen}
+        />
         <Collapse in={manifestationIsOpen} timeout="auto" unmountOnExit>
-          <Link to="/elogio" className={classes.link}>
-            <ListItem
-              button
-              className={clsx(classes.nested, {
-                [classes.selected]: activeMenu === "Elogio"
-              })}
-              onClick={() => onMenuChange("Elogio")}
-            >
-              <ListItemIcon>
-                <ThumbUp />
-              </ListItemIcon>
-              <ListItemText primary="Elogio" />
-            </ListItem>
-          </Link>
-          <Link to="/sugestao" className={classes.link}>
-            <ListItem
-              button
-              className={clsx(classes.nested, {
-                [classes.selected]: activeMenu === "Sugestão"
-              })}
-              onClick={() => onMenuChange("Sugestão")}
-            >
-              <ListItemIcon>
-                <Message />
-              </ListItemIcon>
-              <ListItemText primary="Sugestão" />
-            </ListItem>
-          </Link>
-          <Link to="/solicitacao" className={classes.link}>
-            <ListItem
-              button
-              className={clsx(classes.nested, {
-                [classes.selected]: activeMenu === "Solicitação"
-              })}
-              onClick={() => onMenuChange("Solicitação")}
-            >
-              <ListItemIcon>
-                <RecordVoiceOver />
-              </ListItemIcon>
-              <ListItemText primary="Solicitação" />
-            </ListItem>
-          </Link>
-          <Link to="/reclamacao" className={classes.link}>
-            <ListItem
-              button
-              className={clsx(classes.nested, {
-                [classes.selected]: activeMenu === "Reclamação"
-              })}
-              onClick={() => onMenuChange("Reclamação")}
-            >
-              <ListItemIcon>
-                <ThumbDown />
-              </ListItemIcon>
-              <ListItemText primary="Reclamação" />
-            </ListItem>
-          </Link>
-          <Link to="/denuncia" className={classes.link}>
-            <ListItem
-              button
-              className={clsx(classes.nested, {
-                [classes.selected]: activeMenu === "Denúncia"
-              })}
-              onClick={() => onMenuChange("Denúncia")}
-            >
-              <ListItemIcon>
-                <Report />
-              </ListItemIcon>
-              <ListItemText primary="Denúncia" />
-            </ListItem>
-          </Link>
+          <SidebarItem
+            path="/elogio"
+            nested={true}
+            label="Elogio"
+            icon={<ThumbUp />}
+          />
+          <SidebarItem
+            path="/sugestao"
+            nested={true}
+            label="Sugestão"
+            icon={<Message />}
+          />
+          <SidebarItem
+            path="/solicitacao"
+            nested={true}
+            label="Solicitação"
+            icon={<RecordVoiceOver />}
+          />
+          <SidebarItem
+            path="/reclamacao"
+            nested={true}
+            label="Reclamação"
+            icon={<ThumbDown />}
+          />
+          <SidebarItem
+            path="/denuncia"
+            nested={true}
+            label="Denúncia"
+            icon={<Report />}
+          />
         </Collapse>
         <Divider />
-        <Link to="/questionario" className={classes.link}>
-          <ListItem
-            button
-            className={clsx({
-              [classes.selected]: activeMenu === "Questionários"
-            })}
-            onClick={() => onMenuChange("Questionários")}
-          >
-            <ListItemIcon>
-              <QuestionAnswer />
-            </ListItemIcon>
-            <ListItemText primary="Questionários" />
-          </ListItem>
-        </Link>
-        <Divider />
-        <ListItem button onClick={onAdministrationChange}>
-          <ListItemIcon>
-            <Build />
-          </ListItemIcon>
-          <ListItemText primary="Administração" />
-          {administrationIsOpen ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
-        <Collapse in={administrationIsOpen} timeout="auto" unmountOnExit>
-          <Link to="/cursos" className={classes.link}>
-            <ListItem
-              button
-              className={clsx(classes.nested, {
-                [classes.selected]: activeMenu === "Cursos"
-              })}
-              onClick={() => onMenuChange("Cursos")}
-            >
-              <ListItemIcon>
-                <School />
-              </ListItemIcon>
-              <ListItemText primary="Cursos" />
-            </ListItem>
-          </Link>
-          <Link to="/departamentos" className={classes.link}>
-            <ListItem
-              button
-              className={clsx(classes.nested, {
-                [classes.selected]: activeMenu === "Departamentos"
-              })}
-              onClick={() => onMenuChange("Departamentos")}
-            >
-              <ListItemIcon>
-                <Work />
-              </ListItemIcon>
-              <ListItemText primary="Departamentos" />
-            </ListItem>
-          </Link>
-          <Link to="/usuarios" className={classes.link}>
-            <ListItem
-              button
-              className={clsx(classes.nested, {
-                [classes.selected]: activeMenu === "Usuários"
-              })}
-              onClick={() => onMenuChange("Usuários")}
-            >
-              <ListItemIcon>
-                <People />
-              </ListItemIcon>
-              <ListItemText primary="Usuários" />
-            </ListItem>
-          </Link>
-        </Collapse>
+        {props.user !== null && (
+          <>
+            <SidebarItem
+              path="/questionario"
+              label="Questionários"
+              icon={<QuestionAnswer />}
+            />
+            <Divider />
+            {!!props.user.claims.find(x => x.type === "Administrador") && (
+              <SidebarExpandItem
+                icon={<Build />}
+                onClick={handleAdministrationChange}
+                label="Administração"
+                isOpen={administrationIsOpen}
+              />
+            )}
+            <Collapse in={administrationIsOpen} timeout="auto" unmountOnExit>
+              <SidebarItem
+                path="/cursos"
+                label="Cursos"
+                nested={true}
+                icon={<School />}
+              />
+              <SidebarItem
+                path="/departamentos"
+                label="Departamentos"
+                nested={true}
+                icon={<Work />}
+              />
+              <SidebarItem
+                path="/usuarios"
+                label="Usuários"
+                nested={true}
+                icon={<People />}
+              />
+            </Collapse>
+          </>
+        )}
       </List>
     </Drawer>
   );
 }
 
 const mapStateToProps = (state: IApplicationState) => ({
-  sidebarIsOpen: state.NavigationReducer.sidebarIsOpen
+  sidebarIsOpen: state.NavigationReducer.sidebarIsOpen,
+  user: state.SessionReducer.user
 });
 
 export default connect(
@@ -270,7 +167,7 @@ export default connect(
 )(SidebarComponent);
 
 const useStyles = makeStyles((theme: Theme) => ({
-  titulo: {
+  title: {
     marginBottom: 10,
     textAlign: "center"
   },
@@ -302,16 +199,5 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: "auto",
     marginRight: "auto",
     marginBottom: 10
-  },
-  selected: {
-    background: "rgba(0, 0, 0, 0.09) !important"
-  },
-  link: {
-    color: "white",
-    textDecoration: "none"
-  },
-  nested: {
-    paddingLeft: theme.spacing(4),
-    background: "rgba(0, 0, 0, 0.04)"
   }
 }));
