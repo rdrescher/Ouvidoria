@@ -8,23 +8,23 @@ import SidebarComponent from "../components/navigation/SidebarComponent";
 import Store from "../store";
 
 export default function MainView() {
-    const classes = useStyles();
+  const classes = useStyles();
 
-    return (
-        <div className={classes.root}>
-            <Provider store={Store}>
-                <BrowserRouter>
-                    <NavbarComponent />
-                    <SidebarComponent />
-                    <ContentComponent />
-                </BrowserRouter>
-            </Provider>
-        </div>
-    );
+  return (
+    <div className={classes.root}>
+      <Provider store={Store}>
+        <BrowserRouter>
+          <NavbarComponent />
+          <SidebarComponent />
+          <ContentComponent />
+        </BrowserRouter>
+      </Provider>
+    </div>
+  );
 }
 
 const useStyles = makeStyles(() => ({
-    root: {
-        display: "flex"
-    }
+  root: {
+    display: "flex"
+  }
 }));

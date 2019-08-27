@@ -11,7 +11,7 @@ namespace Ouvidoria.Domain.Models
             this.DataAtualizacao = DateTime.Now;
             this.DataInsercao = DateTime.Now;
         }
-        public Departamento(string nome, int idUsuarioResponsavel)
+        public Departamento(string nome, int? idUsuarioResponsavel)
         {
             this.Nome = nome;
             this.IdUsuarioResponsavel = idUsuarioResponsavel;

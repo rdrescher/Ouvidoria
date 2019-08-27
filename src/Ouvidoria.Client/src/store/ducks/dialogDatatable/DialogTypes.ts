@@ -1,4 +1,4 @@
-import Operacao from "../../../types/Operacao";
+import Operacao from "../../../utils/Operacao";
 
 export enum DialogTypes {
     Open_Dialog = "@dialog/OpenDialog",

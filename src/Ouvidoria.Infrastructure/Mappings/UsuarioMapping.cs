@@ -14,10 +14,6 @@ namespace Ouvidoria.Infrastructure.Mappings
                 .IsRequired()
                 .HasColumnType("varchar(100)");
 
-            builder.Property(c => c.Senha)
-                .IsRequired()
-                .HasColumnType("varchar(1000)");
-
             builder.Property(c => c.CPF)
                 .IsRequired()
                 .HasColumnType("varchar(11)");
@@ -27,6 +23,7 @@ namespace Ouvidoria.Infrastructure.Mappings
                 .HasColumnType("varchar(100)");
 
             builder.Property(c => c.Telefone)
+                .HasColumnName("PhoneNumber")
                 .HasColumnType("varchar(15)");
 
             builder.HasOne(c => c.Curso)
@@ -41,7 +38,7 @@ namespace Ouvidoria.Infrastructure.Mappings
                 .IsRequired()
                 .HasColumnType("datetime");
 
-            builder.ToTable("Usuario");
+            builder.ToTable("AspNetUsers");
         }
     }
 }

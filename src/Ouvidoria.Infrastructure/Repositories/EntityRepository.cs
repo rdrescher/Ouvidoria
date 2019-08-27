@@ -41,7 +41,7 @@ namespace Ouvidoria.Infrastructure.Repositories
         public async Task<int> SaveChanges() => 
             await Db.SaveChangesAsync();
 
-        public async Task<IEnumerable<TEntity>> Search(Expression<Func<TEntity, bool>> predicate) =>
+        public async Task<List<TEntity>> Search(Expression<Func<TEntity, bool>> predicate) =>
             await DbSet.AsNoTracking().Where(predicate).ToListAsync();
 
         public virtual async Task Update(TEntity entity)

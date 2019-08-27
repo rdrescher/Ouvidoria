@@ -10,11 +10,13 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Ouvidoria.Application\Ouvidoria.Application.csproj" />
-    <ProjectReference Include="..\Ouvidoria.CrossCutting\Ouvidoria.CrossCutting.csproj" />
+    <ProjectReference Include="..\Ouvidoria.CrossCutting.Identity\Ouvidoria.CrossCutting.Identity.csproj" />
+    <ProjectReference Include="..\Ouvidoria.CrossCutting.IoC\Ouvidoria.CrossCutting.IoC.csproj" />
   </ItemGroup>
 
 </Project>

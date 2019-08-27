@@ -1,40 +1,77 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Ouvidoria.Application.DTOs;
+using Ouvidoria.Application.ViewModel;
+using Ouvidoria.Application.Enums;
 using Ouvidoria.Application.Interfaces;
 using Ouvidoria.Application.Utils;
+using Ouvidoria.CrossCutting.Identity.Models;
 
 namespace Ouvidoria.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsuarioController: ControllerBase
+    public class UsuarioController : BaseController
     {
-        private readonly IUsuarioAppService service;
-        public UsuarioController(IUsuarioAppService service)
+        private readonly IUsuarioAppService _service;
+        private readonly UserManager<AspNetUser> _userManager;
+        public UsuarioController(
+            IUsuarioAppService service,
+            UserManager<AspNetUser> userManager)
         {
-            this.service = service;
+            _service = service;
+            _userManager = userManager;
         }
 
+        [Authorize(policy: "Administrador")]
         [HttpGet]
-        public async Task<ActionResult<Resultado<List<UsuarioDTO>>>> Get() =>
-            Ok(await service.GetUsers());
+        public async Task<ActionResult<Resultado<List<UsuarioViewModel>>>> Get() =>
+            Ok(await _service.GetUsers());
 
-        [HttpPost]
-        public async Task<ActionResult<Resultado<UsuarioDTO>>> Post(CadastroUsuarioDTO cadastroUsuarioDTO) =>
-            ModelState.IsValid ?
-                Ok(await service.Create(cadastroUsuarioDTO)) :
-                Ok(Resultado<UsuarioDTO>.Failed(ModelState.Values.Select(x => x.Errors).ToString()));
-
+        [Authorize(policy: "Administrador")]
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<Resultado<UsuarioDTO>>> Put(int id, CadastroUsuarioDTO cadastroUsuarioDTO)
+        public async Task<ActionResult<Resultado<UsuarioViewModel>>> Put(int id, AtualizacaoUsuarioViewModel atualizacaoUsuario)
         {
-            if(id != cadastroUsuarioDTO.id) return BadRequest();
-            return ModelState.IsValid ?
-                Ok(await service.Update(cadastroUsuarioDTO)) :
-                Ok(Resultado<CursoDTO>.Failed(ModelState.Values.Select(x => x.Errors).ToString()));
+            if (id != atualizacaoUsuario.id) return BadRequest();
+            if (!ModelState.IsValid)
+                return Ok(Resultado<CursoViewModel>.Failed(ModelState.Values.Select(x => x.Errors).ToString()));
+
+            var result = await _service.Update(atualizacaoUsuario);
+            if (result.Success)
+            {
+                var user = await _userManager.FindByIdAsync(result.Data.id.ToString());
+                var claims = await _userManager.GetClaimsAsync(user);
+
+                if (claims.Count > 0 && atualizacaoUsuario.UsuarioPerfil == UsuarioPerfil.Usuario)
+                {
+                    await _userManager.RemoveClaimsAsync(user, claims);
+                }
+                else if (atualizacaoUsuario.UsuarioPerfil != UsuarioPerfil.Usuario)
+                {
+                    var claim = new Claim(atualizacaoUsuario.UsuarioPerfil.ToString(),
+                                          atualizacaoUsuario.UsuarioPerfil.ToString());
+
+                    if (claims.Count > 0 && !claims.Select(x => x.Type).Contains(claim.Type))
+                    {
+                        await _userManager.RemoveClaimsAsync(user, claims);
+                        await _userManager.AddClaimAsync(user, claim);
+                    }
+                    else if (claims.Count == 0)
+                    {
+                        await _userManager.AddClaimAsync(user, claim);
+                    }
+                }
+            }
+            return Ok(result);
         }
+
+        [Authorize(policy: "Administrador")]
+        [HttpGet("[action]")]
+        public async Task<ActionResult<Resultado<List<GenericList>>>> GetGenericList() =>
+            Ok(await _service.GetGenericList());
     }
 }

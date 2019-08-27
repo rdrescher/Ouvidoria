@@ -1,4 +1,4 @@
-import Http from "../core/http";
+import Http from "../application/http";
 import IResultado from "../models/Resultado";
 
 export default class EntityApi<TEntity>
