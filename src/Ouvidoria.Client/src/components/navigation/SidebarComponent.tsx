@@ -39,7 +39,6 @@ interface IStateProps {
 }
 
 function SidebarComponent(props: IStateProps) {
-  console.log(props.claims);
   const classes = useStyles();
   const sidebarIsOpen = props.sidebarIsOpen;
   const [manifestationIsOpen, setManifestationIsOpen] = useState<boolean>(

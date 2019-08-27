@@ -1,17 +1,17 @@
 import {
+  makeStyles,
   Container,
   FormControl,
   FormHelperText,
   InputLabel,
-  NativeSelect,
-  makeStyles
+  NativeSelect
 } from "@material-ui/core";
 import React, { useEffect, useState, ChangeEvent, SyntheticEvent } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import GenericList from "../../models/GenericList";
 import Resultado from "../../models/Resultado";
-import CadastroUsuario from "../../models/Usuario/CadastroUsuario";
+import AtualizacaoUsuario from "../../models/Usuario/AtualizacaoUsuario";
 import Usuario, { UsuarioPerfil } from "../../models/Usuario/Usuario";
 import CursoApi from "../../services/CursoApi";
 import UsuarioApi from "../../services/UsuarioApi";
@@ -31,13 +31,13 @@ interface IDispatchProps {
 }
 
 interface IProps {
-  user: CadastroUsuario;
+  user: AtualizacaoUsuario;
   operation: Operacao;
   handleUpdateData: (user: Usuario) => void;
 }
 
 interface IState {
-  user: CadastroUsuario;
+  user: AtualizacaoUsuario;
   loading: boolean;
   classes: GenericList[];
   errors: string[];
@@ -45,32 +45,20 @@ interface IState {
 
 interface IErrors {
   nome: string;
-  email: string;
   telefone: string;
-  cpf: string;
-  senha: string;
-  confirmaSenha: string;
 }
 
 const initialErrorsState: IErrors = {
   nome: "",
-  email: "",
-  telefone: "",
-  cpf: "",
-  senha: "",
-  confirmaSenha: ""
+  telefone: ""
 };
 
 const initialState: IState = {
   user: {
     ativo: true,
-    cpf: "",
-    email: "",
     id: 0,
     idCurso: null,
     nome: "",
-    senha: "",
-    confirmaSenha: "",
     telefone: "",
     usuarioPerfil: 1
   },
@@ -100,14 +88,14 @@ function UsuarioComponent(props: Props) {
       });
     }
     getClasses();
-  }, []);
+  },        []);
 
   useEffect(() => {
     if (!!props.user.nome)
       setState((prevState: IState) => {
         return { ...prevState, user: props.user };
       });
-  }, [props]);
+  },        [props]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let name = e.target.name;
@@ -125,7 +113,7 @@ function UsuarioComponent(props: Props) {
     setState({ ...state, user: { ...state.user, ativo: !state.user.ativo } });
   };
 
-  const handleTelephoneCPFChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleTelephoneChange = (e: ChangeEvent<HTMLInputElement>) => {
     let name = e.target.name;
     let value = e.target.value;
     let regex = /^\s*\d*\s*$/;
@@ -138,19 +126,10 @@ function UsuarioComponent(props: Props) {
     const { user } = state;
     let valid = true;
     let result: Resultado<Usuario>;
-    let operationMessage = "";
 
     if (user === props.user) return;
-
     if (!validateName()) valid = false;
-    if (!validateEmail()) valid = false;
     if (!validateTelephone()) valid = false;
-    if (!validateCPF()) valid = false;
-
-    if (props.operation === "Criar") {
-      if (!validatePassword()) valid = false;
-      if (!validateConfirmPassword()) valid = false;
-    }
 
     if (!valid) return;
 
@@ -158,13 +137,7 @@ function UsuarioComponent(props: Props) {
       return { ...prevState, loading: true };
     });
 
-    if (props.operation === "Criar") {
-      result = await UsuarioApi.create(state.user);
-      operationMessage = "criado";
-    } else {
-      result = await UsuarioApi.update(state.user.id, state.user);
-      operationMessage = "atualizado";
-    }
+    result = await UsuarioApi.update(state.user.id, state.user);
 
     setState((prevState: IState) => {
       return { ...prevState, loading: false };
@@ -177,7 +150,7 @@ function UsuarioComponent(props: Props) {
     } else {
       props.handleUpdateData(result.data!);
       props.closeDialog();
-      props.show(`Usuário ${operationMessage} com sucesso`);
+      props.show(`Usuário atualizado com sucesso`);
     }
   };
 
@@ -202,26 +175,6 @@ function UsuarioComponent(props: Props) {
     }
     setErrors((prevState: IErrors) => {
       return { ...prevState, nome: "" };
-    });
-    return true;
-  };
-
-  const validateEmail = (): boolean => {
-    let { email } = state.user;
-    if (!email) {
-      setErrors((prevState: IErrors) => {
-        return { ...prevState, email: "Por favor, informe o email" };
-      });
-      return false;
-    } else if (!Validations.isValidEmail(email)) {
-      setErrors((prevState: IErrors) => {
-        return { ...prevState, email: "O email deve ser válido" };
-      });
-      return false;
-    }
-
-    setErrors((prevState: IErrors) => {
-      return { ...prevState, email: "" };
     });
     return true;
   };
@@ -251,90 +204,6 @@ function UsuarioComponent(props: Props) {
     return true;
   };
 
-  const validateCPF = (): boolean => {
-    let { cpf } = state.user;
-    if (!cpf) {
-      setErrors((prevState: IErrors) => {
-        return { ...prevState, cpf: "Por favor, informe o cpf" };
-      });
-      return false;
-    } else {
-      if (!Validations.onlyNumbers(cpf)) {
-        setErrors((prevState: IErrors) => {
-          return {
-            ...prevState,
-            cpf: "O CPF deve conter apenas números"
-          };
-        });
-        return false;
-      } else if (!Validations.isValidCPF(cpf)) {
-        setErrors((prevState: IErrors) => {
-          return {
-            ...prevState,
-            cpf: "O CPF informado é inválido"
-          };
-        });
-        return false;
-      }
-      setErrors((prevState: IErrors) => {
-        return { ...prevState, cpf: "" };
-      });
-      return true;
-    }
-  };
-
-  const validatePassword = (): boolean => {
-    let password = state.user.senha;
-    if (!password) {
-      setErrors((prevState: IErrors) => {
-        return { ...prevState, senha: "Por favor, informe a senha" };
-      });
-      return false;
-    } else {
-      if (!Validations.hasCorrectSize(password, 6, 20)) {
-        setErrors((prevState: IErrors) => {
-          return {
-            ...prevState,
-            senha: "A senha deve conter entre 6 e 20 caracteres"
-          };
-        });
-        return false;
-      }
-    }
-    setErrors((prevState: IErrors) => {
-      return { ...prevState, senha: "" };
-    });
-    return true;
-  };
-
-  const validateConfirmPassword = (): boolean => {
-    let confirmPassword = state.user.confirmaSenha;
-    let password = state.user.senha;
-    if (!confirmPassword) {
-      setErrors((prevState: IErrors) => {
-        return {
-          ...prevState,
-          confirmaSenha: "Por favor, confirme a senha digitada anteriormente"
-        };
-      });
-      return false;
-    } else {
-      if (confirmPassword !== password) {
-        setErrors((prevState: IErrors) => {
-          return {
-            ...prevState,
-            confirmaSenha: "As senhas digitadas não são correspondentes"
-          };
-        });
-        return false;
-      }
-    }
-    setErrors((prevState: IErrors) => {
-      return { ...prevState, confirmaSenha: "" };
-    });
-    return true;
-  };
-
   return (
     <Container maxWidth="lg">
       <form>
@@ -347,52 +216,13 @@ function UsuarioComponent(props: Props) {
           onBlur={validateName}
         />
         <InputField
-          name="email"
-          label="E-mail"
-          type="email"
-          error={errors.email}
-          value={state.user.email}
-          onChange={handleInputChange}
-          onBlur={validateEmail}
-        />
-        <InputField
-          name="cpf"
-          label="CPF"
-          error={errors.cpf}
-          value={state.user.cpf}
-          onChange={handleTelephoneCPFChange}
-          onBlur={validateCPF}
-        />
-        <InputField
           name="telefone"
           label="Telefone"
           error={errors.telefone}
           value={state.user.telefone}
-          onChange={handleTelephoneCPFChange}
+          onChange={handleTelephoneChange}
           onBlur={validateTelephone}
         />
-        <InputField
-          name="senha"
-          label="Senha"
-          error={errors.senha}
-          value={state.user.senha}
-          type="password"
-          onChange={handleInputChange}
-          disabled={props.operation === "Atualizar"}
-          onBlur={validatePassword}
-        />
-        {props.operation === "Criar" && (
-          <InputField
-            name="confirmaSenha"
-            label="Confirmar Senha"
-            error={errors.confirmaSenha}
-            value={state.user.confirmaSenha}
-            type="password"
-            onChange={handleInputChange}
-            onBlur={validateConfirmPassword}
-          />
-        )}
-
         <SelectField
           name="idCurso"
           label="Curso"

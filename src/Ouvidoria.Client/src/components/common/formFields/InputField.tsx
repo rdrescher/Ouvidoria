@@ -10,7 +10,7 @@ interface IProps {
   error: string;
   name: string;
   label: string;
-  value: string | number;
+  value: string | number | null;
   type?: string;
   disabled?: boolean;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;

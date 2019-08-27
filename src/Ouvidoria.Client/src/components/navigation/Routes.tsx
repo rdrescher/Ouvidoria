@@ -4,6 +4,7 @@ import { UsuarioPerfil } from "../../models/Usuario/Usuario";
 import CursoView from "../../views/administracao/CursoView";
 import DepartamentoView from "../../views/administracao/DepartamentoView";
 import UsuarioView from "../../views/administracao/UsuarioView";
+import CadastroView from "../../views/autenticacao/CadastroView";
 import LoginView from "../../views/autenticacao/LoginView";
 import DashboardView from "../../views/manifestacoes/DashboardView";
 import DenunciaView from "../../views/manifestacoes/DenunciaView";
@@ -14,10 +15,12 @@ import SolicitacaoView from "../../views/manifestacoes/SolicitacaoView";
 import SugestaoView from "../../views/manifestacoes/SugestaoView";
 import PrivateRoute from "./PrivateRoute";
 
+
 export default function Routes() {
   return (
     <Switch>
       <Route exact path="/login" component={LoginView} />
+      <Route exact path="/cadastrar" component={CadastroView} />
       <Route exact path="/denuncia" component={DenunciaView} />
       <Route exact path="/elogio" component={ElogioView} />
       <Route exact path="/reclamacao" component={ReclamacaoView} />

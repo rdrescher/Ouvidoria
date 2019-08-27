@@ -1,5 +1,6 @@
+import { makeStyles, Theme, Typography } from "@material-ui/core";
+import { ErrorOutline } from "@material-ui/icons";
 import React from "react";
-import { Typography, Divider, makeStyles, Theme } from "@material-ui/core";
 
 interface IProps {
   errors: string[];
@@ -9,11 +10,9 @@ export default function ErrorMessages(props: IProps) {
   const classes = useStyles(0);
   return (
     <div className={classes.errors}>
-      <Typography variant="h6">Erro ao salvar</Typography>
-      <Divider className={classes.divider} />
       {props.errors.map(error => (
-        <Typography key={error} variant="body2">
-          {error}
+        <Typography key={error} variant="body2" className={classes.text} >
+          <ErrorOutline className={classes.icon} />{error}
         </Typography>
       ))}
     </div>
@@ -30,9 +29,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 20,
     padding: 10,
     paddingRight: 20,
-    paddingLeft: 20
+    paddingLeft: 20,
   },
-  divider: {
-    marginBottom: 15
+  text: {
+    display: "flex",
+    alignItems: "center"
+  },
+  icon: {
+    marginRight: 15
   }
 }));

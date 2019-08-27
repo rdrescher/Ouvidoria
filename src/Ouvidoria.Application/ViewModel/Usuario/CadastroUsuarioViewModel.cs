@@ -11,7 +11,6 @@ namespace Ouvidoria.Application.ViewModel
         public string cpf { get; set; }
         public string senha { get; set; }
         public string confirmaSenha { get; set; }
-        public bool ativo { get; set; }
         public int? idCurso { get; set; }
     }
 }

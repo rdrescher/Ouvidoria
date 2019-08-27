@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Ouvidoria.Api.Controllers
 {
@@ -6,6 +7,7 @@ namespace Ouvidoria.Api.Controllers
     [ApiController]
     public abstract class BaseController : ControllerBase
     {
-
+        public BaseController()
+        { }
     }
 }

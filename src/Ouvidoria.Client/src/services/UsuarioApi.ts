@@ -1,18 +1,14 @@
 import Http from "../application/http";
 import GenericList from "../models/GenericList";
 import Resultado from "../models/Resultado";
-import CadastroUsuario from "../models/Usuario/CadastroUsuario";
+import AtualizacaoUsuario from "../models/Usuario/AtualizacaoUsuario";
 import Usuario from "../models/Usuario/Usuario";
 import EntityApi from "./EntityApi";
 
 export default class UsuarioApi {
     public static readonly entity = new EntityApi<Usuario>("Usuario");
 
-    public static async create(user: CadastroUsuario): Promise<Resultado<Usuario>> {
-        return await Http.post(`/api/Usuario`, user);
-    }
-
-    public static async update(id: number, user: CadastroUsuario): Promise<Resultado<Usuario>> {
+    public static async update(id: number, user: AtualizacaoUsuario): Promise<Resultado<Usuario>> {
         return await Http.put(`/api/Usuario/${id}`, user);
     }
 

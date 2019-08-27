@@ -28,7 +28,7 @@ namespace Ouvidoria.Application.AutoMapper
 
             #region Identity
             CreateMap<CadastroUsuarioViewModel, AspNetUser>()
-                .ConstructUsing(c => new AspNetUser(c.nome, c.email, c.cpf, c.telefone, c.idCurso, c.ativo));
+                .ConstructUsing(c => new AspNetUser(c.nome, c.email, c.cpf, c.telefone, c.idCurso, true));
             #endregion
         }
     }

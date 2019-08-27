@@ -56,6 +56,7 @@ namespace Ouvidoria.Api.Controllers
         [HttpPost("[action]")]
         public async Task<ActionResult<Resultado<LoginResponseViewModel>>> Cadastrar(CadastroUsuarioViewModel cadastroUsuario)
         {
+            if (User.Identity.IsAuthenticated) return Ok(Resultado.Failed());
             if (!ModelState.IsValid)
                 return Ok(Resultado.Failed("Dados incorretos"));
             if (!await _usuarioService.IsValidUser(cadastroUsuario))
@@ -77,6 +78,7 @@ namespace Ouvidoria.Api.Controllers
         [HttpPost("[action]")]
         public async Task<ActionResult<Resultado<LoginResponseViewModel>>> Login(LoginViewModel login)
         {
+            if (User.Identity.IsAuthenticated) return Ok(Resultado.Failed());
             if (!ModelState.IsValid)
                 return Ok(Resultado.Failed("Dados Incorretos"));
 
@@ -137,7 +139,7 @@ namespace Ouvidoria.Api.Controllers
                 {
                     Id = user.Id,
                     Email = user.Email,
-                    Claims = claims.Select(c => new ClaimViewModel { Type = c.Type, Value = c.Value })
+                    Name = user.Nome
                 }
             };
 

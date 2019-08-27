@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import UsuarioComponent from "../../components/administracao/UsuarioComponent";
 import DataTable from "../../components/common/dataTable/DataTable";
 import Resultado from "../../models/Resultado";
-import CadastroUsuario from "../../models/Usuario/CadastroUsuario";
+import AtualizacaoUsuario from "../../models/Usuario/AtualizacaoUsuario";
 import Usuario, { UsuarioPerfil } from "../../models/Usuario/Usuario";
 import UsuarioApi from "../../services/UsuarioApi";
 import Operacao from "../../utils/Operacao";
@@ -59,13 +59,13 @@ const headers: MUIDataTableColumnDef[] = [
 
 interface IState {
   operation: Operacao;
-  selectedUser: CadastroUsuario;
+  selectedUser: AtualizacaoUsuario;
   newUser: Usuario | null;
 }
 
 const initialState: IState = {
   operation: "Criar",
-  selectedUser: {} as CadastroUsuario,
+  selectedUser: {} as AtualizacaoUsuario,
   newUser: null
 };
 
@@ -82,16 +82,12 @@ export default function UsuarioView() {
       setState({
         ...state,
         operation: operation,
-        selectedUser: data as CadastroUsuario
+        selectedUser: data as AtualizacaoUsuario
       });
     } else {
-      let selectedUser: CadastroUsuario = {
+      let selectedUser: AtualizacaoUsuario = {
         nome: user.nome,
-        email: user.email,
         ativo: user.ativo,
-        cpf: user.cpf,
-        senha: "xxxxxx",
-        confirmaSenha: "",
         id: user.id,
         telefone: user.telefone,
         idCurso: user.idCurso,
@@ -120,13 +116,13 @@ export default function UsuarioView() {
       title="Usuários"
       data={getUsers}
       columns={headers}
-      create={true}
+      create={false}
       delete={false}
       edit={true}
       newData={state.newUser}
       dialogContent={
         <UsuarioComponent
-          user={state.selectedUser as CadastroUsuario}
+          user={state.selectedUser}
           operation={state.operation}
           handleUpdateData={updateData}
         />

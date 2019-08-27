@@ -180,7 +180,7 @@ function LoginView(props: Props) {
             onSubmit={handleSubmit}
           />
           <div className={styles.wrapper}>
-            <Link to="/">
+            <Link to="/cadastrar">
               <Fab
                 variant="extended"
                 color="primary"
