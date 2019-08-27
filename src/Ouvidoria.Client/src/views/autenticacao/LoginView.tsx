@@ -221,7 +221,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    padding: "20px 60px"
+    padding: "20px 30px"
   },
   logo: {
     height: 130,
@@ -235,15 +235,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 10,
     width: "100%",
     display: "flex",
-    justifyContent: "space-evenly",
-    "& > div": {
-      "& > a > button": {
-        width: "130px !important"
-      },
-      "& > button": {
-        width: "130px !important"
-      }
-    }
+    justifyContent: "space-evenly"
   },
   wrapper: {
     margin: theme.spacing(1),

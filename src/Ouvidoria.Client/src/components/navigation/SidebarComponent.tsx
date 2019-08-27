@@ -113,7 +113,7 @@ function SidebarComponent(props: IStateProps) {
           />
         </Collapse>
         <Divider />
-        {props.user !== null && (
+        {!!props.user && (
           <>
             <SidebarItem
               path="/questionario"
@@ -122,33 +122,39 @@ function SidebarComponent(props: IStateProps) {
             />
             <Divider />
             {!!props.user.claims.find(x => x.type === "Administrador") && (
-              <SidebarExpandItem
-                icon={<Build />}
-                onClick={handleAdministrationChange}
-                label="Administração"
-                isOpen={administrationIsOpen}
-              />
+              <>
+                <SidebarExpandItem
+                  icon={<Build />}
+                  onClick={handleAdministrationChange}
+                  label="Administração"
+                  isOpen={administrationIsOpen}
+                />
+                <Collapse
+                  in={administrationIsOpen}
+                  timeout="auto"
+                  unmountOnExit
+                >
+                  <SidebarItem
+                    path="/cursos"
+                    label="Cursos"
+                    nested={true}
+                    icon={<School />}
+                  />
+                  <SidebarItem
+                    path="/departamentos"
+                    label="Departamentos"
+                    nested={true}
+                    icon={<Work />}
+                  />
+                  <SidebarItem
+                    path="/usuarios"
+                    label="Usuários"
+                    nested={true}
+                    icon={<People />}
+                  />
+                </Collapse>
+              </>
             )}
-            <Collapse in={administrationIsOpen} timeout="auto" unmountOnExit>
-              <SidebarItem
-                path="/cursos"
-                label="Cursos"
-                nested={true}
-                icon={<School />}
-              />
-              <SidebarItem
-                path="/departamentos"
-                label="Departamentos"
-                nested={true}
-                icon={<Work />}
-              />
-              <SidebarItem
-                path="/usuarios"
-                label="Usuários"
-                nested={true}
-                icon={<People />}
-              />
-            </Collapse>
           </>
         )}
       </List>

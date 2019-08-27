@@ -4,16 +4,18 @@ import {
   IconButton,
   Theme,
   Toolbar,
-  Typography
+  Typography,
+  Container
 } from "@material-ui/core";
 import { AccountCircle, Menu } from "@material-ui/icons";
-import React from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { bindActionCreators, Dispatch } from "redux";
 import { IApplicationState } from "../../store";
 import * as NavigationActions from "../../store/ducks/navigation/NavigationActions";
 import * as SessionActions from "../../store/ducks/session/SessionActions";
+import DropDownMenu, { IItems } from "../common/fields/DropDownMenu";
 
 interface IDispatchState {
   toggleSidebar(): void;
@@ -24,55 +26,83 @@ interface IStateProps {
   isAuthenticated: boolean;
 }
 
+interface IState {
+  userMenuIsOpen: boolean;
+}
+
+const initialState: IState = {
+  userMenuIsOpen: false
+};
+
 type Props = IDispatchState & IStateProps;
 
 function NavbarComponent(props: Props) {
+  const [state, setState] = useState(initialState);
   const classes = useStyles();
+  const userMenuItems: IItems[] = [{ label: "Sair", onClick: props.logout }];
+
+  function handleDropDown(): void {
+    setState((prevState: IState) => {
+      return {
+        ...prevState,
+        userMenuIsOpen: !prevState.userMenuIsOpen
+      };
+    });
+  }
+
+  function handleClose(): void {
+    setState((prevState: IState) => {
+      return { ...prevState, userMenuIsOpen: false };
+    });
+  }
 
   return (
     <>
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
-          <IconButton
-            aria-label="Open drawer"
-            edge="start"
-            onClick={props.toggleSidebar}
-            className={classes.iconButton}
-          >
-            <Menu />
-          </IconButton>
-          <div className={classes.grow}>
+          <Container className={classes.container}>
+            <IconButton
+              aria-label="Open drawer"
+              edge="start"
+              onClick={props.toggleSidebar}
+              className={classes.hamburger}
+            >
+              <Menu />
+            </IconButton>
             <Typography variant="h6" noWrap>
               <Link to="/" className={classes.link}>
                 Ouvidoria
               </Link>
             </Typography>
-          </div>
-          <div className={classes.user}>
-            {props.isAuthenticated ? (
-              <IconButton
-                aria-owns={"menu-appbar"}
-                aria-haspopup="false"
-                className={classes.iconButton}
-                onClick={props.logout}
-              >
-                <AccountCircle />
-              </IconButton>
-            ) : (
-              <>
-                <Typography variant="body1" className={classes.nested}>
-                  <Link to="/login" className={classes.link}>
-                    Logar
-                  </Link>
-                </Typography>
-                <Typography variant="body1" className={classes.nested}>
-                  <Link to="/login" className={classes.link}>
-                    Registrar
-                  </Link>
-                </Typography>
-              </>
-            )}
-          </div>
+            <div className={classes.grow} />
+            <div>
+              {props.isAuthenticated ? (
+                <>
+                  <IconButton
+                    aria-owns={"menu-appbar"}
+                    aria-haspopup="false"
+                    className={classes.userButton}
+                    onClick={handleDropDown}
+                  >
+                    <AccountCircle />
+                  </IconButton>
+                  <DropDownMenu
+                    open={state.userMenuIsOpen}
+                    handleClose={handleClose}
+                    items={userMenuItems}
+                  />
+                </>
+              ) : (
+                <>
+                  <Typography variant="body1">
+                    <Link to="/login" className={classes.link}>
+                      Acesse!
+                    </Link>
+                  </Typography>
+                </>
+              )}
+            </div>
+          </Container>
         </Toolbar>
       </AppBar>
     </>
@@ -100,7 +130,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: 0,
     background: "linear-gradient(-206deg, #00B4DB 35%, #0083B0)"
   },
-  iconButton: {
+  hamburger: {
     marginRight: theme.spacing(2),
     color: "inherit"
   },
@@ -111,10 +141,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: "white",
     textDecoration: "none"
   },
-  user: {
-    display: "flex"
+  container: {
+    display: "flex",
+    alignItems: "center"
   },
-  nested: {
-    paddingLeft: theme.spacing(3)
+  userButton: {
+    color: "inherit"
   }
 }));

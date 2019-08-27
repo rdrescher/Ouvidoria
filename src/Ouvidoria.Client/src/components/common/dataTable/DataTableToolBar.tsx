@@ -18,7 +18,7 @@ export default function DataTableToolBar(props: IProps) {
   return (
     <Tooltip title={"Criar"}>
       <IconButton onClick={handleCreate} className={classes.create}>
-        <Add />
+        <Add onClick={handleCreate} />
       </IconButton>
     </Tooltip>
   );

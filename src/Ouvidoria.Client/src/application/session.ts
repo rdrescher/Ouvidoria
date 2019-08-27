@@ -20,9 +20,7 @@ export function refreshUserClaims(): void {
   if (token === null) return;
 
   let user = JSON.parse(userStore) as UserToken;
-  let claims = JwtParser.parseJwt(token) as Claim[];
-  user.claims = claims;
-
+  user.claims = refreshClaims(token);
   setUser(user);
 }
 
@@ -48,4 +46,13 @@ function setUser(user: UserToken): void {
 
 function setExpirationTime(time: number): void {
   localStorage.setItem("expiresIn", time.toString());
+}
+
+function refreshClaims(token: string): Claim[] {
+  let obj = JwtParser.parseJwt(token);
+  let claims: Claim[] = [];
+  for (let key in obj) {
+    claims.push({ type: key, value: obj[key] });
+  }
+  return claims;
 }
