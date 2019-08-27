@@ -1,14 +1,16 @@
-import React, { ReactElement } from "react";
-import { Route, Redirect } from "react-router-dom";
-import { IApplicationState } from "../../store/index";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
+import { Redirect, Route } from "react-router-dom";
+import Claim from "../../models/Autenticacao/Claim";
 import IUserToken from "../../models/Autenticacao/UserToken";
 import { UsuarioPerfil } from "../../models/Usuario/Usuario";
-import { Dispatch, bindActionCreators } from "redux";
+import AutenticacaoApi from "../../services/AutenticacaoApi";
+import { IApplicationState } from "../../store/index";
 
 interface IStateProps {
   isAuthenticated: boolean;
   user: IUserToken | null;
+  claims: Claim[];
 }
 
 interface IProps {
@@ -21,14 +23,16 @@ interface IProps {
 type Props = IProps & IStateProps;
 
 function PrivateRoute(props: Props) {
+  useEffect(() => {
+    async function CheckToken() {
+      await AutenticacaoApi.CheckToken();
+    }
+    CheckToken();
+  },        []);
   function hasPermission(): boolean {
     if (!props.isAuthenticated) return false;
     if (!props.claimRequired) return true;
-    if (
-      !props.user!.claims.find(
-        x => x.type === UsuarioPerfil[props.claimRequired!]
-      )
-    )
+    if (!props.claims.find(x => x.type === UsuarioPerfil[props.claimRequired!]))
       return false;
     return true;
   }
@@ -46,7 +50,8 @@ function PrivateRoute(props: Props) {
 
 const mapStateToProps = (state: IApplicationState) => ({
   isAuthenticated: state.SessionReducer.isAuthenticated,
-  user: state.SessionReducer.user
+  user: state.SessionReducer.user,
+  claims: state.SessionReducer.claims
 });
 
 export default connect(

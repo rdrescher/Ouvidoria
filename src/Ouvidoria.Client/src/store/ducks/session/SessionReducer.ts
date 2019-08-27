@@ -3,11 +3,14 @@ import * as Session from "../../../application/session";
 import ILoginResponse from "../../../models/Autenticacao/LoginResponse";
 import { ISessionState, SessionTypes } from "./SessionTypes";
 
-const initialState: ISessionState = {
-  isAuthenticated: Session.isAuthenticated(),
-  token: Session.getToken(),
-  user: Session.getUser()
-};
+function refreshState(): ISessionState {
+  return {
+    isAuthenticated: Session.isAuthenticated(),
+    token: Session.getToken(),
+    user: Session.getUser(),
+    claims: Session.getClaims()
+  };
+}
 
 const reducer: Reducer = (state: ISessionState = refreshState(), action) => {
   switch (action.type) {
@@ -23,15 +26,5 @@ const reducer: Reducer = (state: ISessionState = refreshState(), action) => {
       return state;
   }
 };
-
-function refreshState(): ISessionState {
-  Session.refreshUserClaims();
-  
-  return {
-    isAuthenticated: Session.isAuthenticated(),
-    token: Session.getToken(),
-    user: Session.getUser()
-  };
-}
 
 export default reducer;

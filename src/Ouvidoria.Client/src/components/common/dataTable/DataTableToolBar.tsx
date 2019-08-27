@@ -1,7 +1,7 @@
-import React from "react";
-import { Tooltip, IconButton } from "@material-ui/core";
+import { IconButton, Tooltip } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
+import React from "react";
 import Operacao from "../../../utils/Operacao";
 
 interface IProps {
@@ -18,7 +18,7 @@ export default function DataTableToolBar(props: IProps) {
   return (
     <Tooltip title={"Criar"}>
       <IconButton onClick={handleCreate} className={classes.create}>
-        <Add onClick={handleCreate} />
+        <Add />
       </IconButton>
     </Tooltip>
   );

@@ -46,10 +46,9 @@ export default class Http {
       if (response.ok) {
         return await response.json();
       } else if (response.status === 401) {
-        console.log(401);
+        Session.logout();
         window.location.href = `${this._baseClientUrl}/login`;
       } else if (response.status === 403) {
-        console.log(403);
         window.location.href = this._baseClientUrl;
       } else if (response.status === 404) {
         console.log("Not Found");

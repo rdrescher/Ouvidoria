@@ -11,18 +11,13 @@ export const getUser = (): UserToken | null => {
   else return JSON.parse(user);
 };
 
-export const isAuthenticated = (): boolean => getToken() !== "";
-
-export function refreshUserClaims(): void {
-  let userStore = localStorage.getItem("user");
+export const getClaims = (): Claim[] => {
   let token = getToken();
-  if (userStore === null) return;
-  if (token === null) return;
+  if (!token) return [];
+  return refreshClaims(token);
+};
 
-  let user = JSON.parse(userStore) as UserToken;
-  user.claims = refreshClaims(token);
-  setUser(user);
-}
+export const isAuthenticated = (): boolean => getToken() !== "";
 
 export function login(login: LoginResponse): void {
   setToken(login.accessToken);

@@ -20,7 +20,6 @@ using Ouvidoria.Domain.Interfaces;
 
 namespace Ouvidoria.Api.Controllers
 {
-    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class AutenticacaoController : BaseController
@@ -49,6 +48,11 @@ namespace Ouvidoria.Api.Controllers
             _jwtSettings = jwtSettings.Value;
         }
 
+        [HttpGet("[action]")]
+        [Authorize]
+        public ActionResult<Resultado> CheckToken() => Ok(Resultado.Successfull());
+
+        [AllowAnonymous]
         [HttpPost("[action]")]
         public async Task<ActionResult<Resultado<LoginResponseViewModel>>> Cadastrar(CadastroUsuarioViewModel cadastroUsuario)
         {
@@ -69,6 +73,7 @@ namespace Ouvidoria.Api.Controllers
             return Ok(Resultado.Failed(GetRegisterErrors(result.Errors).ToArray()));
         }
 
+        [AllowAnonymous]
         [HttpPost("[action]")]
         public async Task<ActionResult<Resultado<LoginResponseViewModel>>> Login(LoginViewModel login)
         {

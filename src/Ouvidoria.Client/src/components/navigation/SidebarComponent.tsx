@@ -25,7 +25,8 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import AMFIcon from "../../assets/img/amf_white.png";
 import Background from "../../assets/img/bg-clear.png";
-import IUserToken from "../../models/Autenticacao/UserToken";
+import Claim from "../../models/Autenticacao/Claim";
+import UserToken from "../../models/Autenticacao/UserToken";
 import { IApplicationState } from "../../store";
 import SidebarExpandItem from "../common/fields/SidebarExpandItem";
 import SidebarItem from "../common/fields/SidebarItem";
@@ -33,10 +34,12 @@ import SidebarItem from "../common/fields/SidebarItem";
 const drawerWidth = 240;
 interface IStateProps {
   sidebarIsOpen: boolean;
-  user: IUserToken | null;
+  user: UserToken | null;
+  claims: Claim[];
 }
 
 function SidebarComponent(props: IStateProps) {
+  console.log(props.claims);
   const classes = useStyles();
   const sidebarIsOpen = props.sidebarIsOpen;
   const [manifestationIsOpen, setManifestationIsOpen] = useState<boolean>(
@@ -121,7 +124,7 @@ function SidebarComponent(props: IStateProps) {
               icon={<QuestionAnswer />}
             />
             <Divider />
-            {!!props.user.claims.find(x => x.type === "Administrador") && (
+            {!!props.claims.find(x => x.type === "Administrador") && (
               <>
                 <SidebarExpandItem
                   icon={<Build />}
@@ -164,7 +167,8 @@ function SidebarComponent(props: IStateProps) {
 
 const mapStateToProps = (state: IApplicationState) => ({
   sidebarIsOpen: state.NavigationReducer.sidebarIsOpen,
-  user: state.SessionReducer.user
+  user: state.SessionReducer.user,
+  claims: state.SessionReducer.claims,
 });
 
 export default connect(
