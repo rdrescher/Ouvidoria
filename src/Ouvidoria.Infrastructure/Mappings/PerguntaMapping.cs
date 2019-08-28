@@ -15,7 +15,7 @@ namespace Ouvidoria.Infrastructure.Mappings
                 .HasColumnType("varchar(5000)");
             
             builder.HasOne(c => c.Questionario)
-                .WithMany(c => c.Pergunta)
+                .WithMany(c => c.Perguntas)
                 .HasForeignKey(c => c.IdQuestionario);
 
             builder.Property(c => c.DataInsercao)

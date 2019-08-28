@@ -13,15 +13,23 @@ namespace Ouvidoria.Application.AutoMapper
             CreateMap<Curso, CursoViewModel>();
             CreateMap<Departamento, CadastroDepartamentoViewModel>();
             CreateMap<Manifestacao, ManifestacaoViewModel>();
+            CreateMap<Opcao, OpcaoViewModel>();
             CreateMap<Pergunta, PerguntaViewModel>();
             CreateMap<Questionario, QuestionarioViewModel>();
+            CreateMap<Questionario, QuestionarioDetailViewModel>()
+                .ForMember(c => c.usuarioCriador,
+                                c => c.MapFrom(d => d.Usuario != null ? d.Usuario.Nome : ""))
+                .ForMember(c => c.perguntas,
+                                c => c.MapFrom(d => d.Perguntas.Count))
+                .ForMember(c => c.respostas,
+                                c => c.MapFrom(d => d.QuestionarioRespostas.Count));
             CreateMap<Resposta, RespostaViewModel>();
-            CreateMap<Usuario, Application.ViewModel.UsuarioViewModel>();
+            CreateMap<Usuario, UsuarioViewModel>();
             CreateMap<Departamento, DepartamentoViewModel>()
                 .ForMember(c => c.usuarioResponsavel,
                                 c => c.MapFrom(d => d.Usuario != null ? d.Usuario.Nome : ""));
             CreateMap<UsuarioDTO, UsuarioViewModel>();
-            
+
             #endregion
 
             #region GenericLists

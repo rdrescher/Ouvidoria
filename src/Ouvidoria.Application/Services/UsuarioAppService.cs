@@ -36,9 +36,9 @@ namespace Ouvidoria.Application.Services
             var usuarioViewModel = base.MapToViewModel(usuario);
             usuarioViewModel.usuarioPerfil = atualizacaoUsuario.UsuarioPerfil;
 
-            return Notificador.HasNotification() ?
-                Resultado<UsuarioViewModel>.Failed(Notificador.GetNotifications().Select(x => x.Mensagem).ToArray()) :
-                Resultado<UsuarioViewModel>.Successfull(usuarioViewModel);
+            return Notificador.HasNotification()
+                ? Resultado<UsuarioViewModel>.Failed(Notificador.GetNotificationsMessages())
+                : Resultado<UsuarioViewModel>.Successfull(usuarioViewModel);
         }
 
         public async Task<bool> IsActiveUser(string email) =>

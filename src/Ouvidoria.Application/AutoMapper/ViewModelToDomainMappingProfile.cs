@@ -10,20 +10,34 @@ namespace Ouvidoria.Application.AutoMapper
         public ViewModelToDomainMappingProfile()
         {
             #region Domain
-            CreateMap<AtualizacaoDepartamentoViewModel, Departamento>();
-            CreateMap<AtualizacaoUsuarioViewModel, Usuario>();
-            CreateMap<CadastroDepartamentoViewModel, Departamento>()
-                .ConstructUsing(d => new Departamento(d.nome, d.idUsuarioResponsavel));
-            CreateMap<CadastroUsuarioViewModel, Usuario>()
-                .ConstructUsing(u => new Usuario(u.nome, u.email, u.telefone, u.cpf, u.idCurso));
-            CreateMap<CursoViewModel, Curso>()
-                .ConstructUsing(c => new Curso(c.nome));
+
             CreateMap<DepartamentoViewModel, Departamento>();
             CreateMap<ManifestacaoViewModel, Manifestacao>();
             CreateMap<PerguntaViewModel, Pergunta>();
             CreateMap<QuestionarioViewModel, Questionario>();
             CreateMap<RespostaViewModel, Resposta>();
             CreateMap<UsuarioViewModel, Usuario>();
+
+            #region Updates
+            CreateMap<AtualizacaoDepartamentoViewModel, Departamento>();
+            CreateMap<AtualizacaoUsuarioViewModel, Usuario>();
+            #endregion
+
+            #region Inserts
+            CreateMap<CadastroDepartamentoViewModel, Departamento>()
+                .ConstructUsing(d => new Departamento(d.nome, d.idUsuarioResponsavel));
+            CreateMap<CadastroUsuarioViewModel, Usuario>()
+                .ConstructUsing(u => new Usuario(u.nome, u.email, u.telefone, u.cpf, u.idCurso));
+            CreateMap<CursoViewModel, Curso>()
+                .ConstructUsing(c => new Curso(c.nome));
+            CreateMap<CadastroOpcaoViewModel, Opcao>()
+                .ConstructUsing(o => new Opcao(o.descricao));
+            CreateMap<CadastroPerguntaViewModel, Pergunta>()
+                .ConstructUsing(p => new Pergunta(p.descricao, p.tipo));
+            CreateMap<CadastroQuestionarioViewModel, Questionario>()
+                .ConstructUsing(q => new Questionario(q.titulo, q.descricao, q.dataInicio, q.dataFim));
+            #endregion
+
             #endregion
 
             #region Identity
