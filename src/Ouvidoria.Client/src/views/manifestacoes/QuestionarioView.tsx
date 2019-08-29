@@ -1,6 +1,7 @@
-import { Button, Divider, Input, NativeSelect, Radio } from "@material-ui/core";
+import { Button, Container, Divider, Input, NativeSelect, Radio } from "@material-ui/core";
 import React, { useState, ChangeEvent } from "react";
 import TipoPergunta from "../../application/enums/TipoPergunta";
+import InputField from "../../components/common/formFields/InputField";
 import Pergunta from "../../models/Pergunta/Pergunta";
 import CadastroQuestionario from "../../models/Questionario/CadastroQuestionario";
 
@@ -66,7 +67,7 @@ export default function QuestionarioView() {
     });
   };
 
-  const handleChange = (_index: number) => (
+  const handleQuestionTypeChange = (_index: number) => (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     let value = Number(e.target.value);
@@ -84,8 +85,22 @@ export default function QuestionarioView() {
   };
 
   return (
-    <div>
-      <Input value={state.quiz.titulo} onChange={handleInputChange} />
+    <Container maxWidth="md">
+      <InputField
+        error=""
+        label="Título do Questionário"
+        name="titulo"
+        onChange={handleInputChange}
+        value={state.quiz.titulo}
+      />
+      <InputField
+        error=""
+        label="Descrição"
+        name="descricao"
+        onChange={handleInputChange}
+        value={state.quiz.descricao}
+        multiline
+      />
       <Button variant="contained" color="primary" onClick={handleAdd}>
         +
       </Button>
@@ -109,7 +124,7 @@ export default function QuestionarioView() {
             name="usuarioPerfil"
             fullWidth
             value={item.tipo}
-            onChange={handleChange(index)}
+            onChange={handleQuestionTypeChange(index)}
           >
             {Object.keys(TipoPergunta)
               .filter(type => !isNaN(Number(type)))
@@ -121,6 +136,6 @@ export default function QuestionarioView() {
           </NativeSelect>
         </div>
       ))}
-    </div>
+    </Container>
   );
 }

@@ -236,6 +236,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: "100%",
     display: "flex",
     justifyContent: "space-evenly"
+
   },
   wrapper: {
     margin: theme.spacing(1),

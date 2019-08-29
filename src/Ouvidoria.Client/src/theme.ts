@@ -89,7 +89,12 @@ const theme = createMuiTheme({
       input: {
         color: "rgba(0, 0, 0, 0.54)"
       }
-    }
+    },
+    MuiFormControl: {
+      root: {
+        marginTop: 10
+      }
+    },
   }
 });
 

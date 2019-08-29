@@ -2,7 +2,8 @@ import {
   FormControl,
   FormHelperText,
   Input,
-  InputLabel
+  InputLabel,
+  TextField
 } from "@material-ui/core";
 import React, { ChangeEvent, KeyboardEvent } from "react";
 
@@ -13,6 +14,7 @@ interface IProps {
   value: string | number | null;
   type?: string;
   disabled?: boolean;
+  multiline?: boolean;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onKeyPress?: (e: KeyboardEvent<HTMLDivElement>) => void;
   onBlur?: () => void;
@@ -25,11 +27,13 @@ export default function InputField(props: IProps) {
 
   return (
     <FormControl fullWidth error={!!props.error}>
-      <InputLabel htmlFor={props.name}>{props.label}</InputLabel>
-      <Input
+      {/* <InputLabel htmlFor={props.name}>{props.label}</InputLabel> */}
+      <TextField
+        error={!!props.error}
         name={props.name}
         aria-describedby={`${props.name}-helper`}
         fullWidth
+        label={props.label}
         value={props.value || ""}
         type={!!props.type ? props.type : "text"}
         disabled={props.disabled}
@@ -38,8 +42,16 @@ export default function InputField(props: IProps) {
         onKeyPress={
           props.onKeyPress !== undefined ? props.onKeyPress : handleKeyPress
         }
+        multiline={props.multiline}
+        rows="3"
+        rowsMax="10"
+        variant="outlined"
       />
-      <FormHelperText id={`${props.name}-helper`}>{props.error}</FormHelperText>
+      {!!props.error && (
+        <FormHelperText id={`${props.name}-helper`}>
+          {props.error}
+        </FormHelperText>
+      )}
     </FormControl>
   );
 }
