@@ -15,7 +15,7 @@ function ContentComponent(props: IStateProps) {
   const classes = useStyles();
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" className={classes.container}>
       <main
         className={clsx(classes.content, {
           [classes.contentShift]: props.sidebarIsOpen
@@ -40,6 +40,9 @@ export default connect(
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) => ({
+  container: {
+    background: "rgb(249, 249, 252)"
+  },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),

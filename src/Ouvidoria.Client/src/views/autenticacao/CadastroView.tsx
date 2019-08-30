@@ -431,7 +431,7 @@ function CadastroView(props: Props) {
                 variant="extended"
                 color="primary"
                 aria-label="login"
-                size="small"
+                size="medium"
                 onClick={() => {}}
               >
                 <Typography variant="inherit" className={styles.contentSpacer}>
@@ -477,8 +477,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: 20
   },
   buttons: {
-    marginTop: 10,
-    marginBottom: 10,
+    marginTop: 20,
     width: "100%",
     display: "flex",
     justifyContent: "space-evenly"

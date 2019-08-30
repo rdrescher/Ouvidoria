@@ -1,8 +1,6 @@
 import {
   FormControl,
   FormHelperText,
-  Input,
-  InputLabel,
   TextField
 } from "@material-ui/core";
 import React, { ChangeEvent, KeyboardEvent } from "react";
@@ -27,7 +25,6 @@ export default function InputField(props: IProps) {
 
   return (
     <FormControl fullWidth error={!!props.error}>
-      {/* <InputLabel htmlFor={props.name}>{props.label}</InputLabel> */}
       <TextField
         error={!!props.error}
         name={props.name}

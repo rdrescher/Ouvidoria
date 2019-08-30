@@ -1,9 +1,21 @@
-import { Button, Container, Divider, Input, NativeSelect, Radio } from "@material-ui/core";
+import {
+  Button,
+  Container,
+  Divider,
+  Input,
+  NativeSelect,
+  Paper,
+  Theme
+} from "@material-ui/core";
 import React, { useState, ChangeEvent } from "react";
 import TipoPergunta from "../../application/enums/TipoPergunta";
 import InputField from "../../components/common/formFields/InputField";
 import Pergunta from "../../models/Pergunta/Pergunta";
 import CadastroQuestionario from "../../models/Questionario/CadastroQuestionario";
+import { makeStyles } from "@material-ui/styles";
+import { MuiPickersUtilsProvider, DateTimePicker } from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
+import ptBR from "date-fns/locale/pt-BR";
 
 interface IState {
   quiz: CadastroQuestionario;
@@ -12,8 +24,8 @@ interface IState {
 const initialState: IState = {
   quiz: {
     titulo: "",
-    dataFim: "",
-    dataInicio: "",
+    dataFim: new Date(),
+    dataInicio: new Date(),
     descricao: "",
     perguntas: [{ descricao: "", opcoes: [], tipo: TipoPergunta.Dissertativa }]
   }
@@ -27,6 +39,9 @@ const perguntaVazia: Pergunta = {
 
 export default function QuestionarioView() {
   const [state, setState] = useState<IState>(initialState);
+  const classes = useStyles();
+  const dt = new Date();
+  const minDate = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let name = e.target.name;
@@ -84,23 +99,71 @@ export default function QuestionarioView() {
     });
   };
 
+  function handleStartDate(date: Date | null) {
+    handleDateChange(date, "dataInicio");
+  }
+
+  function handleFinalDate(date: Date | null) {
+    handleDateChange(date, "dataFim");
+  }
+
+  function handleDateChange(date: Date | null, name: string) {
+    setState((prevState: IState) => {
+      return {
+        ...prevState,
+        quiz: {
+          ...prevState.quiz,
+          [name]: date === null ? new Date() : date
+        }
+      };
+    });
+  }
+
   return (
     <Container maxWidth="md">
-      <InputField
-        error=""
-        label="Título do Questionário"
-        name="titulo"
-        onChange={handleInputChange}
-        value={state.quiz.titulo}
-      />
-      <InputField
-        error=""
-        label="Descrição"
-        name="descricao"
-        onChange={handleInputChange}
-        value={state.quiz.descricao}
-        multiline
-      />
+      <Paper className={classes.paper}>
+        <InputField
+          error=""
+          label="Título do Questionário"
+          name="titulo"
+          onChange={handleInputChange}
+          value={state.quiz.titulo}
+        />
+        <InputField
+          error=""
+          label="Descrição"
+          name="descricao"
+          onChange={handleInputChange}
+          value={state.quiz.descricao}
+          multiline
+        />
+        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptBR}>
+          <DateTimePicker
+            value={state.quiz.dataInicio}
+            onChange={handleStartDate}
+            variant="dialog"
+            inputVariant="outlined"
+            format="dd/MM/yyyy HH:mm"
+            ampm={false}
+            label="Data inicial"
+            disableToolbar
+            fullWidth
+            minDate={minDate}
+          />
+          <DateTimePicker
+            value={state.quiz.dataFim}
+            onChange={handleFinalDate}
+            variant="dialog"
+            inputVariant="outlined"
+            format="dd/MM/yyyy HH:mm"
+            ampm={false}
+            label="Data final"
+            disableToolbar
+            fullWidth
+            minDate={minDate}
+          />
+        </MuiPickersUtilsProvider>
+      </Paper>
       <Button variant="contained" color="primary" onClick={handleAdd}>
         +
       </Button>
@@ -139,3 +202,9 @@ export default function QuestionarioView() {
     </Container>
   );
 }
+
+const useStyles = makeStyles((theme: Theme) => ({
+  paper: {
+    padding: "0px 20px 20px 20px "
+  }
+}));
