@@ -7,7 +7,6 @@ namespace Ouvidoria.Api.Controllers
     [ApiController]
     public abstract class BaseController : ControllerBase
     {
-        public BaseController()
-        { }
+        protected BaseController() { }
     }
 }

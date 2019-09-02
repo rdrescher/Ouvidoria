@@ -1,3 +1,4 @@
+import DateFnsUtils from "@date-io/date-fns";
 import {
   Button,
   Container,
@@ -7,15 +8,16 @@ import {
   Paper,
   Theme
 } from "@material-ui/core";
+import { CalendarToday } from "@material-ui/icons";
+import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { makeStyles } from "@material-ui/styles";
+import ptBR from "date-fns/locale/pt-BR";
 import React, { useState, ChangeEvent } from "react";
 import TipoPergunta from "../../application/enums/TipoPergunta";
 import InputField from "../../components/common/formFields/InputField";
 import Pergunta from "../../models/Pergunta/Pergunta";
 import CadastroQuestionario from "../../models/Questionario/CadastroQuestionario";
-import { makeStyles } from "@material-ui/styles";
-import { MuiPickersUtilsProvider, DateTimePicker } from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
-import ptBR from "date-fns/locale/pt-BR";
+import clsx from "clsx";
 
 interface IState {
   quiz: CadastroQuestionario;
@@ -101,6 +103,8 @@ export default function QuestionarioView() {
 
   function handleStartDate(date: Date | null) {
     handleDateChange(date, "dataInicio");
+    if (date != null && state.quiz.dataFim < date)
+      handleDateChange(date, "dataFim");
   }
 
   function handleFinalDate(date: Date | null) {
@@ -124,7 +128,7 @@ export default function QuestionarioView() {
       <Paper className={classes.paper}>
         <InputField
           error=""
-          label="Título do Questionário"
+          label="Título"
           name="titulo"
           onChange={handleInputChange}
           value={state.quiz.titulo}
@@ -137,32 +141,35 @@ export default function QuestionarioView() {
           value={state.quiz.descricao}
           multiline
         />
-        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptBR}>
-          <DateTimePicker
-            value={state.quiz.dataInicio}
-            onChange={handleStartDate}
-            variant="dialog"
-            inputVariant="outlined"
-            format="dd/MM/yyyy HH:mm"
-            ampm={false}
-            label="Data inicial"
-            disableToolbar
-            fullWidth
-            minDate={minDate}
-          />
-          <DateTimePicker
-            value={state.quiz.dataFim}
-            onChange={handleFinalDate}
-            variant="dialog"
-            inputVariant="outlined"
-            format="dd/MM/yyyy HH:mm"
-            ampm={false}
-            label="Data final"
-            disableToolbar
-            fullWidth
-            minDate={minDate}
-          />
-        </MuiPickersUtilsProvider>
+        <div className={classes.dates}>
+          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptBR}>
+            <DateTimePicker
+              value={state.quiz.dataInicio}
+              onChange={handleStartDate}
+              variant="dialog"
+              inputVariant="outlined"
+              format="dd/MM/yyyy HH:mm"
+              ampm={false}
+              label="Data inicial"
+              disableToolbar
+              disablePast
+              className={clsx(classes.date, classes.dateLeft)}
+            />
+            <DateTimePicker
+              value={state.quiz.dataFim}
+              onChange={handleFinalDate}
+              variant="dialog"
+              inputVariant="outlined"
+              format="dd/MM/yyyy HH:mm"
+              ampm={false}
+              label="Data final"
+              disableToolbar
+              minDate={state.quiz.dataInicio}
+              minDateMessage={"A data final deve ser maior que a data inicial"}
+              className={clsx(classes.date, classes.dateRight)}
+            />
+          </MuiPickersUtilsProvider>
+        </div>
       </Paper>
       <Button variant="contained" color="primary" onClick={handleAdd}>
         +
@@ -206,5 +213,19 @@ export default function QuestionarioView() {
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
     padding: "0px 20px 20px 20px "
+  },
+  dates: {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+  },
+  date: {
+    flexGrow: 0.5,
+  },
+  dateRight: {
+    marginLeft: 10
+  },
+  dateLeft: {
+    marginRight: 10
   }
 }));

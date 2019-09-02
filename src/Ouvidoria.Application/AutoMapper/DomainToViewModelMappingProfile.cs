@@ -28,7 +28,7 @@ namespace Ouvidoria.Application.AutoMapper
             CreateMap<Departamento, DepartamentoViewModel>()
                 .ForMember(c => c.usuarioResponsavel,
                                 c => c.MapFrom(d => d.Usuario != null ? d.Usuario.Nome : ""));
-            CreateMap<UsuarioDTO, UsuarioViewModel>();
+            CreateMap<UsuarioDto, UsuarioViewModel>();
 
             #endregion
 

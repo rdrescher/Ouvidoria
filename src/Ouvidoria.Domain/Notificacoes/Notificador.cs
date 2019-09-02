@@ -6,7 +6,7 @@ namespace Ouvidoria.Domain.Notificacoes
 {
     public class Notificador : INotificador
     {
-        private List<Notificacao> Notificacoes;
+        private readonly List<Notificacao> Notificacoes;
 
         public Notificador() => Notificacoes = new List<Notificacao>();
 

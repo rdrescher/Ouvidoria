@@ -3,7 +3,7 @@ using Ouvidoria.Domain.Models;
 
 namespace Ouvidoria.Domain.DTO
 {
-    public class UsuarioDTO
+    public class UsuarioDto
     {
         public int Id { get; set; }
         public string Nome { get; set; }

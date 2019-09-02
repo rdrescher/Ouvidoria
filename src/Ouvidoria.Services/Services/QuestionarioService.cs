@@ -10,14 +10,12 @@ namespace Ouvidoria.Services
 {
     public class QuestionarioService : EntityService, IQuestionarioService
     {
-        private readonly INotificador _notificador;
         private readonly IQuestionarioRepository _repository;
         public QuestionarioService(
             IQuestionarioRepository repository,
             INotificador notificador) : base(notificador)
         {
             _repository = repository;
-            _notificador = notificador;
         }
 
         public async Task Create(Questionario quiz)
@@ -32,7 +30,7 @@ namespace Ouvidoria.Services
                         if (!base.Validate(new OpcaoValidation(), option)) return;
             }
 
-            if (!IsValidPeriod(quiz.DataInicio, quiz.DataFim)) return;
+            if (!IsValidPeriod(quiz.DataInicio)) return;
 
             await _repository.Create(quiz);
         }
@@ -45,7 +43,7 @@ namespace Ouvidoria.Services
         public async Task<List<Questionario>> GetQuizzes() =>
             await _repository.GetAllInfos();
 
-        private bool IsValidPeriod(DateTime startDate, DateTime endDate)
+        private bool IsValidPeriod(DateTime startDate)
         {
             if (startDate >= DateTime.Now.Date) return true;
 

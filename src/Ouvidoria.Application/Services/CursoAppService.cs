@@ -58,7 +58,7 @@ namespace Ouvidoria.Application.Services
 
             return _notificador.HasNotification()
                 ? Resultado<CursoViewModel>.Failed(_notificador.GetNotificationsMessages())
-                : Resultado<CursoViewModel>.Successfull(cursoViewModel);
+                : Resultado<CursoViewModel>.Successfull(cursosViewModel);
         }
     }
 }

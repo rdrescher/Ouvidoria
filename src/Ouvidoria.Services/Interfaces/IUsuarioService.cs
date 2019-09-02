@@ -9,7 +9,7 @@ namespace Ouvidoria.Services.Interfaces
     public interface IUsuarioService : IDisposable
     {
         Task<List<Usuario>> GetUsers();
-        Task<List<UsuarioDTO>> GetUsersWithClass();
+        Task<List<UsuarioDto>> GetUsersWithClass();
         Task<Usuario> GetUserById(int id);
         Task<bool> IsValidUser(Usuario usuario);
         Task Update(Usuario usuario);

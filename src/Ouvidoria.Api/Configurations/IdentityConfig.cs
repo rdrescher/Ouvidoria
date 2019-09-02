@@ -34,9 +34,9 @@ namespace Ouvidoria.Api.Configurations
 
 
             var jwtApplicationSection = configuration.GetSection("JWT");
-            services.Configure<JWTSettings>(jwtApplicationSection);
+            services.Configure<JwtSettings>(jwtApplicationSection);
 
-            var jwtSettings = jwtApplicationSection.Get<JWTSettings>();
+            var jwtSettings = jwtApplicationSection.Get<JwtSettings>();
             var key = Encoding.ASCII.GetBytes(jwtSettings.Secret);
 
             services.AddAuthentication(x =>

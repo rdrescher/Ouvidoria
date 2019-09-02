@@ -1,6 +1,6 @@
 namespace Ouvidoria.Api.Extensions
 {
-    public class JWTSettings
+    public class JwtSettings
     {
         public string Secret { get; set; }
         public int ExpirationTime { get; set; }

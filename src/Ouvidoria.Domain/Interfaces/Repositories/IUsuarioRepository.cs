@@ -7,7 +7,7 @@ namespace Ouvidoria.Domain.Interfaces
 {
     public interface IUsuarioRepository : IEntityRepository<Usuario>
     {
-         Task<List<UsuarioDTO>> GetAllWithClass();
+         Task<List<UsuarioDto>> GetAllWithClass();
          Task<(string email, string cpf)> GetEmailCPF(int id);
     }
 }

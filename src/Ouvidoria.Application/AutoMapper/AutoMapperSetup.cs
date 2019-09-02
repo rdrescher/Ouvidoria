@@ -4,6 +4,8 @@ namespace Ouvidoria.Application.AutoMapper
 {
     public class AutoMapperSetup
     {
+        protected AutoMapperSetup() { }
+
         public static MapperConfiguration RegisterMappings()
         {
             return new MapperConfiguration(cfg =>

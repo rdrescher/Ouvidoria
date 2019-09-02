@@ -12,22 +12,20 @@ namespace Ouvidoria.Services
 {
     public class UsuarioService : EntityService, IUsuarioService
     {
-        private readonly INotificador notificador;
         private readonly IUsuarioRepository repository;
         private readonly ICursoService cursoService;
         public UsuarioService(IUsuarioRepository repository, INotificador notificador, ICursoService cursoService) : base(notificador)
         {
             this.repository = repository;
-            this.notificador = notificador;
             this.cursoService = cursoService;
         }
 
         public async Task<bool> IsValidUser(Usuario usuario)
         {
-            if (!base.Validate(new UsuarioValidation(), usuario)) return false;
-            if (await this.EmailAlreadyExists(usuario.Email)) return false;
-            if (await this.CPFAlreadyExists(usuario.CPF)) return false;
-            if (!await this.IsValidClass(usuario.IdCurso)) return false;
+            if (!Validate(new UsuarioValidation(), usuario)) return false;
+            if (await EmailAlreadyExists(usuario.Email)) return false;
+            if (await CPFAlreadyExists(usuario.CPF)) return false;
+            if (!await IsValidClass(usuario.IdCurso)) return false;
 
             return true;
         }
@@ -35,16 +33,16 @@ namespace Ouvidoria.Services
         public async Task<List<Usuario>> GetUsers() =>
             await repository.GetAll();
 
-        public async Task<List<UsuarioDTO>> GetUsersWithClass() =>
+        public async Task<List<UsuarioDto>> GetUsersWithClass() =>
             await repository.GetAllWithClass();
 
 
         public async Task Update(Usuario usuario)
         {
-            var user = await repository.GetEmailCPF(usuario.Id);
-            usuario.AdjustToUpdate(user.email, user.cpf);
-            if (!base.Validate(new UsuarioValidation(), usuario)) return;
-            if (!await this.IsValidClass(usuario.IdCurso)) return;
+            var (email, cpf) = await repository.GetEmailCPF(usuario.Id);
+            usuario.AdjustToUpdate(email, cpf);
+            if (!Validate(new UsuarioValidation(), usuario)) return;
+            if (!await IsValidClass(usuario.IdCurso)) return;
 
             await repository.Update(usuario);
         }
