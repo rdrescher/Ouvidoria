@@ -1,6 +1,6 @@
 import Pergunta from "../Pergunta/Pergunta";
 
-export default interface IQuestionario {
+export default interface ICadastroQuestionario {
     titulo: string;
     descricao: string;
     dataInicio: Date;

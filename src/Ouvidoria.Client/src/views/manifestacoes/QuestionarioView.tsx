@@ -1,6 +1,4 @@
-import DateFnsUtils from "@date-io/date-fns";
 import {
-  useMediaQuery,
   Container,
   Divider,
   Fab,
@@ -9,14 +7,18 @@ import {
   Typography
 } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
-import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/styles";
-import clsx from "clsx";
-import ptBR from "date-fns/locale/pt-BR";
-import React, { useState, ChangeEvent } from "react";
+import React, {
+  useState,
+  ChangeEvent,
+  createRef,
+} from "react";
 import TipoPergunta from "../../application/enums/TipoPergunta";
 import TipoPerguntaSelect from "../../components/common/formFields/nativeSelects/TipoPerguntaSelect";
 import InputField from "../../components/common/formFields/InputField";
+import CabecalhoQuestionario, {
+  ICabecalhoQuestionarioValidations
+} from "../../components/administracao/questionario/CabecalhoQuestionario";
 import SubmitButton from "../../components/common/formFields/SubmitButton";
 import Opcao from "../../models/Opcao/Opcao";
 import Pergunta from "../../models/Pergunta/Pergunta";
@@ -50,7 +52,7 @@ const emptyOption: Opcao = {
 export default function QuestionarioView() {
   const [state, setState] = useState<IState>(initialState);
   const classes = useStyles();
-  const matches = useMediaQuery("(min-width:864px)");
+  const quizHeaderRef = createRef<ICabecalhoQuestionarioValidations>();
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let name = e.target.name;
@@ -238,58 +240,19 @@ export default function QuestionarioView() {
   };
 
   async function handleSubmit() {
+    if(!quizHeaderRef.current!.isValid()) return;
     console.log(await QuestionarioApi.create(state.quiz));
   }
 
   return (
     <Container maxWidth="md">
-      <Paper className={classes.paper}>
-        <Typography variant="h4">Novo Questionário</Typography>
-        <InputField
-          error=""
-          label="Título"
-          name="titulo"
-          onChange={handleInputChange}
-          value={state.quiz.titulo}
-        />
-        <InputField
-          error=""
-          label="Descrição"
-          name="descricao"
-          onChange={handleInputChange}
-          value={state.quiz.descricao}
-          multiline
-        />
-        <div className={classes.dates}>
-          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptBR}>
-            <DateTimePicker
-              value={state.quiz.dataInicio}
-              onChange={handleStartDate}
-              variant="dialog"
-              inputVariant="outlined"
-              format="dd/MM/yyyy HH:mm"
-              ampm={false}
-              label="Data inicial"
-              disableToolbar
-              disablePast
-              className={clsx(classes.date, matches ? classes.dateLeft : null)}
-            />
-            <DateTimePicker
-              value={state.quiz.dataFim}
-              onChange={handleFinalDate}
-              variant="dialog"
-              inputVariant="outlined"
-              format="dd/MM/yyyy HH:mm"
-              ampm={false}
-              label="Data final"
-              disableToolbar
-              minDate={state.quiz.dataInicio}
-              minDateMessage={"A data final deve ser maior que a data inicial"}
-              className={clsx(classes.date, matches ? classes.dateRight : null)}
-            />
-          </MuiPickersUtilsProvider>
-        </div>
-      </Paper>
+      <CabecalhoQuestionario
+        quiz={state.quiz}
+        ref={quizHeaderRef}
+        onInputChange={handleInputChange}
+        onStartDateChange={handleStartDate}
+        onFinalDateChange={handleFinalDate}
+      />
       <Paper className={classes.paper}>
         <Typography variant="h5">Perguntas</Typography>
         {state.quiz.perguntas.map((question, questionIndex) => (
@@ -410,20 +373,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: "center",
     marginTop: 20
   },
-  dates: {
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "space-between"
-  },
-  date: {
-    flexGrow: 1
-  },
-  dateRight: {
-    marginLeft: 10
-  },
-  dateLeft: {
-    marginRight: 10
-  },
+
+  
   optionsHeader: {
     marginTop: 20,
     display: "flex",
