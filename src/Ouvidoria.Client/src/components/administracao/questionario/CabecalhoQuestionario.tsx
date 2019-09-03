@@ -1,25 +1,25 @@
-import React, {
-  ChangeEvent,
-  useState,
-  forwardRef,
-  useImperativeHandle
-} from "react";
-import CadastroQuestionario from "../../../models/Questionario/CadastroQuestionario";
-import QuestionarioErrors from "../../../models/Errors/QuestionarioErrors";
-import {
-  Paper,
-  Typography,
-  makeStyles,
-  Theme,
-  useMediaQuery,
-  FormHelperText
-} from "@material-ui/core";
-import InputField from "../../common/formFields/InputField";
-import { MuiPickersUtilsProvider, DateTimePicker } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
-import ptBR from "date-fns/locale/pt-BR";
+import {
+  makeStyles,
+  useMediaQuery,
+  FormHelperText,
+  Paper,
+  Theme,
+  Typography
+} from "@material-ui/core";
+import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import clsx from "clsx";
+import ptBR from "date-fns/locale/pt-BR";
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useState,
+  ChangeEvent
+} from "react";
+import QuestionarioErrors from "../../../models/Errors/QuestionarioErrors";
+import CadastroQuestionario from "../../../models/Questionario/CadastroQuestionario";
 import * as Validations from "../../../utils/Validations";
+import InputField from "../../common/formFields/InputField";
 
 interface IProps {
   quiz: CadastroQuestionario;

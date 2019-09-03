@@ -9,16 +9,16 @@ import {
 import { Delete } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
 import React, {
+  createRef,
   useState,
   ChangeEvent,
-  createRef,
 } from "react";
 import TipoPergunta from "../../application/enums/TipoPergunta";
-import TipoPerguntaSelect from "../../components/common/formFields/nativeSelects/TipoPerguntaSelect";
-import InputField from "../../components/common/formFields/InputField";
 import CabecalhoQuestionario, {
   ICabecalhoQuestionarioValidations
 } from "../../components/administracao/questionario/CabecalhoQuestionario";
+import TipoPerguntaSelect from "../../components/common/formFields/nativeSelects/TipoPerguntaSelect";
+import InputField from "../../components/common/formFields/InputField";
 import SubmitButton from "../../components/common/formFields/SubmitButton";
 import Opcao from "../../models/Opcao/Opcao";
 import Pergunta from "../../models/Pergunta/Pergunta";
@@ -373,8 +373,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: "center",
     marginTop: 20
   },
-
-  
   optionsHeader: {
     marginTop: 20,
     display: "flex",
