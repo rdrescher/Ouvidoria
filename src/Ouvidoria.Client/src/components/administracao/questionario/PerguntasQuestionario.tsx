@@ -37,12 +37,13 @@ interface IProps {
 }
 
 export interface IPerguntaQuestionarioValidations {
+  addOption: (questionIndex: number) => void;
+  addQuestion: () => void;
   isValid: () => boolean;
   questionTypeChange: (questionIndex: number, type: TipoPergunta) => void;
-  addQuestion: () => void;
   removeQuestion: (questionIndex: number) => void;
-  addOption: (questionIndex: number) => void;
   removeOption: (questionIndex: number, optionIndex: number) => void;
+  reset: () => void;
 }
 
 const emptyQuestionError: PerguntaErrors = {
@@ -68,25 +69,16 @@ const PerguntasQuestionario = forwardRef<
   const classes = useStyles(0);
 
   useImperativeHandle(ref, () => ({
-    isValid: (): boolean => {
-      return validate();
-    },
-    addQuestion: (): void => {
-      handleAddQuestion();
-    },
-    removeQuestion: (questionIndex: number): void => {
-      handleRemoveQuestion(questionIndex);
-    },
-    addOption: (questionIndex: number): void => {
-      handleAddOption(questionIndex);
-    },
-    questionTypeChange: (questionIndex: number, type: TipoPergunta): void => {
-      handleQuestionTypeChange(questionIndex, type);
-    },
-    removeOption: (questionIndex: number, optionIndex: number) => {
-      handleRemoveOption(questionIndex, optionIndex);
-    }
+    isValid: validate,
+    addQuestion: handleAddQuestion,
+    removeQuestion: handleRemoveQuestion,
+    addOption: handleAddOption,
+    questionTypeChange: handleQuestionTypeChange,
+    removeOption: handleRemoveOption,
+    reset
   }));
+
+  const reset = () => setState(initialState);
 
   const handleRemoveQuestion = (questionIndex: number) => {
     setState(prevState => {
@@ -302,7 +294,7 @@ const PerguntasQuestionario = forwardRef<
               <Fab
                 color="secondary"
                 size="medium"
-                className={classes.removeOption}
+                style={{ color: "white" }}
                 onClick={props.onRemoveQuestion(questionIndex)}
               >
                 <Delete />
@@ -434,7 +426,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   questionsHeader: {
     display: "flex",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    alignItems: "flex-start"
   },
   buttons: {
     display: "flex",

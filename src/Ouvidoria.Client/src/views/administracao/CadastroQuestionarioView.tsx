@@ -8,6 +8,7 @@ import CabecalhoQuestionario, {
 import PerguntasQuestionario, {
   IPerguntaQuestionarioValidations
 } from "../../components/administracao/questionario/PerguntasQuestionario";
+import DialogMessage from "../../components/common/fields/DialogMessage";
 import SubmitButton from "../../components/common/formFields/SubmitButton";
 import Opcao from "../../models/Opcao/Opcao";
 import Pergunta from "../../models/Pergunta/Pergunta";
@@ -16,6 +17,10 @@ import QuestionarioApi from "../../services/QuestionarioApi";
 
 interface IState {
   quiz: CadastroQuestionario;
+  loading: boolean;
+  dialogOpen: boolean;
+  returnMessage: string[];
+  returnType: string;
 }
 
 const initialState: IState = {
@@ -25,7 +30,11 @@ const initialState: IState = {
     dataInicio: new Date(),
     descricao: "",
     perguntas: [{ descricao: "", opcoes: [], tipo: TipoPergunta.Dissertativa }]
-  }
+  },
+  loading: false,
+  dialogOpen: false,
+  returnMessage: [],
+  returnType: ""
 };
 
 const emptyQuestion: Pergunta = {
@@ -40,9 +49,48 @@ const emptyOption: Opcao = {
 
 export default function CadastroQuestionarioView() {
   const [state, setState] = useState<IState>(initialState);
-  const classes = useStyles();
+  const classes = useStyles(0);
   const quizHeaderRef = createRef<ICabecalhoQuestionarioValidations>();
   const quizQuestionsRef = createRef<IPerguntaQuestionarioValidations>();
+
+  const handleDialogOpen = (title: string, message: string[]) => {
+    setState(prevState => {
+      return {
+        ...prevState,
+        dialogOpen: true,
+        returnMessage: message,
+        returnType: title
+      };
+    });
+  };
+
+  const resetFormAfterSucces = (title: string, message: string[]) => {
+    setState(() => {
+      return {
+        ...initialState,
+        dialogOpen: true,
+        returnMessage: message,
+        returnType: title
+      };
+    });
+  };
+
+  const handleDialogClose = () => {
+    setState(prevState => {
+      return {
+        ...prevState,
+        dialogOpen: false,
+        returnMessage: [],
+        returnType: ""
+      };
+    });
+  };
+
+  const handleLoading = () => {
+    setState(prevState => {
+      return { ...prevState, loading: !prevState.loading };
+    });
+  };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let name = e.target.name;
@@ -239,7 +287,15 @@ export default function CadastroQuestionarioView() {
     let valid = true;
     if (!quizQuestionsRef.current!.isValid()) valid = false;
     if (!quizHeaderRef.current!.isValid()) valid = false;
-    if (valid) console.log(await QuestionarioApi.create(state.quiz));
+    if (!valid) return;
+    handleLoading();
+    let result = await QuestionarioApi.create(state.quiz);
+    if (result.success) {
+      resetFormAfterSucces("Sucesso", ["Questionário salvo com sucesso!"]);
+    } else {
+      handleDialogOpen("Erro ao salvar", result.messages);
+      handleLoading();
+    }
   };
 
   return (
@@ -265,10 +321,16 @@ export default function CadastroQuestionarioView() {
       <div className={classes.buttons}>
         <SubmitButton
           label="Salvar Questionário"
-          loading={false}
+          loading={state.loading}
           onSubmit={handleSubmit}
         />
       </div>
+      <DialogMessage
+        open={state.dialogOpen}
+        title={state.returnType}
+        messages={state.returnMessage}
+        onClose={handleDialogClose}
+      />
     </Container>
   );
 }

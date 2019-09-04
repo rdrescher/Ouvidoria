@@ -30,6 +30,7 @@ interface IProps {
 
 export interface ICabecalhoQuestionarioValidations {
   isValid: () => boolean;
+  reset: () => void;
 }
 
 const initialState: QuestionarioErrors = {
@@ -48,14 +49,20 @@ const CabecalhoQuestionario = forwardRef<
   const matches = useMediaQuery("(min-width:864px)");
 
   useImperativeHandle(ref, () => ({
-    isValid: (): boolean => {
-      let valid = true;
-      if (!validateTitle()) valid = false;
-      if (!validateDescription()) valid = false;
-      if (!validateFinalDate()) valid = false;
-      return valid;
-    }
+    isValid: validate,
+    reset
   }));
+
+  const reset = () => setState(initialState);
+
+
+  const validate = (): boolean => {
+    let valid = true;
+    if (!validateTitle()) valid = false;
+    if (!validateDescription()) valid = false;
+    if (!validateFinalDate()) valid = false;
+    return valid;
+  };
 
   function validateTitle(): boolean {
     let valid = true;
