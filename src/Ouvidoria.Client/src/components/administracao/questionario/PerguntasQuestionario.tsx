@@ -7,28 +7,190 @@ import {
   Typography
 } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
-import React from "react";
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useState,
+  ChangeEvent
+} from "react";
 import TipoPergunta from "../../../application/enums/TipoPergunta";
+import OpcaoErrors from "../../../models/Errors/OpcaoErrors";
+import PerguntaErrors from "../../../models/Errors/PerguntaErrors";
 import Pergunta from "../../../models/Pergunta/Pergunta";
+import * as Validations from "../../../utils/Validations";
 import TipoPerguntaSelect from "../../common/formFields/nativeSelects/TipoPerguntaSelect";
 import InputField from "../../common/formFields/InputField";
 
 interface IProps {
   questions: Pergunta[];
   onRemoveQuestion: (questionIndex: number) => () => void;
-  onQuestionTypeChange: (questionIndex: number) => () => void;
-  onQuestionDescriptionChange: () => void;
+  onQuestionTypeChange: (
+    questionIndex: number
+  ) => (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onQuestionDescriptionChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onOptionChange: (
+    questionIndex: number
+  ) => (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onAddQuestion: () => void;
   onAddOption: (questionIndex: number) => () => void;
-  onOptionChange: (questionIndex: number) => () => void;
   onRemoveOption: (questionIndex: number, optionIndex: number) => () => void;
 }
 
-export default function PerguntasQuestionario(props: IProps) {
+export interface IPerguntaQuestionarioValidations {
+  isValid: () => boolean;
+  questionTypeChange: (questionIndex: number, type: TipoPergunta) => void;
+  addQuestion: () => void;
+  removeQuestion: (questionIndex: number) => void;
+  addOption: (questionIndex: number, optionIndex: number) => void;
+}
+
+const emptyQuestionError: PerguntaErrors = {
+  descricao: "",
+  opcoes: []
+};
+
+const emptyOptionError: OpcaoErrors = {
+  descricao: ""
+};
+
+interface IState {
+  questions: PerguntaErrors[];
+}
+
+const initialState: IState = { questions: [emptyQuestionError] };
+
+const PerguntasQuestionario = forwardRef<
+  IPerguntaQuestionarioValidations,
+  IProps
+>((props, ref) => {
+  const [state, setState] = useState(initialState);
   const classes = useStyles(0);
+
+  useImperativeHandle(ref, () => ({
+    isValid: (): boolean => {
+      let valid = true;
+      state.questions.forEach((question, index) => {
+        if (!validateQuestionDescription(index)) valid = false;
+      });
+      return valid;
+    },
+    addQuestion: (): void => {
+      handleAddQuestion();
+    },
+    removeQuestion: (questionIndex: number): void => {
+      handleRemoveQuestion(questionIndex);
+    },
+    addOption: (questionIndex: number, optionIndex: number): void => {},
+    questionTypeChange: (questionIndex: number, type: TipoPergunta): void => {
+      handleQuestionTypeChange(questionIndex, type);
+    }
+  }));
+
+  const validateQuestionDescription = (questionIndex: number): boolean => {
+    let valid = true;
+    let message = "";
+    let question = props.questions[questionIndex];
+
+    if (!question.descricao) {
+      valid = false;
+      message = "A descrição é obrigatória";
+    } else if (!Validations.hasCorrectSize(question.descricao, 2, 5000)) {
+      valid = false;
+      message = "A descrição deve conter entre 2 e 5000 caracteres";
+    }
+
+    if (valid) {
+      setState(prevState => {
+        return {
+          ...prevState,
+          questions: prevState.questions.map((question, index) =>
+            index === questionIndex ? { ...question, descricao: "" } : question
+          )
+        };
+      });
+    } else {
+      setState(prevState => {
+        return {
+          ...prevState,
+          questions: prevState.questions.map((question, index) =>
+            index === questionIndex
+              ? { ...question, descricao: message }
+              : question
+          )
+        };
+      });
+    }
+
+    return valid;
+  };
+
+  const handleRemoveQuestion = (questionIndex: number) => {
+    setState(prevState => {
+      return {
+        ...prevState,
+        questions: prevState.questions
+          .slice(0, questionIndex)
+          .concat(
+            prevState.questions.slice(
+              questionIndex + 1,
+              prevState.questions.length
+            )
+          )
+      };
+    });
+  };
+
+  const handleAddQuestion = () => {
+    setState(prevState => {
+      return {
+        ...prevState,
+        questions: [...prevState.questions, emptyQuestionError]
+      };
+    });
+  };
+
+  const handleQuestionTypeChange = (
+    questionIndex: number,
+    type: TipoPergunta
+  ) => {
+    console.log(props.questions[questionIndex], TipoPergunta.Dissertativa);
+    setState(prevState => {
+      return {
+        ...prevState,
+        questions: prevState.questions.map((question, index) =>
+          index === questionIndex
+            ? {
+                ...question,
+                opcoes:
+                  type === TipoPergunta.Dissertativa
+                    ? []
+                    : [emptyOptionError, emptyOptionError]
+              }
+            : question
+        )
+      };
+    });
+  };
 
   return (
     <Paper className={classes.paper}>
-      <Typography variant="h5">Perguntas</Typography>
+      <div className={classes.questionsHeader}>
+        <Typography variant="h5">Perguntas</Typography>
+        <Fab
+          variant="extended"
+          color="secondary"
+          size="medium"
+          onClick={props.onAddQuestion}
+        >
+          <Typography
+            variant="inherit"
+            color="textSecondary"
+            className={classes.contentSpacer}
+          >
+            Nova Pergunta
+          </Typography>
+        </Fab>
+      </div>
       {props.questions.map((question, questionIndex) => (
         <div key={questionIndex} className={classes.questions}>
           <div className={classes.questionsHeader}>
@@ -51,7 +213,8 @@ export default function PerguntasQuestionario(props: IProps) {
             label="Descrição"
             value={question.descricao}
             onChange={props.onQuestionDescriptionChange}
-            error={""}
+            error={state.questions[questionIndex].descricao}
+            onBlur={() => validateQuestionDescription(questionIndex)}
           />
           <TipoPerguntaSelect
             name={`options${questionIndex.toString()}`}
@@ -113,7 +276,9 @@ export default function PerguntasQuestionario(props: IProps) {
       ))}
     </Paper>
   );
-}
+});
+
+export default PerguntasQuestionario;
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
