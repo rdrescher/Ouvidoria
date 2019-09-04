@@ -85,31 +85,31 @@ function SidebarComponent(props: IStateProps) {
         <Collapse in={manifestationIsOpen} timeout="auto" unmountOnExit>
           <SidebarItem
             path="/elogio"
-            nested={true}
+            nested
             label="Elogio"
             icon={<ThumbUp />}
           />
           <SidebarItem
             path="/sugestao"
-            nested={true}
+            nested
             label="Sugestão"
             icon={<Message />}
           />
           <SidebarItem
             path="/solicitacao"
-            nested={true}
+            nested
             label="Solicitação"
             icon={<RecordVoiceOver />}
           />
           <SidebarItem
             path="/reclamacao"
-            nested={true}
+            nested
             label="Reclamação"
             icon={<ThumbDown />}
           />
           <SidebarItem
             path="/denuncia"
-            nested={true}
+            nested
             label="Denúncia"
             icon={<Report />}
           />
@@ -139,19 +139,25 @@ function SidebarComponent(props: IStateProps) {
                   <SidebarItem
                     path="/cursos"
                     label="Cursos"
-                    nested={true}
+                    nested
                     icon={<School />}
                   />
                   <SidebarItem
                     path="/departamentos"
                     label="Departamentos"
-                    nested={true}
+                    nested
                     icon={<Work />}
+                  />
+                  <SidebarItem
+                    path="/cadastro-questionario"
+                    label="Questionários"
+                    nested
+                    icon={<QuestionAnswer />}
                   />
                   <SidebarItem
                     path="/usuarios"
                     label="Usuários"
-                    nested={true}
+                    nested
                     icon={<People />}
                   />
                 </Collapse>
@@ -167,7 +173,7 @@ function SidebarComponent(props: IStateProps) {
 const mapStateToProps = (state: IApplicationState) => ({
   sidebarIsOpen: state.NavigationReducer.sidebarIsOpen,
   user: state.SessionReducer.user,
-  claims: state.SessionReducer.claims,
+  claims: state.SessionReducer.claims
 });
 
 export default connect(

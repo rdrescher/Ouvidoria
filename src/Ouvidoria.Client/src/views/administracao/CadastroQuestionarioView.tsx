@@ -1,4 +1,4 @@
-import { Container, Fab, Theme, Typography } from "@material-ui/core";
+import { Container, Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import React, { createRef, useState, ChangeEvent } from "react";
 import TipoPergunta from "../../application/enums/TipoPergunta";
@@ -38,7 +38,7 @@ const emptyOption: Opcao = {
   descricao: ""
 };
 
-export default function QuestionarioView() {
+export default function CadastroQuestionarioView() {
   const [state, setState] = useState<IState>(initialState);
   const classes = useStyles();
   const quizHeaderRef = createRef<ICabecalhoQuestionarioValidations>();
@@ -182,6 +182,7 @@ export default function QuestionarioView() {
         }
       };
     });
+    quizQuestionsRef.current!.addOption(questionIndex);
   };
 
   const handleRemoveOption = (
@@ -211,6 +212,7 @@ export default function QuestionarioView() {
         }
       };
     });
+    quizQuestionsRef.current!.removeOption(questionIndex, optionIndex);
   };
 
   const handleRemoveQuestion = (questionIndex: number) => () => {
@@ -234,9 +236,10 @@ export default function QuestionarioView() {
   };
 
   const handleSubmit = async () => {
-    if (!quizQuestionsRef.current!.isValid()) return;
-    if (!quizHeaderRef.current!.isValid()) return;
-    console.log(await QuestionarioApi.create(state.quiz));
+    let valid = true;
+    if (!quizQuestionsRef.current!.isValid()) valid = false;
+    if (!quizHeaderRef.current!.isValid()) valid = false;
+    if (valid) console.log(await QuestionarioApi.create(state.quiz));
   };
 
   return (
@@ -260,23 +263,6 @@ export default function QuestionarioView() {
         onRemoveQuestion={handleRemoveQuestion}
       />
       <div className={classes.buttons}>
-        <div className={classes.wrapper}>
-          <Fab
-            variant="extended"
-            color="secondary"
-            aria-label="nova-pergunta"
-            size="medium"
-            onClick={handleAddQuestion}
-          >
-            <Typography
-              variant="inherit"
-              color="textSecondary"
-              className={classes.contentSpacer}
-            >
-              Nova Pergunta
-            </Typography>
-          </Fab>
-        </div>
         <SubmitButton
           label="Salvar Questionário"
           loading={false}

@@ -41,7 +41,8 @@ export interface IPerguntaQuestionarioValidations {
   questionTypeChange: (questionIndex: number, type: TipoPergunta) => void;
   addQuestion: () => void;
   removeQuestion: (questionIndex: number) => void;
-  addOption: (questionIndex: number, optionIndex: number) => void;
+  addOption: (questionIndex: number) => void;
+  removeOption: (questionIndex: number, optionIndex: number) => void;
 }
 
 const emptyQuestionError: PerguntaErrors = {
@@ -68,11 +69,7 @@ const PerguntasQuestionario = forwardRef<
 
   useImperativeHandle(ref, () => ({
     isValid: (): boolean => {
-      let valid = true;
-      state.questions.forEach((question, index) => {
-        if (!validateQuestionDescription(index)) valid = false;
-      });
-      return valid;
+      return validate();
     },
     addQuestion: (): void => {
       handleAddQuestion();
@@ -80,11 +77,112 @@ const PerguntasQuestionario = forwardRef<
     removeQuestion: (questionIndex: number): void => {
       handleRemoveQuestion(questionIndex);
     },
-    addOption: (questionIndex: number, optionIndex: number): void => {},
+    addOption: (questionIndex: number): void => {
+      handleAddOption(questionIndex);
+    },
     questionTypeChange: (questionIndex: number, type: TipoPergunta): void => {
       handleQuestionTypeChange(questionIndex, type);
+    },
+    removeOption: (questionIndex: number, optionIndex: number) => {
+      handleRemoveOption(questionIndex, optionIndex);
     }
   }));
+
+  const handleRemoveQuestion = (questionIndex: number) => {
+    setState(prevState => {
+      return {
+        ...prevState,
+        questions: prevState.questions
+          .slice(0, questionIndex)
+          .concat(
+            prevState.questions.slice(
+              questionIndex + 1,
+              prevState.questions.length
+            )
+          )
+      };
+    });
+  };
+
+  const handleAddQuestion = () => {
+    setState(prevState => {
+      return {
+        ...prevState,
+        questions: [...prevState.questions, emptyQuestionError]
+      };
+    });
+  };
+
+  const handleRemoveOption = (questionIndex: number, optionIndex: number) => {
+    setState(prevState => {
+      return {
+        ...prevState,
+        questions: prevState.questions.map((question, qIndex) =>
+          qIndex === questionIndex
+            ? {
+                ...question,
+                opcoes: question.opcoes
+                  .slice(0, optionIndex)
+                  .concat(
+                    question.opcoes.slice(
+                      optionIndex + 1,
+                      question.opcoes.length
+                    )
+                  )
+              }
+            : question
+        )
+      };
+    });
+  };
+
+  const handleAddOption = (questionIndex: number) => {
+    setState(prevState => {
+      return {
+        ...prevState,
+        questions: prevState.questions.map((question, qIndex) =>
+          qIndex === questionIndex
+            ? { ...question, opcoes: [...question.opcoes, emptyOptionError] }
+            : question
+        )
+      };
+    });
+  };
+
+  const handleQuestionTypeChange = (
+    questionIndex: number,
+    type: TipoPergunta
+  ) => {
+    console.log(props.questions[questionIndex], TipoPergunta.Dissertativa);
+    setState(prevState => {
+      return {
+        ...prevState,
+        questions: prevState.questions.map((question, index) =>
+          index === questionIndex
+            ? {
+                ...question,
+                opcoes:
+                  type === TipoPergunta.Dissertativa
+                    ? []
+                    : [emptyOptionError, emptyOptionError]
+              }
+            : question
+        )
+      };
+    });
+  };
+
+  const validate = (): boolean => {
+    let valid = true;
+    state.questions.forEach((question, qIndex) => {
+      if (!validateQuestionDescription(qIndex)) valid = false;
+      if (question.opcoes.length > 0)
+        question.opcoes.forEach((option, oIndex) => {
+          if (!validateOptionDescription(qIndex, oIndex)) valid = false;
+        });
+    });
+    return valid;
+  };
 
   const validateQuestionDescription = (questionIndex: number): boolean => {
     let valid = true;
@@ -124,52 +222,55 @@ const PerguntasQuestionario = forwardRef<
     return valid;
   };
 
-  const handleRemoveQuestion = (questionIndex: number) => {
-    setState(prevState => {
-      return {
-        ...prevState,
-        questions: prevState.questions
-          .slice(0, questionIndex)
-          .concat(
-            prevState.questions.slice(
-              questionIndex + 1,
-              prevState.questions.length
-            )
-          )
-      };
-    });
-  };
-
-  const handleAddQuestion = () => {
-    setState(prevState => {
-      return {
-        ...prevState,
-        questions: [...prevState.questions, emptyQuestionError]
-      };
-    });
-  };
-
-  const handleQuestionTypeChange = (
+  const validateOptionDescription = (
     questionIndex: number,
-    type: TipoPergunta
-  ) => {
-    console.log(props.questions[questionIndex], TipoPergunta.Dissertativa);
-    setState(prevState => {
-      return {
-        ...prevState,
-        questions: prevState.questions.map((question, index) =>
-          index === questionIndex
-            ? {
-                ...question,
-                opcoes:
-                  type === TipoPergunta.Dissertativa
-                    ? []
-                    : [emptyOptionError, emptyOptionError]
-              }
-            : question
-        )
-      };
-    });
+    optionIndex: number
+  ): boolean => {
+    console.log(questionIndex, optionIndex);
+    let valid = true;
+    let message = "";
+    let option = props.questions[questionIndex].opcoes[optionIndex];
+
+    if (!option.descricao) {
+      valid = false;
+      message = "A descrição é obrigatória";
+    } else if (!Validations.hasCorrectSize(option.descricao, 2, 1000)) {
+      valid = false;
+      message = "A descrição deve ter conter entre 2 e 1000 caracteres";
+    }
+    if (valid) {
+      setState(prevState => {
+        return {
+          questions: prevState.questions.map((question, qIndex) =>
+            questionIndex === qIndex
+              ? {
+                  ...question,
+                  opcoes: question.opcoes.map((option, oIndex) =>
+                    optionIndex === oIndex ? emptyOptionError : option
+                  )
+                }
+              : question
+          )
+        };
+      });
+    } else {
+      setState(prevState => {
+        return {
+          questions: prevState.questions.map((question, qIndex) =>
+            questionIndex === qIndex
+              ? {
+                  ...question,
+                  opcoes: question.opcoes.map((option, oIndex) =>
+                    optionIndex === oIndex ? { descricao: message } : option
+                  )
+                }
+              : question
+          )
+        };
+      });
+    }
+
+    return valid;
   };
 
   return (
@@ -249,10 +350,16 @@ const PerguntasQuestionario = forwardRef<
                     <div className={classes.option}>
                       <InputField
                         value={option.descricao}
-                        error=""
+                        error={
+                          state.questions[questionIndex].opcoes[optionIndex]
+                            .descricao
+                        }
                         label={`Opção nº ${optionIndex + 1}`}
                         name={optionIndex.toString()}
                         onChange={props.onOptionChange(questionIndex)}
+                        onBlur={() =>
+                          validateOptionDescription(questionIndex, optionIndex)
+                        }
                       />
                     </div>
                     {props.questions[questionIndex].opcoes.length > 2 && (
@@ -306,7 +413,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-evenly"
+    justifyContent: "space-evenly",
+    alignItems: "flex-start"
   },
   option: {
     width: 250
@@ -317,11 +425,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   optionContent: {
     width: 300,
     display: "flex",
-    alignItems: "flex-end"
+    alignItems: "flex-start"
   },
   removeOption: {
     marginLeft: 10,
-    color: "white"
+    color: "white",
+    marginTop: 20
   },
   questionsHeader: {
     display: "flex",
