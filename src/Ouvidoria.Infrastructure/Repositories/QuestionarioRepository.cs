@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ouvidoria.Domain.Interfaces;
@@ -12,11 +14,22 @@ namespace Ouvidoria.Infrastructure.Repositories
         public QuestionarioRepository(OuvidoriaContext context) : base(context)
         { }
 
-        public Task<List<Questionario>> GetAllInfos() =>
-            DbSet.AsNoTracking()
+        public async Task<List<Questionario>> GetAllInfos() =>
+            await DbSet.AsNoTracking()
                 .Include(x => x.Usuario)
                 .Include(x => x.Perguntas)
                 .Include(x => x.QuestionarioRespostas)
+                .ToListAsync();
+
+        public async Task<List<Questionario>> GetPreviewList(int userId) =>
+            await DbSet.AsNoTracking()
+                .Include(x => x.QuestionarioRespostas)
+                .Where(x => x.DataInicio < DateTime.Now
+                         && x.DataFim > DateTime.Now
+                         && (x.QuestionarioRespostas.Count == 0
+                             || !x.QuestionarioRespostas
+                                  .Select(q => q.IdUsuario)
+                                  .Contains(userId)))
                 .ToListAsync();
     }
 }

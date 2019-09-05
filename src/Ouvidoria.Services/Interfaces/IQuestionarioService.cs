@@ -9,5 +9,6 @@ namespace Ouvidoria.Services.Interfaces
     {
         Task<List<Questionario>> GetQuizzes();
         Task Create(Questionario quiz);
+        Task<List<Questionario>> GetPreviewList(int userId);
     }
 }

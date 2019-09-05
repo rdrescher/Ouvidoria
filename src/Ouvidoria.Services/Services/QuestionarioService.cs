@@ -40,6 +40,9 @@ namespace Ouvidoria.Services
             _repository.Dispose();
         }
 
+        public async Task<List<Questionario>> GetPreviewList(int userId) =>
+            await _repository.GetPreviewList(userId);
+
         public async Task<List<Questionario>> GetQuizzes() =>
             await _repository.GetAllInfos();
 

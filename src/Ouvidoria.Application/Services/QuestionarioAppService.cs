@@ -35,6 +35,12 @@ namespace Ouvidoria.Application.Services
                 : Resultado<QuestionarioViewModel>.Successfull(MapToViewModel(quiz));
         }
 
+        public async Task<Resultado<List<QuestionarioPreviewViewModel>>> GetPreviewList(int userId)
+        {
+            var quizzesPreview = Mapper.Map<List<QuestionarioPreviewViewModel>>(await _service.GetPreviewList(userId));
+            return Resultado<List<QuestionarioPreviewViewModel>>.Successfull(quizzesPreview);
+        }
+
         public async Task<Resultado<List<QuestionarioDetailViewModel>>> GetQuizzes()
         {
             var quizzes = Mapper.Map<List<QuestionarioDetailViewModel>>(await _service.GetQuizzes());

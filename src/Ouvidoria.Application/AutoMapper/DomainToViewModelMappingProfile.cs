@@ -16,6 +16,7 @@ namespace Ouvidoria.Application.AutoMapper
             CreateMap<Opcao, OpcaoViewModel>();
             CreateMap<Pergunta, PerguntaViewModel>();
             CreateMap<Questionario, QuestionarioViewModel>();
+            CreateMap<Questionario, QuestionarioPreviewViewModel>();
             CreateMap<Questionario, QuestionarioDetailViewModel>()
                 .ForMember(c => c.usuarioCriador,
                                 c => c.MapFrom(d => d.Usuario != null ? d.Usuario.Nome : ""))
