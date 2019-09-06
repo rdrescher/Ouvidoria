@@ -1,14 +1,13 @@
 import DateFnsUtils from "@date-io/date-fns";
 import {
   makeStyles,
-  useMediaQuery,
   FormHelperText,
+  Grid,
   Paper,
   Theme,
   Typography
 } from "@material-ui/core";
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import clsx from "clsx";
 import ptBR from "date-fns/locale/pt-BR";
 import React, {
   forwardRef,
@@ -46,7 +45,6 @@ const CabecalhoQuestionario = forwardRef<
 >((props, ref) => {
   const [state, setState] = useState<QuestionarioErrors>(initialState);
   const classes = useStyles(0);
-  const matches = useMediaQuery("(min-width:864px)");
 
   useImperativeHandle(ref, () => ({
     isValid: validate,
@@ -54,7 +52,6 @@ const CabecalhoQuestionario = forwardRef<
   }));
 
   const reset = () => setState(initialState);
-
 
   const validate = (): boolean => {
     let valid = true;
@@ -177,38 +174,42 @@ const CabecalhoQuestionario = forwardRef<
         multiline
         onBlur={validateDescription}
       />
-      <div className={classes.dates}>
+      <Grid container spacing={2} className={classes.dates}>
         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptBR}>
-          <DateTimePicker
-            value={props.quiz.dataInicio}
-            variant="dialog"
-            inputVariant="outlined"
-            format="dd/MM/yyyy HH:mm"
-            label="Data inicial"
-            minDateMessage="A data inicial deve ser maior ou igual à data atual"
-            ampm={false}
-            disableToolbar
-            disablePast
-            onChange={props.onStartDateChange}
-            className={clsx(classes.date, matches ? classes.dateLeft : null)}
-          />
-          <DateTimePicker
-            value={props.quiz.dataFim}
-            onChange={props.onFinalDateChange}
-            variant="dialog"
-            inputVariant="outlined"
-            format="dd/MM/yyyy HH:mm"
-            ampm={false}
-            label="Data final"
-            disableToolbar
-            minDate={props.quiz.dataInicio}
-            minDateMessage={"A data final deve ser maior que a data inicial"}
-            className={clsx(classes.date, matches ? classes.dateRight : null)}
-            error={!!state.dataFim}
-            onBlur={validateFinalDate}
-          />
+          <Grid item xs={12} sm={6}>
+            <DateTimePicker
+              value={props.quiz.dataInicio}
+              variant="dialog"
+              inputVariant="outlined"
+              format="dd/MM/yyyy HH:mm"
+              label="Data inicial"
+              minDateMessage="A data inicial deve ser maior ou igual à data atual"
+              ampm={false}
+              disableToolbar
+              disablePast
+              fullWidth
+              onChange={props.onStartDateChange}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <DateTimePicker
+              value={props.quiz.dataFim}
+              onChange={props.onFinalDateChange}
+              variant="dialog"
+              inputVariant="outlined"
+              format="dd/MM/yyyy HH:mm"
+              ampm={false}
+              label="Data final"
+              disableToolbar
+              fullWidth
+              minDate={props.quiz.dataInicio}
+              minDateMessage={"A data final deve ser maior que a data inicial"}
+              error={!!state.dataFim}
+              onBlur={validateFinalDate}
+            />
+          </Grid>
         </MuiPickersUtilsProvider>
-      </div>
+      </Grid>
       {!!state.dataFim && (
         <FormHelperText
           id={`${state.dataFim}-helper`}
@@ -228,10 +229,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 20
   },
   dates: {
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    marginTop: 10
+    marginTop: 5
   },
   date: {
     flexGrow: 1
