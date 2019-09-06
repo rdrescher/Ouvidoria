@@ -16,7 +16,9 @@ namespace Ouvidoria.Application.AutoMapper
             CreateMap<Opcao, OpcaoViewModel>();
             CreateMap<Pergunta, PerguntaViewModel>();
             CreateMap<Questionario, QuestionarioViewModel>();
-            CreateMap<Questionario, QuestionarioPreviewViewModel>();
+            CreateMap<Questionario, QuestionarioPreviewViewModel>()
+                .ForMember(q => q.dataFim,
+                                q => q.MapFrom(c => c.DataFim.ToString("dd/MM/yyyy hh:mm")));
             CreateMap<Questionario, QuestionarioDetailViewModel>()
                 .ForMember(c => c.usuarioCriador,
                                 c => c.MapFrom(d => d.Usuario != null ? d.Usuario.Nome : ""))

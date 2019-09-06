@@ -6,6 +6,6 @@ namespace Ouvidoria.Application.ViewModel
     {
         public string titulo { get; set; }
         public string descricao { get; set; }
-        public DateTime dataFim { get; set; }
+        public string dataFim { get; set; }
     }
 }

@@ -118,7 +118,7 @@ function SidebarComponent(props: IStateProps) {
         {!!props.user && (
           <>
             <SidebarItem
-              path="/questionario"
+              path="/questionarios"
               label="Questionários"
               icon={<QuestionAnswer />}
             />

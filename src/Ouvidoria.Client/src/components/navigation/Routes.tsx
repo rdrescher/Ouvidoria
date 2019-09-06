@@ -13,6 +13,7 @@ import ElogioView from "../../views/manifestacoes/ElogioView";
 import ReclamacaoView from "../../views/manifestacoes/ReclamacaoView";
 import SolicitacaoView from "../../views/manifestacoes/SolicitacaoView";
 import SugestaoView from "../../views/manifestacoes/SugestaoView";
+import Questionarios from "../../views/questionarios/Questionarios";
 import PrivateRoute from "./PrivateRoute";
 
 export default function Routes() {
@@ -25,6 +26,7 @@ export default function Routes() {
       <Route exact path="/reclamacao" component={ReclamacaoView} />
       <Route exact path="/solicitacao" component={SolicitacaoView} />
       <Route exact path="/sugestao" component={SugestaoView} />
+      <PrivateRoute path="/questionarios" component={Questionarios} />
       <PrivateRoute
         path="/cadastro-questionario"
         component={CadastroQuestionarioView}
