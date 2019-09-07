@@ -1,7 +1,5 @@
-import classes from "*.module.sass";
 import {
   makeStyles,
-  Button,
   Container,
   Fab,
   Paper,
@@ -59,7 +57,7 @@ export default function Questionarios() {
                 Disponível até: {quiz.dataFim}
               </Typography>
             </div>
-            <Fab size="medium" color="primary" className={classes.button}>
+            <Fab size="medium" color="secondary" className={classes.button}>
               <Reply />
             </Fab>
           </div>
