@@ -7,5 +7,6 @@ namespace Ouvidoria.Application.Interfaces
     public interface IQuestionarioRespostaAppService
     {
         Task<Resultado> Create(CadastroQuestionarioRespostaViewModel resposta, int idUsuario);
+        Task<Resultado> IsUserAbleToAnswer(int idQuestionario, int idUsuario);
     }
 }

@@ -35,5 +35,14 @@ namespace Ouvidoria.Application.Services
                 ? Resultado.Failed(_notificador.GetNotificationsMessages()) 
                 : Resultado.Successfull();
         }
+
+        public async Task<Resultado> IsUserAbleToAnswer(int idQuestionario, int idUsuario)
+        {
+            await _service.IsUserAbleToAnswer(idQuestionario, idUsuario);
+            
+            return _notificador.HasNotification()
+                ? Resultado.Failed(_notificador.GetNotificationsMessages()) 
+                : Resultado.Successfull();
+        }
     }
 }

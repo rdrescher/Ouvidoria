@@ -7,8 +7,6 @@ namespace Ouvidoria.Application.ViewModel
     {
         public string titulo { get; set; }
         public string descricao { get; set; }
-        public DateTime dataInicio { get; set; }
-        public DateTime dataFim { get; set; }
         public List<PerguntaViewModel> perguntas { get; set; }
     }
 }

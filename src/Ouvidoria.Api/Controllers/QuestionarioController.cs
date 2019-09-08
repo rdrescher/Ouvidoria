@@ -31,6 +31,11 @@ namespace Ouvidoria.Api.Controllers
             Ok(await _service.GetQuizzes());
 
         [Authorize]
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Resultado<QuestionarioViewModel>>> Get(int id) =>
+            Ok(await _service.GetById(id));
+
+        [Authorize]
         [HttpGet("[action]")]
         public async Task<ActionResult<Resultado<List<QuestionarioPreviewViewModel>>>> GetPreviewList()
         {
@@ -49,11 +54,17 @@ namespace Ouvidoria.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public async Task<ActionResult<Resultado>> Responder(CadastroQuestionarioRespostaViewModel resposta)
+        public async Task<ActionResult<Resultado>> Reply(CadastroQuestionarioRespostaViewModel resposta)
         {
             if (!ModelState.IsValid) return Ok(Resultado.Failed("Dados inválidos"));
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             return Ok(await _questionarioRespostaService.Create(resposta, userId));
+        }
+
+        public async Task<ActionResult<Resultado>> IsUserAbleToAnswer(int idQuestionario)
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            return Ok(await _questionarioRespostaService.IsUserAbleToAnswer(idQuestionario, userId));
         }
 
     }

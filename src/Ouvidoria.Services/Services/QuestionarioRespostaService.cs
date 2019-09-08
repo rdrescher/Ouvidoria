@@ -111,5 +111,12 @@ namespace Ouvidoria.Services
             }
             return true;
         }
+
+        public async Task IsUserAbleToAnswer(int idQuestionario, int idUsuario)
+        {
+            var quiz = await _questionarioService.GetById(idQuestionario);
+            if (!IsValidQuiz(quiz)) return;
+            await this.UserCanAnswer(idQuestionario, idUsuario);
+        }
     }
 }

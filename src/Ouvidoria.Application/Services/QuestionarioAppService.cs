@@ -25,6 +25,9 @@ namespace Ouvidoria.Application.Services
             _notificador = notificador;
         }
 
+        public async Task<Resultado<QuestionarioViewModel>> GetById(int idQuestionario) =>
+            Resultado<QuestionarioViewModel>.Successfull(MapToViewModel(await _service.GetById(idQuestionario)));
+
         public async Task<Resultado> Create(CadastroQuestionarioViewModel questionario, int userId)
         {
             var quiz = Mapper.Map<Questionario>(questionario);
