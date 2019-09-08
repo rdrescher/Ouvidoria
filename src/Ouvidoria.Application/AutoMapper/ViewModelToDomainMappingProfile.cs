@@ -15,7 +15,7 @@ namespace Ouvidoria.Application.AutoMapper
             CreateMap<ManifestacaoViewModel, Manifestacao>();
             CreateMap<PerguntaViewModel, Pergunta>();
             CreateMap<QuestionarioViewModel, Questionario>();
-            CreateMap<RespostaViewModel, Resposta>();
+            CreateMap<CadastroRespostaViewModel, Resposta>();
             CreateMap<UsuarioViewModel, Usuario>();
 
             #region Updates
@@ -36,6 +36,10 @@ namespace Ouvidoria.Application.AutoMapper
                 .ConstructUsing(p => new Pergunta(p.descricao, p.tipo));
             CreateMap<CadastroQuestionarioViewModel, Questionario>()
                 .ConstructUsing(q => new Questionario(q.titulo, q.descricao, q.dataInicio, q.dataFim));
+            CreateMap<CadastroQuestionarioRespostaViewModel, QuestionarioResposta>()
+                .ConstructUsing(q => new QuestionarioResposta(q.idQuestionario));
+            CreateMap<CadastroRespostaViewModel, Resposta>()
+                .ConstructUsing(r => new Resposta(r.retorno, r.idOpcao, r.idPergunta));
             #endregion
 
             #endregion

@@ -226,7 +226,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   paper: {
     padding: 20,
     textAlign: "center",
-    marginTop: 20
   },
   dates: {
     marginTop: 5

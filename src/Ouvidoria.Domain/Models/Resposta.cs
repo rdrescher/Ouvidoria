@@ -4,15 +4,9 @@ namespace Ouvidoria.Domain.Models
 {
     public class Resposta : Entity
     {
-        public Resposta(string retorno, int idPergunta)
+        public Resposta(string retorno, int? IdOpcao, int idPergunta)
         {
             this.Retorno = retorno;
-            this.IdPergunta = idPergunta;
-            this.DataAtualizacao = DateTime.Now;
-            this.DataInsercao = DateTime.Now;
-        }
-        public Resposta(int idOpcao, int idPergunta)
-        {
             this.IdOpcao = IdOpcao;
             this.IdPergunta = idPergunta;
             this.DataAtualizacao = DateTime.Now;

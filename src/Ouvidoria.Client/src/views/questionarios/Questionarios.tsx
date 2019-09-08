@@ -32,7 +32,7 @@ export default function Questionarios() {
     }
 
     getQuizzesPreview();
-  }, []);
+  },        []);
 
   return (
     <Container maxWidth="md">
@@ -40,28 +40,34 @@ export default function Questionarios() {
         <Typography className={classes.pageTitle} variant="h4">
           Questionários
         </Typography>
-        {state.quizzes.map(quiz => (
-          <div key={quiz.id} className={classes.item}>
-            <div className={classes.description}>
-              <Typography variant="h5" >
-                {quiz.titulo.length > 50
-                  ? `${quiz.titulo.substring(0, 50)}...`
-                  : quiz.titulo}
-              </Typography>
-              <Typography className={classes.quizDescription} variant="body2">
-                {quiz.descricao.length > 100
-                  ? `${quiz.descricao.substring(0, 100)}...`
-                  : quiz.descricao}
-              </Typography>
-              <Typography variant="subtitle1">
-                Disponível até: {quiz.dataFim}
-              </Typography>
+        {state.quizzes.length === 0 ? (
+          <Typography variant="body1" className={classes.noQuizzes}>
+            Não há questionários disponíveis para responder.
+          </Typography>
+        ) : (
+          state.quizzes.map(quiz => (
+            <div key={quiz.id} className={classes.item}>
+              <div className={classes.description}>
+                <Typography variant="h5">
+                  {quiz.titulo.length > 50
+                    ? `${quiz.titulo.substring(0, 50)}...`
+                    : quiz.titulo}
+                </Typography>
+                <Typography className={classes.quizDescription} variant="body2">
+                  {quiz.descricao.length > 100
+                    ? `${quiz.descricao.substring(0, 100)}...`
+                    : quiz.descricao}
+                </Typography>
+                <Typography variant="subtitle1">
+                  Disponível até: {quiz.dataFim}
+                </Typography>
+              </div>
+              <Fab size="medium" color="secondary" className={classes.button}>
+                <Reply />
+              </Fab>
             </div>
-            <Fab size="medium" color="secondary" className={classes.button}>
-              <Reply />
-            </Fab>
-          </div>
-        ))}
+          ))
+        )}
       </Paper>
     </Container>
   );
@@ -92,5 +98,9 @@ const useStyles = makeStyles(() => ({
   },
   quizDescription: {
     margin: "10px 0"
+  },
+  noQuizzes: {
+    textAlign: "center",
+    marginTop: 20
   }
 }));

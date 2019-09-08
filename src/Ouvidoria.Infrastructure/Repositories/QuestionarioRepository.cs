@@ -21,6 +21,11 @@ namespace Ouvidoria.Infrastructure.Repositories
                 .Include(x => x.QuestionarioRespostas)
                 .ToListAsync();
 
+        public async Task<Questionario> GetByIdWithQuestions(int idQuestionario) => 
+            await DbSet.AsNoTracking()
+                .Include(x => x.Perguntas)
+                .ThenInclude(x => x.Opcoes)
+                .FirstOrDefaultAsync(x => x.Id == idQuestionario);
         public async Task<List<Questionario>> GetPreviewList(int userId) =>
             await DbSet.AsNoTracking()
                 .Include(x => x.QuestionarioRespostas)

@@ -35,10 +35,10 @@ namespace Ouvidoria.Services
             await _repository.Create(quiz);
         }
 
-        public void Dispose()
-        {
-            _repository.Dispose();
-        }
+        public void Dispose() => _repository.Dispose();
+
+        public async Task<Questionario> GetById(int idQuestionario) =>
+            await _repository.GetByIdWithQuestions(idQuestionario);
 
         public async Task<List<Questionario>> GetPreviewList(int userId) =>
             await _repository.GetPreviewList(userId);

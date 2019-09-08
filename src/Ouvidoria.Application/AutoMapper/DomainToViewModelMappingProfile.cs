@@ -26,7 +26,6 @@ namespace Ouvidoria.Application.AutoMapper
                                 c => c.MapFrom(d => d.Perguntas.Count))
                 .ForMember(c => c.respostas,
                                 c => c.MapFrom(d => d.QuestionarioRespostas.Count));
-            CreateMap<Resposta, RespostaViewModel>();
             CreateMap<Usuario, UsuarioViewModel>();
             CreateMap<Departamento, DepartamentoViewModel>()
                 .ForMember(c => c.usuarioResponsavel,

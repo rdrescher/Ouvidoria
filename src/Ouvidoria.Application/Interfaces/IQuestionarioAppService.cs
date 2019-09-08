@@ -9,7 +9,7 @@ namespace Ouvidoria.Application.Interfaces
     public interface IQuestionarioAppService : IEntityAppService<Questionario, QuestionarioViewModel>
     {
         Task<Resultado<List<QuestionarioDetailViewModel>>> GetQuizzes();
-        Task<Resultado<QuestionarioViewModel>> Create(CadastroQuestionarioViewModel questionario, int userId);
+        Task<Resultado> Create(CadastroQuestionarioViewModel questionario, int userId);
         Task<Resultado<List<QuestionarioPreviewViewModel>>> GetPreviewList(int userId);
     }
 }

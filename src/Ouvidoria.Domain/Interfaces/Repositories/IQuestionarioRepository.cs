@@ -8,5 +8,6 @@ namespace Ouvidoria.Domain.Interfaces
     {
         Task<List<Questionario>> GetAllInfos();
         Task<List<Questionario>> GetPreviewList(int userId);
+        Task<Questionario> GetByIdWithQuestions(int idQuestionario);
     }
 }

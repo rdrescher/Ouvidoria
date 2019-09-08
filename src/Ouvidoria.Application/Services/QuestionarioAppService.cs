@@ -25,14 +25,14 @@ namespace Ouvidoria.Application.Services
             _notificador = notificador;
         }
 
-        public async Task<Resultado<QuestionarioViewModel>> Create(CadastroQuestionarioViewModel questionario, int userId)
+        public async Task<Resultado> Create(CadastroQuestionarioViewModel questionario, int userId)
         {
             var quiz = Mapper.Map<Questionario>(questionario);
             quiz.ChangeCreator(userId);
             await _service.Create(quiz);
             return _notificador.HasNotification()
-                ? Resultado<QuestionarioViewModel>.Failed(_notificador.GetNotificationsMessages())
-                : Resultado<QuestionarioViewModel>.Successfull(MapToViewModel(quiz));
+                ? Resultado.Failed(_notificador.GetNotificationsMessages())
+                : Resultado.Successfull();
         }
 
         public async Task<Resultado<List<QuestionarioPreviewViewModel>>> GetPreviewList(int userId)

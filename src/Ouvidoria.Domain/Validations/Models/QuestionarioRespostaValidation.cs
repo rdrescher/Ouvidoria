@@ -12,6 +12,10 @@ namespace Ouvidoria.Domain.Validations.Models
 
             RuleFor(q => q.IdUsuario)
                 .NotNull().WithMessage("Usuário inválido");
+
+            RuleFor(q => q.Respostas)
+                .NotNull().WithMessage("Respostas inválidas")
+                .NotEmpty().WithMessage("Respostas inválidas");
         }
     }
 }

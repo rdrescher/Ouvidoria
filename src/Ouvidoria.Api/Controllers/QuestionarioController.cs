@@ -15,9 +15,14 @@ namespace Ouvidoria.Api.Controllers
     public class QuestionarioController : BaseController
     {
         private readonly IQuestionarioAppService _service;
-        public QuestionarioController(IQuestionarioAppService service)
+        private readonly IQuestionarioRespostaAppService _questionarioRespostaService;
+        public QuestionarioController(
+            IQuestionarioAppService service, 
+            IQuestionarioRespostaAppService questionarioRespostaService
+        )
         {
             _service = service;
+            _questionarioRespostaService = questionarioRespostaService;
         }
 
         [Authorize(policy: "Administrador")]
@@ -35,11 +40,20 @@ namespace Ouvidoria.Api.Controllers
 
         [Authorize(policy: "Administrador")]
         [HttpPost]
-        public async Task<ActionResult<Resultado<QuestionarioViewModel>>> Post(CadastroQuestionarioViewModel questionario)
+        public async Task<ActionResult<Resultado>> Post(CadastroQuestionarioViewModel questionario)
         {
             if (!ModelState.IsValid) return Ok(Resultado.Failed("Dados inválidos"));
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             return Ok(await _service.Create(questionario, userId));
+        }
+
+        [AllowAnonymous]
+        [HttpPost("[action]")]
+        public async Task<ActionResult<Resultado>> Responder(CadastroQuestionarioRespostaViewModel resposta)
+        {
+            if (!ModelState.IsValid) return Ok(Resultado.Failed("Dados inválidos"));
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            return Ok(await _questionarioRespostaService.Create(resposta, userId));
         }
 
     }

@@ -32,7 +32,7 @@ namespace Ouvidoria.CrossCutting.IoC
             services.AddScoped<IOpcaoAppService, OpcaoAppService>();
             services.AddScoped<IPerguntaAppService, PerguntaAppService>();
             services.AddScoped<IQuestionarioAppService, QuestionarioAppService>();
-            services.AddScoped<IRespostaAppService, RespostaAppService>();
+            services.AddScoped<IQuestionarioRespostaAppService, QuestionarioRespostaAppService>();
             services.AddScoped<IUsuarioAppService, UsuarioAppService>();
             
             //Domain Services
