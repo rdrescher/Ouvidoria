@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Redirect, Route } from "react-router-dom";
+import { Redirect, Route, RouteProps } from "react-router-dom";
 import Claim from "../../models/Autenticacao/Claim";
 import IUserToken from "../../models/Autenticacao/UserToken";
 import { UsuarioPerfil } from "../../models/Usuario/Usuario";
@@ -13,38 +13,57 @@ interface IStateProps {
   claims: Claim[];
 }
 
-interface IProps {
-  path: string;
-  component: () => JSX.Element;
+interface IProps extends RouteProps {
   claimRequired?: UsuarioPerfil;
   redirect?: string;
 }
 
+interface IState {
+  loading: boolean;
+  hasPermission: boolean;
+}
+
+const initialState: IState = {
+  loading: true,
+  hasPermission: false
+};
+
 type Props = IProps & IStateProps;
 
 function PrivateRoute(props: Props) {
-  useEffect(() => {
-    async function CheckToken() {
-      await AutenticacaoApi.CheckToken();
-    }
-    CheckToken();
-  },        []);
-  function hasPermission(): boolean {
-    if (!props.isAuthenticated) return false;
-    if (!props.claimRequired) return true;
-    if (!props.claims.find(x => x.type === UsuarioPerfil[props.claimRequired!]))
-      return false;
-    return true;
-  }
+  const [state, setState] = useState(initialState);
 
-  return (
-    <Route
-      exact
-      path={props.path}
-      render={() =>
-        hasPermission() ? <props.component /> : <Redirect to="/" />
+  useEffect(() => {
+    async function hasPermission() {
+      let result = await AutenticacaoApi.CheckToken();
+
+      if (result.success) {
+        let valid = true;
+
+        if (!props.isAuthenticated) valid = false;
+        if (
+          !!props.claimRequired &&
+          !props.claims.find(
+            x => x.type === UsuarioPerfil[props.claimRequired!]
+          )
+        )
+          valid = false;
+
+        setState(prevState => {
+          return { ...prevState, loading: false, hasPermission: valid };
+        });
       }
-    />
+    }
+
+    hasPermission();
+  },        [props]);
+
+  return state.loading ? (
+    <></>
+  ) : state.hasPermission ? (
+    <Route {...props} />
+  ) : (
+    <Redirect to="/" />
   );
 }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace Ouvidoria.Api.Controllers
         private readonly IQuestionarioAppService _service;
         private readonly IQuestionarioRespostaAppService _questionarioRespostaService;
         public QuestionarioController(
-            IQuestionarioAppService service, 
+            IQuestionarioAppService service,
             IQuestionarioRespostaAppService questionarioRespostaService
         )
         {
@@ -61,10 +62,12 @@ namespace Ouvidoria.Api.Controllers
             return Ok(await _questionarioRespostaService.Create(resposta, userId));
         }
 
-        public async Task<ActionResult<Resultado>> IsUserAbleToAnswer(int idQuestionario)
+        [Authorize]
+        [HttpGet("[action]/{id:int}")]
+        public async Task<ActionResult<Resultado>> IsUserAbleToAnswer(int id)
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            return Ok(await _questionarioRespostaService.IsUserAbleToAnswer(idQuestionario, userId));
+            return Ok(await _questionarioRespostaService.IsUserAbleToAnswer(id, userId));
         }
 
     }

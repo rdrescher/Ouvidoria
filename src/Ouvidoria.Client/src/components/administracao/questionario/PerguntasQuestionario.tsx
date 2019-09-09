@@ -16,13 +16,13 @@ import React, {
 import TipoPergunta from "../../../application/enums/TipoPergunta";
 import OpcaoErrors from "../../../models/Errors/OpcaoErrors";
 import PerguntaErrors from "../../../models/Errors/PerguntaErrors";
-import Pergunta from "../../../models/Pergunta/Pergunta";
+import CadastroPergunta from "../../../models/Pergunta/CadastroPergunta";
 import * as Validations from "../../../utils/Validations";
 import TipoPerguntaSelect from "../../common/formFields/nativeSelects/TipoPerguntaSelect";
 import InputField from "../../common/formFields/InputField";
 
 interface IProps {
-  questions: Pergunta[];
+  questions: CadastroPergunta[];
   onRemoveQuestion: (questionIndex: number) => () => void;
   onQuestionTypeChange: (
     questionIndex: number
@@ -145,7 +145,6 @@ const PerguntasQuestionario = forwardRef<
     questionIndex: number,
     type: TipoPergunta
   ) => {
-    console.log(props.questions[questionIndex], TipoPergunta.Dissertativa);
     setState(prevState => {
       return {
         ...prevState,
@@ -218,7 +217,6 @@ const PerguntasQuestionario = forwardRef<
     questionIndex: number,
     optionIndex: number
   ): boolean => {
-    console.log(questionIndex, optionIndex);
     let valid = true;
     let message = "";
     let option = props.questions[questionIndex].opcoes[optionIndex];

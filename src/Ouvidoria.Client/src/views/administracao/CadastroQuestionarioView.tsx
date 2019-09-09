@@ -1,6 +1,8 @@
 import { Container, Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import React, { createRef, useState, ChangeEvent } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators, Dispatch } from "redux";
 import TipoPergunta from "../../application/enums/TipoPergunta";
 import CabecalhoQuestionario, {
   ICabecalhoQuestionarioValidations
@@ -8,87 +10,78 @@ import CabecalhoQuestionario, {
 import PerguntasQuestionario, {
   IPerguntaQuestionarioValidations
 } from "../../components/administracao/questionario/PerguntasQuestionario";
-import DialogMessage from "../../components/common/fields/DialogMessage";
 import SubmitButton from "../../components/common/formFields/SubmitButton";
-import Opcao from "../../models/Opcao/Opcao";
-import Pergunta from "../../models/Pergunta/Pergunta";
+import CadastroOpcao from "../../models/Opcao/CadastroOpcao";
+import CadastroPergunta from "../../models/Pergunta/CadastroPergunta";
 import CadastroQuestionario from "../../models/Questionario/CadastroQuestionario";
 import QuestionarioApi from "../../services/QuestionarioApi";
+import * as MessageBoxActions from "../../store/ducks/dialogMessages/DialogMessagesActions";
+import * as LoadingActions from "../../store/ducks/loading/LoadingActions";
 
 interface IState {
   quiz: CadastroQuestionario;
   loading: boolean;
-  dialogOpen: boolean;
-  returnMessage: string[];
-  returnType: string;
+  dataInicial: Date;
+  dataFinal: Date;
 }
+
+interface IDispatchProps {
+  open(title: string, messages: string[]): void;
+  setLoading(): void;
+  setLoaded(): void;
+}
+
+const adjustDate = (date: Date) => {
+  let newDate = new Date(
+    Date.UTC(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      date.getHours(),
+      date.getMinutes(),
+      date.getSeconds()
+    )
+  );
+
+  let hours = Math.abs(date.getTime() - date.getTime()) / 3600000;
+
+  newDate.setTime(newDate.getTime() + hours * -1 * 3600000);
+
+  return newDate;
+};
 
 const initialState: IState = {
   quiz: {
     titulo: "",
-    dataFim: new Date(),
-    dataInicio: new Date(),
+    dataFim: adjustDate(new Date()),
+    dataInicio: adjustDate(new Date()),
     descricao: "",
     perguntas: [{ descricao: "", opcoes: [], tipo: TipoPergunta.Dissertativa }]
   },
   loading: false,
-  dialogOpen: false,
-  returnMessage: [],
-  returnType: ""
+  dataInicial: new Date(),
+  dataFinal: new Date()
 };
 
-const emptyQuestion: Pergunta = {
+const emptyQuestion: CadastroPergunta = {
   descricao: "",
   tipo: TipoPergunta.Dissertativa,
   opcoes: []
 };
 
-const emptyOption: Opcao = {
+const emptyOption: CadastroOpcao = {
   descricao: ""
 };
 
-export default function CadastroQuestionarioView() {
+function CadastroQuestionarioView(props: IDispatchProps) {
   const [state, setState] = useState<IState>(initialState);
   const classes = useStyles(0);
   const quizHeaderRef = createRef<ICabecalhoQuestionarioValidations>();
   const quizQuestionsRef = createRef<IPerguntaQuestionarioValidations>();
 
-  const handleDialogOpen = (title: string, message: string[]) => {
-    setState(prevState => {
-      return {
-        ...prevState,
-        dialogOpen: true,
-        returnMessage: message,
-        returnType: title
-      };
-    });
-  };
-
-  const resetFormAfterSucces = (title: string, message: string[]) => {
+  const resetFormAfterSucces = () => {
     setState(() => {
-      return {
-        ...initialState,
-        dialogOpen: true,
-        returnMessage: message,
-        returnType: title
-      };
-    });
-  };
-
-  const handleDialogClose = () => {
-    setState(prevState => {
-      return {
-        ...prevState,
-        dialogOpen: false,
-        returnMessage: [],
-        returnType: ""
-      };
-    });
-  };
-
-  const handleLoading = () => {
-    setState(prevState => {
-      return { ...prevState, loading: !prevState.loading };
+      return { ...initialState };
     });
   };
 
@@ -148,23 +141,30 @@ export default function CadastroQuestionarioView() {
   };
 
   const handleStartDate = (date: Date | null): void => {
-    handleDateChange(date, "dataInicio");
-    if (date != null && state.quiz.dataFim < date)
-      handleDateChange(date, "dataFim");
-  };
-
-  const handleFinalDate = (date: Date | null): void => {
-    handleDateChange(date, "dataFim");
-  };
-
-  const handleDateChange = (date: Date | null, name: string): void => {
+    let newDate = adjustDate(date!);
     setState((prevState: IState) => {
       return {
         ...prevState,
         quiz: {
           ...prevState.quiz,
-          [name]: date === null ? new Date() : date
-        }
+          dataInicio: newDate
+        },
+        dataInicial: date!
+      };
+    });
+    if (newDate != null && state.quiz.dataFim < newDate) handleFinalDate(date);
+  };
+
+  const handleFinalDate = (date: Date | null): void => {
+    let newDate = adjustDate(date!);
+    setState((prevState: IState) => {
+      return {
+        ...prevState,
+        quiz: {
+          ...prevState.quiz,
+          dataFim: newDate
+        },
+        dataFinal: date!
       };
     });
   };
@@ -288,20 +288,23 @@ export default function CadastroQuestionarioView() {
     if (!quizQuestionsRef.current!.isValid()) valid = false;
     if (!quizHeaderRef.current!.isValid()) valid = false;
     if (!valid) return;
-    handleLoading();
+    props.setLoading();
     let result = await QuestionarioApi.create(state.quiz);
     if (result.success) {
-      resetFormAfterSucces("Sucesso", ["Questionário salvo com sucesso!"]);
+      resetFormAfterSucces();
+      props.open("Sucesso", ["Questionário salvo com sucesso!"]);
     } else {
-      handleDialogOpen("Erro ao salvar", result.messages);
-      handleLoading();
+      props.open("Erro ao salvar", result.messages);
     }
+    props.setLoaded();
   };
 
   return (
     <Container maxWidth="md">
       <CabecalhoQuestionario
         quiz={state.quiz}
+        initialDate={state.dataInicial}
+        finalDate={state.dataFinal}
         ref={quizHeaderRef}
         onInputChange={handleInputChange}
         onStartDateChange={handleStartDate}
@@ -320,20 +323,25 @@ export default function CadastroQuestionarioView() {
       />
       <div className={classes.buttons}>
         <SubmitButton
-          label="Salvar Questionário"
+          label="Salvar Questionários"
           loading={state.loading}
           onSubmit={handleSubmit}
         />
       </div>
-      <DialogMessage
-        open={state.dialogOpen}
-        title={state.returnType}
-        messages={state.returnMessage}
-        onClose={handleDialogClose}
-      />
     </Container>
   );
 }
+
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(
+    Object.assign({}, MessageBoxActions, LoadingActions),
+    dispatch
+  );
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(CadastroQuestionarioView);
 
 const useStyles = makeStyles((theme: Theme) => ({
   buttons: {

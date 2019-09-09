@@ -1,3 +1,4 @@
 export default interface IOpcao {
-    descricao: string;
+  id: number;
+  descricao: string;
 }

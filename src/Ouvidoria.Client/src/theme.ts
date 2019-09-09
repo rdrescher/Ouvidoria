@@ -95,6 +95,16 @@ const theme = createMuiTheme({
         marginTop: 10
       }
     },
+    MuiRadio: {
+      root: {
+        color: "#00B4DB"
+      }
+    },
+    MuiFormControlLabel: {
+      label: {
+        wordBreak: "break-all"
+      }
+    }
   }
 });
 

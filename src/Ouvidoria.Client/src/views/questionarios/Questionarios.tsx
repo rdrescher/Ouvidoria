@@ -7,8 +7,17 @@ import {
 } from "@material-ui/core";
 import { Reply } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { bindActionCreators, Dispatch } from "redux";
 import QuestionarioPreview from "../../models/Questionario/QuestionarioPreview";
 import QuestionarioApi from "../../services/QuestionarioApi";
+import * as LoadingActions from "../../store/ducks/loading/LoadingActions";
+
+interface IDispatchToProps {
+  setLoading: () => void;
+  setLoaded: () => void;
+}
 
 interface IState {
   quizzes: QuestionarioPreview[];
@@ -18,21 +27,22 @@ const initialState: IState = {
   quizzes: []
 };
 
-export default function Questionarios() {
+function Questionarios(props: IDispatchToProps) {
   const [state, setState] = useState(initialState);
   const classes = useStyles();
 
   useEffect(() => {
     async function getQuizzesPreview() {
+      props.setLoading();
       let result = await QuestionarioApi.getPreviewList();
-
+      props.setLoaded();
       setState(prevState => {
         return { ...prevState, quizzes: result.data! };
       });
     }
 
     getQuizzesPreview();
-  },        []);
+  },        [props]);
 
   return (
     <Container maxWidth="md">
@@ -62,9 +72,11 @@ export default function Questionarios() {
                   Disponível até: {quiz.dataFim}
                 </Typography>
               </div>
-              <Fab size="medium" color="secondary" className={classes.button}>
-                <Reply />
-              </Fab>
+              <Link to={`/responder-questionario/${quiz.id}`}>
+                <Fab size="medium" color="secondary" className={classes.button}>
+                  <Reply />
+                </Fab>
+              </Link>
             </div>
           ))
         )}
@@ -72,6 +84,14 @@ export default function Questionarios() {
     </Container>
   );
 }
+
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(LoadingActions, dispatch);
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Questionarios);
 
 const useStyles = makeStyles(() => ({
   paper: {

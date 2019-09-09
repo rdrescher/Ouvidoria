@@ -1,5 +1,7 @@
 import { createStore, Store } from "redux";
 import { IDialogState } from "./ducks/dialogDatatable/DialogTypes";
+import { IDialogMessagesState } from "./ducks/dialogMessages/DialogMessagesTypes";
+import { ILoadingState } from "./ducks/loading/LoadingTypes";
 import { IMessageBoxState } from "./ducks/messageBox/MessageBoxTypes";
 import { ISidebarState } from "./ducks/navigation/NavigationTypes";
 import { ISessionState } from "./ducks/session/SessionTypes";
@@ -14,4 +16,6 @@ export interface IApplicationState {
   DialogReducer: IDialogState;
   MessageBoxReducer: IMessageBoxState;
   SessionReducer: ISessionState;
+  DialogMessagesReducer: IDialogMessagesState;
+  LoadingReducer: ILoadingState;
 }

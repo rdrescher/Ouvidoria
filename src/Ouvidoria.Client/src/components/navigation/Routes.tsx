@@ -14,6 +14,7 @@ import ReclamacaoView from "../../views/manifestacoes/ReclamacaoView";
 import SolicitacaoView from "../../views/manifestacoes/SolicitacaoView";
 import SugestaoView from "../../views/manifestacoes/SugestaoView";
 import Questionarios from "../../views/questionarios/Questionarios";
+import ResponderQuestionario from "../../views/questionarios/ResponderQuestionario";
 import PrivateRoute from "./PrivateRoute";
 
 export default function Routes() {
@@ -28,21 +29,30 @@ export default function Routes() {
       <Route exact path="/sugestao" component={SugestaoView} />
       <PrivateRoute path="/questionarios" component={Questionarios} />
       <PrivateRoute
+        exact
+        path="/responder-questionario/:id"
+        component={ResponderQuestionario}
+      />
+      <PrivateRoute
+        exact
         path="/cadastro-questionario"
         component={CadastroQuestionarioView}
         claimRequired={UsuarioPerfil.Administrador}
       />
       <PrivateRoute
+        exact
         path="/cursos"
         claimRequired={UsuarioPerfil.Administrador}
         component={CursoView}
       />
       <PrivateRoute
+        exact
         path="/departamentos"
         claimRequired={UsuarioPerfil.Administrador}
         component={DepartamentoView}
       />
       <PrivateRoute
+        exact
         path="/usuarios"
         claimRequired={UsuarioPerfil.Administrador}
         component={UsuarioView}

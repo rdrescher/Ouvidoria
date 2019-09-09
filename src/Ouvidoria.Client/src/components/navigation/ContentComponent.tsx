@@ -4,8 +4,11 @@ import clsx from "clsx";
 import React from "react";
 import { connect } from "react-redux";
 import { IApplicationState } from "../../store";
+import DialogMessage from "../common/fields/DialogMessage";
+import Loading from "../common/Loading"
 import MessageBox from "../common/MessageBox";
 import Routes from "./Routes";
+
 
 interface IStateProps {
   sidebarIsOpen: boolean;
@@ -23,6 +26,8 @@ function ContentComponent(props: IStateProps) {
       >
         <Routes />
         <MessageBox />
+        <DialogMessage />
+        <Loading />
       </main>
     </Container>
   );

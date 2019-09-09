@@ -8,7 +8,6 @@ import {
   Typography
 } from "@material-ui/core";
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import ptBR from "date-fns/locale/pt-BR";
 import React, {
   forwardRef,
   useImperativeHandle,
@@ -22,6 +21,8 @@ import InputField from "../../common/formFields/InputField";
 
 interface IProps {
   quiz: CadastroQuestionario;
+  initialDate: Date;
+  finalDate: Date;
   onInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onStartDateChange: (date: Date | null) => void;
   onFinalDateChange: (date: Date | null) => void;
@@ -175,10 +176,10 @@ const CabecalhoQuestionario = forwardRef<
         onBlur={validateDescription}
       />
       <Grid container spacing={2} className={classes.dates}>
-        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptBR}>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <Grid item xs={12} sm={6}>
             <DateTimePicker
-              value={props.quiz.dataInicio}
+              value={props.initialDate}
               variant="dialog"
               inputVariant="outlined"
               format="dd/MM/yyyy HH:mm"
@@ -193,7 +194,7 @@ const CabecalhoQuestionario = forwardRef<
           </Grid>
           <Grid item xs={12} sm={6}>
             <DateTimePicker
-              value={props.quiz.dataFim}
+              value={props.finalDate}
               onChange={props.onFinalDateChange}
               variant="dialog"
               inputVariant="outlined"

@@ -8,21 +8,29 @@ import {
   DialogTitle
 } from "@material-ui/core";
 import React from "react";
+import { connect } from "react-redux";
+import { bindActionCreators, Dispatch } from "redux";
+import { IApplicationState } from "../../../store";
+import * as DialogMessagesActions from "../../../store/ducks/dialogMessages/DialogMessagesActions";
 
-interface IProps {
-  open: boolean;
-  title: string;
-  messages: string[];
-  onClose: () => void;
+interface IDispatchProps {
+  close(): void;
 }
 
-export default function DialogMessage(props: IProps) {
-  const classes = useStyles();
+interface IStateProps {
+  isOpen: boolean;
+  title: string;
+  messages: string[];
+}
 
+type Props = IDispatchProps & IStateProps;
+
+function DialogMessage(props: Props) {
+  const classes = useStyles();
   return (
     <Dialog
-      open={props.open}
-      onClose={props.onClose}
+      open={props.isOpen}
+      onClose={props.close}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
@@ -30,13 +38,17 @@ export default function DialogMessage(props: IProps) {
         <DialogTitle id="alert-dialog-title">{props.title}</DialogTitle>
       )}
       <DialogContent dividers>
-        <DialogContentText id="alert-dialog-description" className={classes.text}>
+        <DialogContentText
+          id="alert-dialog-description"
+          className={classes.text}
+        >
+          {`\n`}
           {props.messages.map(message => `\n${message}`)}
           {`\n`}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={props.onClose} color="primary" autoFocus>
+        <Button onClick={props.close} color="primary" autoFocus>
           Ok
         </Button>
       </DialogActions>
@@ -49,3 +61,18 @@ const useStyles = makeStyles(() => ({
     color: "black"
   }
 }));
+
+const mapStateToProps = (state: IApplicationState) => ({
+  isOpen: state.DialogMessagesReducer.isOpen,
+  title: state.DialogMessagesReducer.title,
+  messages: state.DialogMessagesReducer.messages,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(DialogMessagesActions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DialogMessage);
+
