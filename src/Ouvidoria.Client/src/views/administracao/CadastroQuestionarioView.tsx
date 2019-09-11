@@ -43,10 +43,6 @@ const adjustDate = (date: Date) => {
     )
   );
 
-  let hours = Math.abs(date.getTime() - date.getTime()) / 3600000;
-
-  newDate.setTime(newDate.getTime() + hours * -1 * 3600000);
-
   return newDate;
 };
 

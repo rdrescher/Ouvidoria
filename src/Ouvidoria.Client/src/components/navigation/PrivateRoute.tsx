@@ -15,7 +15,6 @@ interface IStateProps {
 
 interface IProps extends RouteProps {
   claimRequired?: UsuarioPerfil;
-  redirect?: string;
 }
 
 interface IState {
@@ -63,7 +62,7 @@ function PrivateRoute(props: Props) {
   ) : state.hasPermission ? (
     <Route {...props} />
   ) : (
-    <Redirect to="/" />
+    <Redirect to="/not-allowed" />
   );
 }
 

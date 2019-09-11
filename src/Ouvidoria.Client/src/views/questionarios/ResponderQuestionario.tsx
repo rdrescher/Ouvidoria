@@ -21,11 +21,19 @@ import Questionario from "../../models/Questionario/Questionario";
 import CadastroQuestionarioResposta from "../../models/QuestionarioResposta/CadastroQuestionarioResposta";
 import ICadastroResposta from "../../models/Resposta/CadastroResposta";
 import QuestionarioApi from "../../services/QuestionarioApi";
+import { IApplicationState } from "../../store";
 import * as MessageBoxActions from "../../store/ducks/dialogMessages/DialogMessagesActions";
+import * as LoadingActions from "../../store/ducks/loading/LoadingActions";
 import * as Validations from "../../utils/Validations";
 
 interface IDispatchProps {
   open(title: string, messages: string[]): void;
+  setLoading(): void;
+  setLoaded(): void;
+}
+
+interface IStateProps {
+  isOpen: boolean;
 }
 
 interface IState {
@@ -48,7 +56,7 @@ const initialState: IState = {
   success: false
 };
 
-type Props = IDispatchProps & RouteComponentProps<Params>;
+type Props = IDispatchProps & RouteComponentProps<Params> & IStateProps;
 
 function ResponderQuestionario(props: Props) {
   const [state, setState] = useState(initialState);
@@ -65,15 +73,20 @@ function ResponderQuestionario(props: Props) {
     if (state.id === null) return;
     if (!isNaN(state.id)) {
       async function getQuiz() {
+        props.setLoading();
         let validQuiz = true;
         let userResult = await QuestionarioApi.IsUserAbleToAnswer(state.id!);
 
         if (!userResult.success) {
+          props.setLoaded();
+          props.open("Aviso", userResult.messages);
           validQuiz = false;
         } else {
           let result = await QuestionarioApi.get(state.id!);
 
           if (!result.success) {
+            props.setLoaded();
+            props.open("Aviso", result.messages);
             validQuiz = false;
           } else {
             setState(prevState => {
@@ -85,10 +98,11 @@ function ResponderQuestionario(props: Props) {
           setState(prevState => {
             return { ...prevState, validQuiz };
           });
+        props.setLoaded();
       }
       getQuiz();
     }
-  },        [state.id]);
+  },        [state.id, props]);
 
   useEffect(() => {
     if (state.quiz === null) return;
@@ -205,8 +219,8 @@ function ResponderQuestionario(props: Props) {
     let result = await QuestionarioApi.Reply(state.answer!);
 
     if (result.success) {
-      success = true;
       props.open("Sucesso", ["Questionário respondido com sucesso!"]);
+      success = true;
     } else {
       props.open("Erro ao salvar", result.messages);
     }
@@ -218,11 +232,11 @@ function ResponderQuestionario(props: Props) {
 
   return state.id === null ? (
     <></>
-  ) : isNaN(state.id) || !state.validQuiz ? (
+  ) : isNaN(state.id) || (!state.validQuiz && !props.isOpen) ? (
     <Redirect to="/questionarios" />
   ) : state.quiz === null || state.answer === null ? (
     <></>
-  ) : state.success ? (
+  ) : state.success && !props.isOpen ? (
     <Redirect to="/questionarios" />
   ) : (
     <Container maxWidth="md">
@@ -238,7 +252,7 @@ function ResponderQuestionario(props: Props) {
         </Typography>
 
         {state.quiz!.perguntas.map((question, index) => (
-          <div className={classes.questions}>
+          <div key={question.id} className={classes.questions}>
             <Typography key={question.id}>{`${index + 1} - ${
               question.descricao
             }`}</Typography>
@@ -307,15 +321,20 @@ function ResponderQuestionario(props: Props) {
   );
 }
 
+const mapStateToProps = (state: IApplicationState) => ({
+  isOpen: state.DialogMessagesReducer.isOpen
+});
+
 const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators(MessageBoxActions, dispatch);
+  bindActionCreators(
+    Object.assign({}, MessageBoxActions, LoadingActions),
+    dispatch
+  );
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(ResponderQuestionario);
-
-
 
 const useStyles = makeStyles(() => ({
   paper: {

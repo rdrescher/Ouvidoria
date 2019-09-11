@@ -72,7 +72,7 @@ function Questionarios(props: IDispatchToProps) {
                   Disponível até: {quiz.dataFim}
                 </Typography>
               </div>
-              <Link to={`/responder-questionario/${quiz.id}`}>
+              <Link to={`/questionarios/responder/${quiz.id}`}>
                 <Fab size="medium" color="secondary" className={classes.button}>
                   <Reply />
                 </Fab>

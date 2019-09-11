@@ -1,7 +1,6 @@
 import {
   makeStyles,
   AppBar,
-  Container,
   IconButton,
   Theme,
   Toolbar,
@@ -34,7 +33,7 @@ function NavbarComponent(props: Props) {
     <>
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
-          <Container className={classes.container}>
+          <div className={classes.container}>
             <IconButton
               aria-label="Open drawer"
               edge="start"
@@ -49,7 +48,7 @@ function NavbarComponent(props: Props) {
               </Link>
             </Typography>
             <div className={classes.grow} />
-            <div>
+            <div className={classes.user}>
               {props.isAuthenticated ? (
                 <Typography
                   variant="body1"
@@ -66,7 +65,7 @@ function NavbarComponent(props: Props) {
                 </Typography>
               )}
             </div>
-          </Container>
+          </div>
         </Toolbar>
       </AppBar>
     </>
@@ -96,7 +95,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   hamburger: {
     marginRight: theme.spacing(2),
-    color: "inherit"
+    color: "inherit",
+    marginLeft: 6
   },
   grow: {
     flexGrow: 1
@@ -109,5 +109,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   container: {
     display: "flex",
     alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%"
+  },
+  user: {
+    marginRight: 40
   }
 }));
