@@ -1,11 +1,11 @@
 import { action } from "typesafe-actions";
+import Operacao from "../../../application/types/Operacao";
 import { DialogTypes } from "./DialogTypes";
-import Operacao from "../../../utils/Operacao";
 
 export function openDialog(operation: Operacao, selectedObject: object = {}) {
-    return action(DialogTypes.Open_Dialog, { operation, selectedObject });
+  return action(DialogTypes.Open_Dialog, { operation, selectedObject });
 }
 
 export function closeDialog() {
-    return action(DialogTypes.Close_Dialog);
+  return action(DialogTypes.Close_Dialog);
 }

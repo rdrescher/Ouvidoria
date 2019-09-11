@@ -14,9 +14,9 @@ import React, {
   useState,
   ChangeEvent
 } from "react";
+import * as Validations from "../../../application/Validations";
 import QuestionarioErrors from "../../../models/Errors/QuestionarioErrors";
 import CadastroQuestionario from "../../../models/Questionario/CadastroQuestionario";
-import * as Validations from "../../../utils/Validations";
 import InputField from "../../common/formFields/InputField";
 
 interface IProps {

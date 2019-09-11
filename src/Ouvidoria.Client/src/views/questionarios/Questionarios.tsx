@@ -3,6 +3,7 @@ import {
   Container,
   Fab,
   Paper,
+  Tooltip,
   Typography
 } from "@material-ui/core";
 import { Reply } from "@material-ui/icons";
@@ -30,19 +31,20 @@ const initialState: IState = {
 function Questionarios(props: IDispatchToProps) {
   const [state, setState] = useState(initialState);
   const classes = useStyles();
+  const { setLoaded, setLoading } = props;
 
   useEffect(() => {
     async function getQuizzesPreview() {
-      props.setLoading();
+      setLoading();
       let result = await QuestionarioApi.getPreviewList();
-      props.setLoaded();
+      setLoaded();
       setState(prevState => {
         return { ...prevState, quizzes: result.data! };
       });
     }
 
     getQuizzesPreview();
-  },        [props]);
+  },        [setLoaded, setLoading]);
 
   return (
     <Container maxWidth="md">
@@ -52,7 +54,7 @@ function Questionarios(props: IDispatchToProps) {
         </Typography>
         {state.quizzes.length === 0 ? (
           <Typography variant="body1" className={classes.noQuizzes}>
-            Não há questionários disponíveis para responder.
+            Não há questionários disponíveis para você responder no momento.
           </Typography>
         ) : (
           state.quizzes.map(quiz => (
@@ -72,11 +74,17 @@ function Questionarios(props: IDispatchToProps) {
                   Disponível até: {quiz.dataFim}
                 </Typography>
               </div>
-              <Link to={`/questionarios/responder/${quiz.id}`}>
-                <Fab size="medium" color="secondary" className={classes.button}>
-                  <Reply />
-                </Fab>
-              </Link>
+              <Tooltip title="Responder">
+                <Link to={`/questionarios/responder/${quiz.id}`}>
+                  <Fab
+                    size="medium"
+                    color="secondary"
+                    className={classes.button}
+                  >
+                    <Reply />
+                  </Fab>
+                </Link>
+              </Tooltip>
             </div>
           ))
         )}

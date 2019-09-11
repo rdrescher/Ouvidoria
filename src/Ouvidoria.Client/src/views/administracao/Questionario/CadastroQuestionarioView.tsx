@@ -3,20 +3,20 @@ import { makeStyles } from "@material-ui/styles";
 import React, { createRef, useState, ChangeEvent } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
-import TipoPergunta from "../../application/enums/TipoPergunta";
+import TipoPergunta from "../../../application/enums/TipoPergunta";
 import CabecalhoQuestionario, {
   ICabecalhoQuestionarioValidations
-} from "../../components/administracao/questionario/CabecalhoQuestionario";
+} from "../../../components/administracao/questionario/CabecalhoQuestionario";
 import PerguntasQuestionario, {
   IPerguntaQuestionarioValidations
-} from "../../components/administracao/questionario/PerguntasQuestionario";
-import SubmitButton from "../../components/common/formFields/SubmitButton";
-import CadastroOpcao from "../../models/Opcao/CadastroOpcao";
-import CadastroPergunta from "../../models/Pergunta/CadastroPergunta";
-import CadastroQuestionario from "../../models/Questionario/CadastroQuestionario";
-import QuestionarioApi from "../../services/QuestionarioApi";
-import * as MessageBoxActions from "../../store/ducks/dialogMessages/DialogMessagesActions";
-import * as LoadingActions from "../../store/ducks/loading/LoadingActions";
+} from "../../../components/administracao/questionario/PerguntasQuestionario";
+import SubmitButton from "../../../components/common/formFields/SubmitButton";
+import CadastroOpcao from "../../../models/Opcao/CadastroOpcao";
+import CadastroPergunta from "../../../models/Pergunta/CadastroPergunta";
+import CadastroQuestionario from "../../../models/Questionario/CadastroQuestionario";
+import QuestionarioApi from "../../../services/QuestionarioApi";
+import * as MessageBoxActions from "../../../store/ducks/dialogMessages/DialogMessagesActions";
+import * as LoadingActions from "../../../store/ducks/loading/LoadingActions";
 
 interface IState {
   quiz: CadastroQuestionario;

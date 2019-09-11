@@ -1,23 +1,23 @@
 import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { UsuarioPerfil } from "../../models/Usuario/Usuario";
-import CadastroQuestionarioView from "../../views/administracao/CadastroQuestionarioView";
 import CursoView from "../../views/administracao/CursoView";
 import DepartamentoView from "../../views/administracao/DepartamentoView";
+import CadastroQuestionarioView from "../../views/administracao/Questionario/CadastroQuestionarioView";
 import UsuarioView from "../../views/administracao/UsuarioView";
 import CadastroView from "../../views/autenticacao/CadastroView";
 import LoginView from "../../views/autenticacao/LoginView";
 import Error from "../../views/errors/Error";
 import NotAllowed from "../../views/errors/NotAllowed";
 import NotFound from "../../views/errors/NotFound";
-import DashboardView from "../../views/manifestacoes/DashboardView";
-import DenunciaView from "../../views/manifestacoes/DenunciaView";
-import ElogioView from "../../views/manifestacoes/ElogioView";
-import ReclamacaoView from "../../views/manifestacoes/ReclamacaoView";
-import SolicitacaoView from "../../views/manifestacoes/SolicitacaoView";
-import SugestaoView from "../../views/manifestacoes/SugestaoView";
+import DenunciaView from "../../views/manifestacoes/Denuncia/DenunciaView";
+import ElogioView from "../../views/manifestacoes/Elogio/ElogioView";
+import ReclamacaoView from "../../views/manifestacoes/Reclamacao/ReclamacaoView";
+import SolicitacaoView from "../../views/manifestacoes/Solicitacao/SolicitacaoView";
+import SugestaoView from "../../views/manifestacoes/Sugestao/SugestaoView";
 import Questionarios from "../../views/questionarios/Questionarios";
 import ResponderQuestionario from "../../views/questionarios/ResponderQuestionario";
+import DashboardView from "../../views/DashboardView";
 import PrivateRoute from "./PrivateRoute";
 
 export default function Routes() {

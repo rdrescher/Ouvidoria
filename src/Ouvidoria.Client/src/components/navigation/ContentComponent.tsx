@@ -5,7 +5,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { IApplicationState } from "../../store";
 import DialogMessage from "../common/fields/DialogMessage";
-import Loading from "../common/Loading"
+import Loading from "../common/Loading";
 import MessageBox from "../common/MessageBox";
 import Routes from "./Routes";
 

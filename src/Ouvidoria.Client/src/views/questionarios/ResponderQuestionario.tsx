@@ -15,6 +15,7 @@ import { Redirect, RouteComponentProps } from "react-router-dom";
 import { bindActionCreators, Dispatch } from "redux";
 import TipoPergunta from "../../application/enums/TipoPergunta";
 import Params from "../../application/types/RouteParams";
+import * as Validations from "../../application/Validations";
 import InputField from "../../components/common/formFields/InputField";
 import SubmitButton from "../../components/common/formFields/SubmitButton";
 import Questionario from "../../models/Questionario/Questionario";
@@ -24,7 +25,6 @@ import QuestionarioApi from "../../services/QuestionarioApi";
 import { IApplicationState } from "../../store";
 import * as MessageBoxActions from "../../store/ducks/dialogMessages/DialogMessagesActions";
 import * as LoadingActions from "../../store/ducks/loading/LoadingActions";
-import * as Validations from "../../utils/Validations";
 
 interface IDispatchProps {
   open(title: string, messages: string[]): void;
@@ -61,6 +61,7 @@ type Props = IDispatchProps & RouteComponentProps<Params> & IStateProps;
 function ResponderQuestionario(props: Props) {
   const [state, setState] = useState(initialState);
   const classes = useStyles();
+  const { setLoading, setLoaded, open } = props;
 
   useEffect(() => {
     let id = Number(props.match.params.id);
@@ -73,20 +74,20 @@ function ResponderQuestionario(props: Props) {
     if (state.id === null) return;
     if (!isNaN(state.id)) {
       async function getQuiz() {
-        props.setLoading();
+        setLoading();
         let validQuiz = true;
         let userResult = await QuestionarioApi.IsUserAbleToAnswer(state.id!);
 
         if (!userResult.success) {
-          props.setLoaded();
-          props.open("Aviso", userResult.messages);
+          setLoaded();
+          open("Aviso", userResult.messages);
           validQuiz = false;
         } else {
           let result = await QuestionarioApi.get(state.id!);
 
           if (!result.success) {
-            props.setLoaded();
-            props.open("Aviso", result.messages);
+            setLoaded();
+            open("Aviso", result.messages);
             validQuiz = false;
           } else {
             setState(prevState => {
@@ -98,11 +99,11 @@ function ResponderQuestionario(props: Props) {
           setState(prevState => {
             return { ...prevState, validQuiz };
           });
-        props.setLoaded();
+        setLoaded();
       }
       getQuiz();
     }
-  },        [state.id, props]);
+  },        [state.id, setLoading, setLoaded, open]);
 
   useEffect(() => {
     if (state.quiz === null) return;
@@ -212,9 +213,7 @@ function ResponderQuestionario(props: Props) {
 
     let success = false;
 
-    setState(prevState => {
-      return { ...prevState, loading: true };
-    });
+    setLoading();
 
     let result = await QuestionarioApi.Reply(state.answer!);
 
@@ -225,8 +224,10 @@ function ResponderQuestionario(props: Props) {
       props.open("Erro ao salvar", result.messages);
     }
 
+    setLoaded();
+
     setState(prevState => {
-      return { ...prevState, loading: false, success };
+      return { ...prevState, success };
     });
   };
 

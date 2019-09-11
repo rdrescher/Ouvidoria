@@ -5,9 +5,10 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  LinearProgress,
-  Grow
+  Grow,
+  LinearProgress
 } from "@material-ui/core";
+import { TransitionProps } from "@material-ui/core/transitions";
 import MUIDataTable, {
   MUIDataTableColumnDef,
   MUIDataTableOptions
@@ -15,13 +16,12 @@ import MUIDataTable, {
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
+import Operacao from "../../../application/types/Operacao";
 import IResultado from "../../../models/Resultado";
 import { IApplicationState } from "../../../store";
 import * as DialogActions from "../../../store/ducks/dialogDatatable/DialogActions";
-import Operacao from "../../../utils/Operacao";
 import DataTableToolBar from "./DataTableToolBar";
 import DataTableToolBarSelected from "./DataTableToolBarSelected";
-import { TransitionProps } from "@material-ui/core/transitions";
 
 interface IState {
   data: object[];
@@ -166,7 +166,7 @@ function DataTable(props: Props) {
     }
 
     getData();
-  }, []);
+  },        []);
 
   useEffect(() => {
     if (props.newData === null) return;
@@ -207,7 +207,7 @@ function DataTable(props: Props) {
       default:
         break;
     }
-  }, [props.newData]);
+  },        [props.newData]);
 
   useEffect(() => {
     if (!props.dialogIsOpen && dialogs.selectedIndex !== -10) {
@@ -216,7 +216,7 @@ function DataTable(props: Props) {
       props.openDialog(dialogs.operation, selectedData);
       props.handle(dialogs.operation, selectedData);
     }
-  }, [dialogs]);
+  },        [dialogs]);
 
   const handleDialogOpen = (operation: Operacao, data: unknown = null) => {
     setDialogs({

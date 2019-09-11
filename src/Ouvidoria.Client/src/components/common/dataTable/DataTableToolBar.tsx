@@ -2,7 +2,7 @@ import { IconButton, Tooltip } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
 import React from "react";
-import Operacao from "../../../utils/Operacao";
+import Operacao from "../../../application/types/Operacao";
 
 interface IProps {
   handleCreate: (operacao: Operacao, data: unknown) => void;

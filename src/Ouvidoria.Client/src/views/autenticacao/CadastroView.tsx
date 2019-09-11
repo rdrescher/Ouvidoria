@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 import { bindActionCreators, Dispatch } from "redux";
+import * as Validations from "../../application/Validations";
 import InputField from "../../components/common/formFields/InputField";
 import SelectField from "../../components/common/formFields/SelectField";
 import SubmitButton from "../../components/common/formFields/SubmitButton";
@@ -15,7 +16,6 @@ import AutenticacaoApi from "../../services/AutenticacaoApi";
 import CursoApi from "../../services/CursoApi";
 import { IApplicationState } from "../../store";
 import * as SessionActions from "../../store/ducks/session/SessionActions";
-import * as Validations from "../../utils/Validations";
 
 interface IDispatchState {
   login(login: ILoginResponse): void;
@@ -84,7 +84,7 @@ function CadastroView(props: Props) {
       });
     }
     getClasses();
-  },        []);
+  }, []);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let name = e.target.name;

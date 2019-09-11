@@ -14,10 +14,10 @@ import React, {
   ChangeEvent
 } from "react";
 import TipoPergunta from "../../../application/enums/TipoPergunta";
+import * as Validations from "../../../application/Validations";
 import OpcaoErrors from "../../../models/Errors/OpcaoErrors";
 import PerguntaErrors from "../../../models/Errors/PerguntaErrors";
 import CadastroPergunta from "../../../models/Pergunta/CadastroPergunta";
-import * as Validations from "../../../utils/Validations";
 import TipoPerguntaSelect from "../../common/formFields/nativeSelects/TipoPerguntaSelect";
 import InputField from "../../common/formFields/InputField";
 

@@ -19,7 +19,7 @@ function Loading(props: IStateProps) {
   return (
     <Dialog
       open={props.loading}
-disableBackdropClick
+      disableBackdropClick
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
@@ -32,7 +32,7 @@ disableBackdropClick
 }
 
 const mapStateToProps = (state: IApplicationState) => ({
-  loading: state.LoadingReducer.loading,
+  loading: state.LoadingReducer.loading
 });
 
 export default connect(
@@ -48,6 +48,6 @@ const useStyles = makeStyles(() => ({
   },
   progress: {
     color: green[500],
-    margin: 10,
+    margin: 10
   }
 }));

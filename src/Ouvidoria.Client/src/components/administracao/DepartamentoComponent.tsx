@@ -2,6 +2,8 @@ import { makeStyles, Container, Typography } from "@material-ui/core";
 import React, { useEffect, useState, ChangeEvent, SyntheticEvent } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
+import Operacao from "../../application/types/Operacao";
+import * as Validations from "../../application/Validations";
 import AtualizacaoDepartamento from "../../models/Departamento/AtualizacaoDepartamento";
 import CadastroDepartamento from "../../models/Departamento/CadastroDepartamento";
 import Departamento from "../../models/Departamento/Departamento";
@@ -11,8 +13,6 @@ import DepartamentoApi from "../../services/DepartamentoApi";
 import UsuarioApi from "../../services/UsuarioApi";
 import * as DialogActions from "../../store/ducks/dialogDatatable/DialogActions";
 import * as MessageBoxActions from "../../store/ducks/messageBox/MessageBoxActions";
-import Operacao from "../../utils/Operacao";
-import * as Validations from "../../utils/Validations";
 import ErrorMessages from "../common/formFields/ErrorMessages";
 import InputField from "../common/formFields/InputField";
 import SelectField from "../common/formFields/SelectField";
@@ -73,7 +73,7 @@ function DepartamentoComponent(props: Props) {
     }
 
     getUserList();
-  },               []);
+  },        []);
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
