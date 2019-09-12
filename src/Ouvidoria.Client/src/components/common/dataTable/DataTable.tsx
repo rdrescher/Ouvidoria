@@ -39,13 +39,15 @@ interface IDialogsState {
 interface IProps {
   data: () => Promise<IResultado<object[]>>;
   columns: MUIDataTableColumnDef[];
-  create: boolean;
-  delete: boolean;
-  edit: boolean;
+  create?: boolean;
+  delete?: boolean;
+  edit?: boolean;
   title: string;
-  dialogContent: JSX.Element;
-  handle: (operation: Operacao, data: object) => void;
-  newData: object | null;
+  dialogContent?: JSX.Element;
+  handle?: (operation: Operacao, data: object) => void;
+  newData?: object | null;
+  customToolbarSelected?: () => JSX.Element;
+  customToolbar?: () => JSX.Element;
 }
 
 interface IDispatchProps {
@@ -123,23 +125,33 @@ const Transition = React.forwardRef<unknown, TransitionProps>(
 type Props = IProps & IDispatchProps & IStateProps;
 
 function DataTable(props: Props) {
+  const {
+    customToolbar: Toolbar,
+    customToolbarSelected: ToolbarSelected
+  } = props;
   const [state, setState] = useState<IState>({
     ...initialState,
     columns: props.columns,
     options: {
       ...initialState.options,
-      customToolbarSelect: selected => (
-        <DataTableToolBarSelected
-          edit={props.edit}
-          delete={props.delete}
-          onHandleClick={handleDialogOpen}
-          selectedData={selected.data[0]}
-        />
-      ),
+      customToolbarSelect: selected =>
+        ToolbarSelected ? (
+          <ToolbarSelected />
+        ) : (
+          <DataTableToolBarSelected
+            edit={props.edit}
+            delete={props.delete}
+            onHandleClick={handleDialogOpen}
+            selectedData={selected.data[0]}
+          />
+        ),
       customToolbar: () =>
-        props.create ? (
+        props.create &&
+        (Toolbar ? (
+          <Toolbar />
+        ) : (
           <DataTableToolBar handleCreate={handleDialogOpen} />
-        ) : null,
+        )),
       selectableRows: props.edit || props.delete ? "single" : "none"
     }
   });
@@ -214,7 +226,7 @@ function DataTable(props: Props) {
       let selectedData =
         dialogs.selectedIndex !== -1 ? state.data[dialogs.selectedIndex] : {};
       props.openDialog(dialogs.operation, selectedData);
-      props.handle(dialogs.operation, selectedData);
+      props.handle!(dialogs.operation, selectedData);
     }
   },        [dialogs]);
 

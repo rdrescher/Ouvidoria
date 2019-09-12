@@ -44,10 +44,10 @@ namespace Ouvidoria.Application.Services
             return Resultado<List<QuestionarioPreviewViewModel>>.Successfull(quizzesPreview);
         }
 
-        public async Task<Resultado<List<QuestionarioDetailViewModel>>> GetQuizzes()
+        public async Task<Resultado<List<DetalheQuestionarioViewModel>>> GetQuizzes()
         {
-            var quizzes = Mapper.Map<List<QuestionarioDetailViewModel>>(await _service.GetQuizzes());
-            return Resultado<List<QuestionarioDetailViewModel>>.Successfull(quizzes);
+            var quizzes = Mapper.Map<List<DetalheQuestionarioViewModel>>(await _service.GetQuizzes());
+            return Resultado<List<DetalheQuestionarioViewModel>>.Successfull(quizzes);
         }
 
     }

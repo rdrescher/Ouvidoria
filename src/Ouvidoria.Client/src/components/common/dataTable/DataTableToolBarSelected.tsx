@@ -7,8 +7,8 @@ import React from "react";
 import Operacao from "../../../application/types/Operacao";
 
 interface IProps {
-  delete: boolean;
-  edit: boolean;
+  delete?: boolean;
+  edit?: boolean;
   onHandleClick: (operacao: Operacao, data: unknown) => void;
   selectedData: object;
 }

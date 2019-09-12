@@ -149,7 +149,7 @@ function SidebarComponent(props: IStateProps) {
                     icon={<Work />}
                   />
                   <SidebarItem
-                    path="/questionarios/novo"
+                    path="/questionarios/lista"
                     label="Questionários"
                     nested
                     icon={<QuestionAnswer />}

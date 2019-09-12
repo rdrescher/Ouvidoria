@@ -4,6 +4,8 @@ import { UsuarioPerfil } from "../../models/Usuario/Usuario";
 import CursoView from "../../views/administracao/CursoView";
 import DepartamentoView from "../../views/administracao/DepartamentoView";
 import CadastroQuestionarioView from "../../views/administracao/Questionario/CadastroQuestionarioView";
+import ListaQuestionarios from "../../views/administracao/Questionario/ListaQuestionarios";
+import PreviewQuestionarioView from "../../views/administracao/Questionario/PreviewQuestionarioView";
 import UsuarioView from "../../views/administracao/UsuarioView";
 import CadastroView from "../../views/autenticacao/CadastroView";
 import LoginView from "../../views/autenticacao/LoginView";
@@ -38,8 +40,20 @@ export default function Routes() {
       />
       <PrivateRoute
         exact
+        path="/questionarios/lista"
+        component={ListaQuestionarios}
+        claimRequired={UsuarioPerfil.Administrador}
+      />
+      <PrivateRoute
+        exact
         path="/questionarios/novo"
         component={CadastroQuestionarioView}
+        claimRequired={UsuarioPerfil.Administrador}
+      />
+      <PrivateRoute
+        exact
+        path="/questionarios/pre-visualizar/:id"
+        component={PreviewQuestionarioView}
         claimRequired={UsuarioPerfil.Administrador}
       />
       <PrivateRoute

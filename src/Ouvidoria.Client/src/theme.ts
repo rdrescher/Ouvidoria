@@ -9,7 +9,7 @@ const theme = createMuiTheme({
       main: "#0083B0"
     },
     secondary: {
-      main: "#00B4DB"
+      main: "#00B4DB",
     },
     error: {
       main: red.A400
@@ -103,6 +103,11 @@ const theme = createMuiTheme({
     MuiFormControlLabel: {
       label: {
         wordBreak: "break-all"
+      }
+    },
+    MuiFab: {
+      secondary: {
+        color: "white"
       }
     }
   }

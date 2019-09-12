@@ -19,13 +19,17 @@ namespace Ouvidoria.Application.AutoMapper
             CreateMap<Questionario, QuestionarioPreviewViewModel>()
                 .ForMember(q => q.dataFim,
                                 q => q.MapFrom(c => c.DataFim.ToString("dd/MM/yyyy hh:mm")));
-            CreateMap<Questionario, QuestionarioDetailViewModel>()
+            CreateMap<Questionario, DetalheQuestionarioViewModel>()
                 .ForMember(c => c.usuarioCriador,
                                 c => c.MapFrom(d => d.Usuario != null ? d.Usuario.Nome : ""))
                 .ForMember(c => c.perguntas,
                                 c => c.MapFrom(d => d.Perguntas.Count))
                 .ForMember(c => c.respostas,
-                                c => c.MapFrom(d => d.QuestionarioRespostas.Count));
+                                c => c.MapFrom(d => d.QuestionarioRespostas.Count))
+                .ForMember(c => c.dataFim,
+                                c => c.MapFrom(d => d.DataFim.ToString("dd/MM/yyyy hh:mm")))
+                .ForMember(c => c.dataInicio,
+                                c => c.MapFrom(d => d.DataInicio.ToString("dd/MM/yyyy hh:mm")));
             CreateMap<Usuario, UsuarioViewModel>();
             CreateMap<Departamento, DepartamentoViewModel>()
                 .ForMember(c => c.usuarioResponsavel,

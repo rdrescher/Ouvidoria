@@ -1,5 +1,6 @@
 import Http from "../application/http";
 import CadastroQuestionario from "../models/Questionario/CadastroQuestionario";
+import DetalheQuestionario from "../models/Questionario/DetalheQuestionario";
 import Questionario from "../models/Questionario/Questionario";
 import QuestionarioPreview from "../models/Questionario/QuestionarioPreview";
 import CadastroQuestionarioResposta from "../models/QuestionarioResposta/CadastroQuestionarioResposta";
@@ -7,7 +8,7 @@ import Resultado from "../models/Resultado";
 import EntityApi from "./EntityApi";
 
 export default class QuestionarioApi {
-    public static readonly entity = new EntityApi<CadastroQuestionario>("Questionario");
+    public static readonly entity = new EntityApi<DetalheQuestionario>("Questionario");
 
     public static async create(quiz: CadastroQuestionario): Promise<Resultado> {
         return await Http.post(`/api/Questionario`, quiz);

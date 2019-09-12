@@ -28,7 +28,7 @@ namespace Ouvidoria.Api.Controllers
 
         [Authorize(policy: "Administrador")]
         [HttpGet]
-        public async Task<ActionResult<Resultado<List<QuestionarioDetailViewModel>>>> Get() =>
+        public async Task<ActionResult<Resultado<List<DetalheQuestionarioViewModel>>>> Get() =>
             Ok(await _service.GetQuizzes());
 
         [Authorize]

@@ -1,8 +1,8 @@
-export default interface IQuestionarioDetail {
+export default interface IDetalheQuestionario {
   titulo: string;
   descricao: string;
-  dataInicio: Date;
-  dataFim: Date;
+  dataInicio: string;
+  dataFim: string;
   usuarioCriador: string;
   perguntas: number;
   respostas: number;
