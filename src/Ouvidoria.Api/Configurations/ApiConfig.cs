@@ -27,20 +27,15 @@ namespace Ouvidoria.Api.Configurations
 
         public static IApplicationBuilder ApiApplicationConfig(this IApplicationBuilder app)
         {
-            var supportedCultures = new[]
-            {
-                new CultureInfo("pt-BR"),
-            };
+            DefaultFilesOptions options = new DefaultFilesOptions();
+            options.DefaultFileNames.Clear();
+            options.DefaultFileNames.Add("index.html");
             
-            var requestLocalizationOptions = new RequestLocalizationOptions
-            {
-                DefaultRequestCulture = new RequestCulture("pt-BR"),
-                SupportedUICultures   = supportedCultures
-            };
-
-            app.UseRequestLocalization(requestLocalizationOptions);
+            app.UseDefaultFiles(options);
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseMvc();
+            app.UseStaticFiles();
 
             return app;
         }
