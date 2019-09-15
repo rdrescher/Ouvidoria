@@ -30,6 +30,8 @@ namespace Ouvidoria.Application.AutoMapper
                 .ConstructUsing(u => new Usuario(u.nome, u.email, u.telefone, u.cpf, u.idCurso));
             CreateMap<CursoViewModel, Curso>()
                 .ConstructUsing(c => new Curso(c.nome));
+            CreateMap<CadastroManifestacaoViewModel, Manifestacao>()
+                .ConstructUsing(m => new Manifestacao(m.titulo, m.descricao, m.idDepartamento, m.tipoManifestacao));
             CreateMap<CadastroOpcaoViewModel, Opcao>()
                 .ConstructUsing(o => new Opcao(o.descricao));
             CreateMap<CadastroPerguntaViewModel, Pergunta>()

@@ -14,6 +14,7 @@ using Ouvidoria.CrossCutting.Identity.Models;
 namespace Ouvidoria.Api.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class UsuarioController : BaseController
     {
@@ -32,7 +33,7 @@ namespace Ouvidoria.Api.Controllers
         public async Task<ActionResult<Resultado<List<UsuarioViewModel>>>> Get() =>
             Ok(await _service.GetUsers());
 
-        [Authorize(policy: "Administrador")]
+        //[Authorize(policy: "Administrador")]
         [HttpPut("{id:int}")]
         public async Task<ActionResult<Resultado<UsuarioViewModel>>> Put(int id, AtualizacaoUsuarioViewModel atualizacaoUsuario)
         {

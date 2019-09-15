@@ -11,37 +11,35 @@ namespace Ouvidoria.Application.Services
 {
     public class QuestionarioRespostaAppService : EntityAppService<QuestionarioResposta, QuestionarioRespostaViewModel>, IQuestionarioRespostaAppService
     {
-        private readonly INotificador _notificador;
         private readonly IQuestionarioRespostaService _service;
 
         public QuestionarioRespostaAppService(
             IMapper map,
-            IQuestionarioRespostaService service,
-            INotificador notificador
-        ) : base(map)
+            INotificador notificador,
+            IQuestionarioRespostaService service
+        ) : base(map, notificador)
         {
             _service = service;
-            _notificador = notificador;
         }
 
         public async Task<Resultado> Create(CadastroQuestionarioRespostaViewModel resposta, int idUsuario)
         {
             var response = Mapper.Map<QuestionarioResposta>(resposta);
             response.SetUser(idUsuario);
-            
+
             await _service.Create(response);
 
-            return _notificador.HasNotification()
-                ? Resultado.Failed(_notificador.GetNotificationsMessages()) 
+            return Notificador.HasNotification()
+                ? Resultado.Failed(Notificador.GetNotificationsMessages())
                 : Resultado.Successfull();
         }
 
         public async Task<Resultado> IsUserAbleToAnswer(int idQuestionario, int idUsuario)
         {
             await _service.IsUserAbleToAnswer(idQuestionario, idUsuario);
-            
-            return _notificador.HasNotification()
-                ? Resultado.Failed(_notificador.GetNotificationsMessages()) 
+
+            return Notificador.HasNotification()
+                ? Resultado.Failed(Notificador.GetNotificationsMessages())
                 : Resultado.Successfull();
         }
     }

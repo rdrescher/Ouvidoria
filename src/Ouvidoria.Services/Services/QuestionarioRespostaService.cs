@@ -26,7 +26,6 @@ namespace Ouvidoria.Services
             _questionarioService = questionarioService;
             _usuarioService = usuarioService;
         }
-        public void Dispose() => _repository.Dispose();
 
         public async Task Create(QuestionarioResposta resposta)
         {
@@ -38,6 +37,8 @@ namespace Ouvidoria.Services
 
             await _repository.Create(resposta);
         }
+        
+        public void Dispose() => _repository.Dispose();
 
         private async Task<bool> UserCanAnswer(int idQuestionario, int idUsuario)
         {

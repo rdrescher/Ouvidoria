@@ -15,14 +15,13 @@ namespace Ouvidoria.Application.Services
     public class QuestionarioAppService : EntityAppService<Questionario, QuestionarioViewModel>, IQuestionarioAppService
     {
         private readonly IQuestionarioService _service;
-        private readonly INotificador _notificador;
         public QuestionarioAppService(
             IMapper map,
-            IQuestionarioService service,
-            INotificador notificador) : base(map)
+            INotificador notificador,
+            IQuestionarioService service
+        ) : base(map, notificador)
         {
             _service = service;
-            _notificador = notificador;
         }
 
         public async Task<Resultado<QuestionarioViewModel>> GetById(int idQuestionario) =>
@@ -31,10 +30,10 @@ namespace Ouvidoria.Application.Services
         public async Task<Resultado> Create(CadastroQuestionarioViewModel questionario, int userId)
         {
             var quiz = Mapper.Map<Questionario>(questionario);
-            quiz.ChangeCreator(userId);
+            quiz.SetCreator(userId);
             await _service.Create(quiz);
-            return _notificador.HasNotification()
-                ? Resultado.Failed(_notificador.GetNotificationsMessages())
+            return Notificador.HasNotification()
+                ? Resultado.Failed(Notificador.GetNotificationsMessages())
                 : Resultado.Successfull();
         }
 

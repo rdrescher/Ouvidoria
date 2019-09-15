@@ -14,10 +14,12 @@ namespace Ouvidoria.Application.Services
     public class UsuarioAppService : EntityAppService<Usuario, UsuarioViewModel>, IUsuarioAppService
     {
         private readonly IUsuarioService Service;
-        private readonly INotificador Notificador;
-        public UsuarioAppService(IMapper map, IUsuarioService service, INotificador notificador) : base(map)
+        public UsuarioAppService(
+            IMapper map,
+            INotificador notificador,
+            IUsuarioService service
+        ) : base(map, notificador)
         {
-            this.Notificador = notificador;
             this.Service = service;
         }
 

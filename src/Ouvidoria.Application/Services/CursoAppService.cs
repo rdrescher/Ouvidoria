@@ -15,10 +15,12 @@ namespace Ouvidoria.Application.Services
     public class CursoAppService : EntityAppService<Curso, CursoViewModel>, ICursoAppService
     {
         private readonly ICursoService _service;
-        private readonly INotificador _notificador;
-        public CursoAppService(IMapper map, ICursoService service, INotificador notificador) : base(map)
+        public CursoAppService(
+            IMapper map, 
+            INotificador notificador,
+            ICursoService service
+        ) : base(map, notificador)
         {
-            _notificador = notificador;
             _service = service;
         }
 
@@ -29,16 +31,16 @@ namespace Ouvidoria.Application.Services
 
             cursoViewModel = MapToViewModel(curso);
 
-            return _notificador.HasNotification()
-                ? Resultado<CursoViewModel>.Failed(_notificador.GetNotificationsMessages())
+            return Notificador.HasNotification()
+                ? Resultado<CursoViewModel>.Failed(Notificador.GetNotificationsMessages())
                 : Resultado<CursoViewModel>.Successfull(cursoViewModel);
         }
 
         public async Task<Resultado> Delete(int id)
         {
             await _service.Delete(id);
-            return _notificador.HasNotification()
-                ? Resultado<CursoViewModel>.Failed(_notificador.GetNotificationsMessages())
+            return Notificador.HasNotification()
+                ? Resultado<CursoViewModel>.Failed(Notificador.GetNotificationsMessages())
                 : Resultado.Successfull();
         }
 
@@ -56,8 +58,8 @@ namespace Ouvidoria.Application.Services
 
             var cursosViewModel = MapToViewModel(curso);
 
-            return _notificador.HasNotification()
-                ? Resultado<CursoViewModel>.Failed(_notificador.GetNotificationsMessages())
+            return Notificador.HasNotification()
+                ? Resultado<CursoViewModel>.Failed(Notificador.GetNotificationsMessages())
                 : Resultado<CursoViewModel>.Successfull(cursosViewModel);
         }
     }

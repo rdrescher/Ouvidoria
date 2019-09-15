@@ -10,34 +10,31 @@ namespace Ouvidoria.Services
 {
     public class DepartamentoService : EntityService, IDepartamentoService
     {
-        private readonly IDepartamentoRepository repository;
-        private readonly IManifestacaoService manifestacaoService;
-        private readonly IUsuarioService usuarioService;
+        private readonly IDepartamentoRepository _repository;
+        private readonly IUsuarioService _usuarioService;
         public DepartamentoService(
             IDepartamentoRepository repository,
             INotificador notificador,
-            IUsuarioService usuarioService,
-            IManifestacaoService manifestacaoService
+            IUsuarioService usuarioService
         ) : base(notificador)
         {
-            this.repository = repository;
-            this.manifestacaoService = manifestacaoService;
-            this.usuarioService = usuarioService;
+            _repository = repository;
+            _usuarioService = usuarioService;
         }
 
         public async Task Create(Departamento departamento)
         {
             if (!base.Validate(new DepartamentoValidation(), departamento)) return;
             if (!await IsValidOwner(departamento.IdUsuarioResponsavel)) return;
-            
-            await repository.Create(departamento);
-            departamento = await repository.GetWithOwner(departamento.Id);
+
+            await _repository.Create(departamento);
+            departamento = await _repository.GetWithOwner(departamento.Id);
         }
 
         public async Task Delete(int id)
         {
             if (await HasManifestationsRegistered(id)) return;
-            await repository.Delete(id);
+            await _repository.Delete(id);
         }
 
         public async Task Update(Departamento departamento)
@@ -45,29 +42,29 @@ namespace Ouvidoria.Services
             if (!base.Validate(new DepartamentoValidation(), departamento)) return;
             if (!await IsValidOwner(departamento.IdUsuarioResponsavel)) return;
 
-            await repository.Update(departamento);
-            departamento = await repository.GetWithOwner(departamento.Id);
+            await _repository.Update(departamento);
+            departamento = await _repository.GetWithOwner(departamento.Id);
         }
 
         public async Task<List<Departamento>> GetDepartments() =>
-            await repository.GetAllWithOwner();
+            await _repository.GetAllWithOwner();
 
-        public void Dispose()
-        {
-            repository.Dispose();
-        }
+        public async Task<Departamento> GetById(int idDepartamento) =>
+            await _repository.GetById(idDepartamento);
+
+        public void Dispose() => _repository.Dispose();
 
         private async Task<bool> IsValidOwner(int? id)
         {
             if (id == null) return true;
-            if (await usuarioService.GetUserById(id.Value) is Usuario user && user.Ativo) return true;
+            if (await _usuarioService.GetUserById(id.Value) is Usuario user && user.Ativo) return true;
 
             Notify("O usuário responsável informado é inválido ou está inativo");
             return false;
         }
         private async Task<bool> HasManifestationsRegistered(int id)
         {
-            if (!(await manifestacaoService.GetByDepartment(id)).Any()) return false;
+            if (!(await _repository.GetByIdWithManifestation(id)).Manifestacoes.Any()) return false;
 
             Notify("O Departamento não pôde ser excluído pois há manifestações cadastradas em relação a ele");
             return true;

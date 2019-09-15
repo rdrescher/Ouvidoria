@@ -6,7 +6,6 @@ using Ouvidoria.Domain.Models;
 namespace Ouvidoria.Services.Interfaces
 {
     public interface IManifestacaoService : IDisposable
-    {
-        Task<List<Manifestacao>> GetByDepartment(int id);
+    {        Task Create(Manifestacao manifestation);
     }
 }

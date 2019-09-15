@@ -8,5 +8,6 @@ namespace Ouvidoria.Domain.Interfaces
     {
         Task<List<Departamento>> GetAllWithOwner();
         Task<Departamento> GetWithOwner(int id);
+        Task<Departamento> GetByIdWithManifestation(int id);
     }
 }
