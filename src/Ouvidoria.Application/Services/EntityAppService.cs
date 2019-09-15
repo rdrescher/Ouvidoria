@@ -9,7 +9,7 @@ namespace Ouvidoria.Application.Services
     public abstract class EntityAppService<TEntity, TEntityViewModel> : IEntityAppService<TEntity, TEntityViewModel> where TEntity : Entity where TEntityViewModel : EntityViewModel
     {
         protected readonly IMapper Mapper;
-        public EntityAppService(IMapper map)
+        protected EntityAppService(IMapper map)
         {
             this.Mapper = map;
         }

@@ -5,9 +5,10 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  LinearProgress,
-  Grow
+  Grow,
+  LinearProgress
 } from "@material-ui/core";
+import { TransitionProps } from "@material-ui/core/transitions";
 import MUIDataTable, {
   MUIDataTableColumnDef,
   MUIDataTableOptions
@@ -15,13 +16,12 @@ import MUIDataTable, {
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
+import Operacao from "../../../application/types/Operacao";
 import IResultado from "../../../models/Resultado";
 import { IApplicationState } from "../../../store";
 import * as DialogActions from "../../../store/ducks/dialogDatatable/DialogActions";
-import Operacao from "../../../utils/Operacao";
 import DataTableToolBar from "./DataTableToolBar";
 import DataTableToolBarSelected from "./DataTableToolBarSelected";
-import { TransitionProps } from "@material-ui/core/transitions";
 
 interface IState {
   data: object[];
@@ -39,13 +39,15 @@ interface IDialogsState {
 interface IProps {
   data: () => Promise<IResultado<object[]>>;
   columns: MUIDataTableColumnDef[];
-  create: boolean;
-  delete: boolean;
-  edit: boolean;
+  create?: boolean;
+  delete?: boolean;
+  edit?: boolean;
   title: string;
-  dialogContent: JSX.Element;
-  handle: (operation: Operacao, data: object) => void;
-  newData: object | null;
+  dialogContent?: JSX.Element;
+  handle?: (operation: Operacao, data: object) => void;
+  newData?: object | null;
+  customToolbarSelected?: () => JSX.Element;
+  customToolbar?: () => JSX.Element;
 }
 
 interface IDispatchProps {
@@ -123,23 +125,33 @@ const Transition = React.forwardRef<unknown, TransitionProps>(
 type Props = IProps & IDispatchProps & IStateProps;
 
 function DataTable(props: Props) {
+  const {
+    customToolbar: Toolbar,
+    customToolbarSelected: ToolbarSelected
+  } = props;
   const [state, setState] = useState<IState>({
     ...initialState,
     columns: props.columns,
     options: {
       ...initialState.options,
-      customToolbarSelect: selected => (
-        <DataTableToolBarSelected
-          edit={props.edit}
-          delete={props.delete}
-          onHandleClick={handleDialogOpen}
-          selectedData={selected.data[0]}
-        />
-      ),
+      customToolbarSelect: selected =>
+        ToolbarSelected ? (
+          <ToolbarSelected />
+        ) : (
+          <DataTableToolBarSelected
+            edit={props.edit}
+            delete={props.delete}
+            onHandleClick={handleDialogOpen}
+            selectedData={selected.data[0]}
+          />
+        ),
       customToolbar: () =>
-        props.create ? (
+        props.create &&
+        (Toolbar ? (
+          <Toolbar />
+        ) : (
           <DataTableToolBar handleCreate={handleDialogOpen} />
-        ) : null,
+        )),
       selectableRows: props.edit || props.delete ? "single" : "none"
     }
   });
@@ -166,7 +178,7 @@ function DataTable(props: Props) {
     }
 
     getData();
-  }, []);
+  },        []);
 
   useEffect(() => {
     if (props.newData === null) return;
@@ -207,16 +219,16 @@ function DataTable(props: Props) {
       default:
         break;
     }
-  }, [props.newData]);
+  },        [props.newData]);
 
   useEffect(() => {
     if (!props.dialogIsOpen && dialogs.selectedIndex !== -10) {
       let selectedData =
         dialogs.selectedIndex !== -1 ? state.data[dialogs.selectedIndex] : {};
       props.openDialog(dialogs.operation, selectedData);
-      props.handle(dialogs.operation, selectedData);
+      props.handle!(dialogs.operation, selectedData);
     }
-  }, [dialogs]);
+  },        [dialogs]);
 
   const handleDialogOpen = (operation: Operacao, data: unknown = null) => {
     setDialogs({

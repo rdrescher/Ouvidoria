@@ -9,7 +9,7 @@ const theme = createMuiTheme({
       main: "#0083B0"
     },
     secondary: {
-      main: "#00B4DB"
+      main: "#00B4DB",
     },
     error: {
       main: red.A400
@@ -88,6 +88,26 @@ const theme = createMuiTheme({
     MuiTablePagination: {
       input: {
         color: "rgba(0, 0, 0, 0.54)"
+      }
+    },
+    MuiFormControl: {
+      root: {
+        marginTop: 10
+      }
+    },
+    MuiRadio: {
+      root: {
+        color: "#00B4DB"
+      }
+    },
+    MuiFormControlLabel: {
+      label: {
+        wordBreak: "break-all"
+      }
+    },
+    MuiFab: {
+      secondary: {
+        color: "white"
       }
     }
   }

@@ -1,4 +1,6 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,8 +27,15 @@ namespace Ouvidoria.Api.Configurations
 
         public static IApplicationBuilder ApiApplicationConfig(this IApplicationBuilder app)
         {
+            DefaultFilesOptions options = new DefaultFilesOptions();
+            options.DefaultFileNames.Clear();
+            options.DefaultFileNames.Add("index.html");
+            
+            app.UseDefaultFiles(options);
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseMvc();
+            app.UseStaticFiles();
 
             return app;
         }

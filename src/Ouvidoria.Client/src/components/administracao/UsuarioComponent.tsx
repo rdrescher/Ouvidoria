@@ -9,6 +9,8 @@ import {
 import React, { useEffect, useState, ChangeEvent, SyntheticEvent } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
+import Operacao from "../../application/types/Operacao";
+import * as Validations from "../../application/Validations";
 import GenericList from "../../models/GenericList";
 import Resultado from "../../models/Resultado";
 import AtualizacaoUsuario from "../../models/Usuario/AtualizacaoUsuario";
@@ -17,8 +19,6 @@ import CursoApi from "../../services/CursoApi";
 import UsuarioApi from "../../services/UsuarioApi";
 import * as DialogActions from "../../store/ducks/dialogDatatable/DialogActions";
 import * as MessageBoxActions from "../../store/ducks/messageBox/MessageBoxActions";
-import Operacao from "../../utils/Operacao";
-import * as Validations from "../../utils/Validations";
 import CheckBoxField from "../common/formFields/CheckBoxField";
 import ErrorMessages from "../common/formFields/ErrorMessages";
 import InputField from "../common/formFields/InputField";

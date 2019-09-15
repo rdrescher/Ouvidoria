@@ -26,7 +26,7 @@ namespace Ouvidoria.Api.Controllers
     {
         private readonly IMapper _map;
         private readonly INotificador _notificador;
-        private readonly JWTSettings _jwtSettings;
+        private readonly JwtSettings _jwtSettings;
         private readonly SignInManager<AspNetUser> _signInManager;
         private readonly UserManager<AspNetUser> _userManager;
         private readonly IUsuarioAppService _usuarioService;
@@ -37,7 +37,7 @@ namespace Ouvidoria.Api.Controllers
             SignInManager<AspNetUser> signInManager,
             UserManager<AspNetUser> userManager,
             IUsuarioAppService usuarioService,
-            IOptions<JWTSettings> jwtSettings
+            IOptions<JwtSettings> jwtSettings
         )
         {
             _userManager = userManager;

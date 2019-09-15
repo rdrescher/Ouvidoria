@@ -4,11 +4,11 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import { Delete, Edit } from "@material-ui/icons";
 import React from "react";
-import Operacao from "../../../utils/Operacao";
+import Operacao from "../../../application/types/Operacao";
 
 interface IProps {
-  delete: boolean;
-  edit: boolean;
+  delete?: boolean;
+  edit?: boolean;
   onHandleClick: (operacao: Operacao, data: unknown) => void;
   selectedData: object;
 }

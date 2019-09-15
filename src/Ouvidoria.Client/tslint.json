@@ -109,7 +109,7 @@
     "switch-default": true,
     "use-isnan": true,
     "variable-name": [
-      true,
+      false,
       "allow-leading-underscore",
       "ban-keywords",
       "check-format"

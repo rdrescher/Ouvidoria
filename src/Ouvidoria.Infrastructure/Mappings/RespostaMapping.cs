@@ -22,7 +22,7 @@ namespace Ouvidoria.Infrastructure.Mappings
                 .HasForeignKey(c => c.IdPergunta);
 
             builder.HasOne(c => c.QuestionarioResposta)
-                .WithMany(c => c.Resposta)
+                .WithMany(c => c.Respostas)
                 .HasForeignKey(c => c.IdQuestionarioResposta);
 
             builder.Property(c => c.DataInsercao)

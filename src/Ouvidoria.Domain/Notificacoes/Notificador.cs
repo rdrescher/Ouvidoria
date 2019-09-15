@@ -6,26 +6,19 @@ namespace Ouvidoria.Domain.Notificacoes
 {
     public class Notificador : INotificador
     {
-        private List<Notificacao> Notificacoes;
+        private readonly List<Notificacao> Notificacoes;
 
-        public Notificador()
-        {
-            Notificacoes = new List<Notificacao>();
-        }
+        public Notificador() => Notificacoes = new List<Notificacao>();
 
-        public void Handle(Notificacao notificacao)
-        {
-            Notificacoes.Add(notificacao);
-        }
 
-        public List<Notificacao> GetNotifications()
-        {
-            return Notificacoes;
-        }
+        public void Handle(Notificacao notificacao) => Notificacoes.Add(notificacao);
 
-        public bool HasNotification()
-        {
-            return Notificacoes.Any();
-        }
+
+        public List<Notificacao> GetNotifications() => Notificacoes;
+
+        public bool HasNotification() => Notificacoes.Any();
+
+        public string[] GetNotificationsMessages() =>
+            GetNotifications().Select(x => x.Mensagem).ToArray();
     }
 }

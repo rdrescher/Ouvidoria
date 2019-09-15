@@ -22,6 +22,7 @@ namespace Ouvidoria.Infrastructure.Repositories
         }
         public virtual async Task Create(TEntity entity)
         {
+            entity.SetDates(DateTime.Now);
             DbSet.Add(entity);
             await SaveChanges();
         }
@@ -32,13 +33,13 @@ namespace Ouvidoria.Infrastructure.Repositories
             await SaveChanges();
         }
 
-        public virtual async Task<List<TEntity>> GetAll() => 
+        public virtual async Task<List<TEntity>> GetAll() =>
             await DbSet.ToListAsync();
 
-        public virtual async Task<TEntity> GetById(int id) => 
+        public virtual async Task<TEntity> GetById(int id) =>
             await DbSet.FindAsync(id);
 
-        public async Task<int> SaveChanges() => 
+        public async Task<int> SaveChanges() =>
             await Db.SaveChangesAsync();
 
         public async Task<List<TEntity>> Search(Expression<Func<TEntity, bool>> predicate) =>
@@ -52,12 +53,12 @@ namespace Ouvidoria.Infrastructure.Repositories
             await SaveChanges();
         }
 
-        private async Task<DateTime> GetCreationDate(int id) => 
+        private async Task<DateTime> GetCreationDate(int id) =>
             await DbSet.Where(x => x.Id == id)
                 .Select(x => x.DataInsercao)
                 .FirstOrDefaultAsync();
 
-        public void Dispose() => 
+        public void Dispose() =>
             Db?.Dispose();
     }
 }

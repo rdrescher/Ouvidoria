@@ -22,12 +22,12 @@ namespace Ouvidoria.Application.Services
         }
 
         public async Task<bool> IsValidUser(CadastroUsuarioViewModel cadastroUsuario) =>
-            await Service.IsValidUser(base.Mapper.Map<Usuario>(cadastroUsuario));
+            await Service.IsValidUser(Mapper.Map<Usuario>(cadastroUsuario));
 
         public async Task<Resultado<List<GenericList>>> GetGenericList() =>
-            Resultado<List<GenericList>>.Successfull(base.MapToGenericList(await Service.GetUsers()));
+            Resultado<List<GenericList>>.Successfull(MapToGenericList(await Service.GetUsers()));
         public async Task<Resultado<List<UsuarioViewModel>>> GetUsers() =>
-            Resultado<List<UsuarioViewModel>>.Successfull(base.Mapper.Map<List<UsuarioViewModel>>(await Service.GetUsersWithClass()));
+            Resultado<List<UsuarioViewModel>>.Successfull(Mapper.Map<List<UsuarioViewModel>>(await Service.GetUsersWithClass()));
 
         public async Task<Resultado<UsuarioViewModel>> Update(AtualizacaoUsuarioViewModel atualizacaoUsuario)
         {
@@ -36,9 +36,9 @@ namespace Ouvidoria.Application.Services
             var usuarioViewModel = base.MapToViewModel(usuario);
             usuarioViewModel.usuarioPerfil = atualizacaoUsuario.UsuarioPerfil;
 
-            return Notificador.HasNotification() ?
-                Resultado<UsuarioViewModel>.Failed(Notificador.GetNotifications().Select(x => x.Mensagem).ToArray()) :
-                Resultado<UsuarioViewModel>.Successfull(usuarioViewModel);
+            return Notificador.HasNotification()
+                ? Resultado<UsuarioViewModel>.Failed(Notificador.GetNotificationsMessages())
+                : Resultado<UsuarioViewModel>.Successfull(usuarioViewModel);
         }
 
         public async Task<bool> IsActiveUser(string email) =>

@@ -10,7 +10,6 @@ namespace Ouvidoria.Services
 {
     public class DepartamentoService : EntityService, IDepartamentoService
     {
-        private readonly INotificador notificador;
         private readonly IDepartamentoRepository repository;
         private readonly IManifestacaoService manifestacaoService;
         private readonly IUsuarioService usuarioService;
@@ -23,7 +22,6 @@ namespace Ouvidoria.Services
         {
             this.repository = repository;
             this.manifestacaoService = manifestacaoService;
-            this.notificador = notificador;
             this.usuarioService = usuarioService;
         }
 

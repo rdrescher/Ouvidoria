@@ -4,8 +4,11 @@ import clsx from "clsx";
 import React from "react";
 import { connect } from "react-redux";
 import { IApplicationState } from "../../store";
+import DialogMessage from "../common/fields/DialogMessage";
+import Loading from "../common/Loading";
 import MessageBox from "../common/MessageBox";
 import Routes from "./Routes";
+
 
 interface IStateProps {
   sidebarIsOpen: boolean;
@@ -15,7 +18,7 @@ function ContentComponent(props: IStateProps) {
   const classes = useStyles();
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" className={classes.container}>
       <main
         className={clsx(classes.content, {
           [classes.contentShift]: props.sidebarIsOpen
@@ -23,6 +26,8 @@ function ContentComponent(props: IStateProps) {
       >
         <Routes />
         <MessageBox />
+        <DialogMessage />
+        <Loading />
       </main>
     </Container>
   );
@@ -40,9 +45,11 @@ export default connect(
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) => ({
+  container: {
+    background: "rgb(249, 249, 252)"
+  },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen

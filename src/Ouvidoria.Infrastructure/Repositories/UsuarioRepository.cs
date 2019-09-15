@@ -15,11 +15,11 @@ namespace Ouvidoria.Infrastructure.Repositories
         public UsuarioRepository(OuvidoriaContext context) : base(context)
         { }
 
-        public async Task<List<UsuarioDTO>> GetAllWithClass() =>
+        public async Task<List<UsuarioDto>> GetAllWithClass() =>
             await base.DbSet.AsNoTracking()
                 .Include(x => x.Curso)
                 .Include(x => x.Claims)
-                .Select(x => new UsuarioDTO
+                .Select(x => new UsuarioDto
                 {
                     Ativo = x.Ativo,
                     CPF = x.CPF,

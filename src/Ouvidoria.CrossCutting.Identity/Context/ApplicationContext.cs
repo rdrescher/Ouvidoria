@@ -31,19 +31,19 @@ namespace Ouvidoria.CrossCutting.Identity.Context
                     builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
                 });
         }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            foreach (var property in modelBuilder.Model.GetEntityTypes()
+            foreach (var property in builder.Model.GetEntityTypes()
                 .SelectMany(e => e.GetProperties()
                     .Where(p => p.ClrType == typeof(string))))
                 property.Relational().ColumnType = "varchar(100)";
 
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
+            builder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
 
-            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
                 relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
 
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(builder);
         }
     }
 }

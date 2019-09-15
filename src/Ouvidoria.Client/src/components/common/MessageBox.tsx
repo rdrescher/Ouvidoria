@@ -1,10 +1,10 @@
 import { makeStyles, IconButton, Snackbar, Theme } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import React from "react";
-import { IApplicationState } from "../../store";
-import { Dispatch, bindActionCreators } from "redux";
-import * as MessageBoxActions from "../../store/ducks/messageBox/MessageBoxActions";
 import { connect } from "react-redux";
+import { bindActionCreators, Dispatch } from "redux";
+import { IApplicationState } from "../../store";
+import * as MessageBoxActions from "../../store/ducks/messageBox/MessageBoxActions";
 
 interface IDispatchProps {
   hide(): void;

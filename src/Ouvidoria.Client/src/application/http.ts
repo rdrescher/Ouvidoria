@@ -49,15 +49,14 @@ export default class Http {
         Session.logout();
         window.location.href = `${this._baseClientUrl}/login`;
       } else if (response.status === 403) {
-        window.location.href = this._baseClientUrl;
+        //window.location.href = `${this._baseClientUrl}`;
       } else if (response.status === 404) {
-        console.log("Not Found");
-        window.location.href = this._baseClientUrl;
+        //window.location.href = `${this._baseClientUrl}/not-found`;
       }
     } catch (err) {
-      console.log(`Error 500 -> ${err}`);
+      window.location.href = `${this._baseClientUrl}/error`;
     }
-    return {success: false, data: [], messages: [] };
+    return { success: false, data: [], messages: [] };
   }
 
   public static async delete<T = unknown>(

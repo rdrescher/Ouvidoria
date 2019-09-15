@@ -24,7 +24,7 @@ export default function SubmitButton(props: IProps) {
         variant="extended"
         color="primary"
         aria-label={props.label.toLowerCase()}
-        size="small"
+        size="medium"
         onClick={props.onSubmit}
         disabled={props.loading}
       >
