@@ -40,7 +40,7 @@ namespace Ouvidoria.Api
             app.UseAuthentication();
             app.UseCors("Development");
             app.SwaggerApplicationConfig();
-            app.ApiApplicationConfig();
+            app.ApiApplicationConfig(env);
         }
     }
 }

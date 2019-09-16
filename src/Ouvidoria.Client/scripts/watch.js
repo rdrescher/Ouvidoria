@@ -3,7 +3,7 @@ process.env.NODE_ENV = "development";
 const fs = require("fs-extra");
 const paths = require("../config/paths");
 const webpack = require("webpack");
-const config = require("../config/webpack.config")("development");
+const config = require("../config/webpack.config")("production");
 
 var entry = config.entry;
 var plugins = config.plugins;

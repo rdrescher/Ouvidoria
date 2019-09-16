@@ -20,7 +20,6 @@ using Ouvidoria.Domain.Interfaces;
 
 namespace Ouvidoria.Api.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class AutenticacaoController : BaseController
     {

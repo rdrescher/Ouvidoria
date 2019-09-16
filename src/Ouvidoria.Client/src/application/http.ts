@@ -12,8 +12,8 @@ type HttpMethods =
   | "TRACE";
 
 export default class Http {
-  private static _baseUrl: string = "https://localhost:5001";
-  private static _baseClientUrl: string = "http://localhost:3000";
+  private static _baseUrl: string = "";
+  private static _baseClientUrl: string = "";
 
   public static get baseUrl(): string {
     return Http._baseUrl;
@@ -45,13 +45,6 @@ export default class Http {
       const response = await fetch(`${Http.baseUrl}${url}`, request);
       if (response.ok) {
         return await response.json();
-      } else if (response.status === 401) {
-        Session.logout();
-        window.location.href = `${this._baseClientUrl}/login`;
-      } else if (response.status === 403) {
-        //window.location.href = `${this._baseClientUrl}`;
-      } else if (response.status === 404) {
-        //window.location.href = `${this._baseClientUrl}/not-found`;
       }
     } catch (err) {
       window.location.href = `${this._baseClientUrl}/error`;
