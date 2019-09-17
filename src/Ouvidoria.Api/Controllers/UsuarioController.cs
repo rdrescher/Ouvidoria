@@ -33,7 +33,7 @@ namespace Ouvidoria.Api.Controllers
         public async Task<ActionResult<Resultado<List<UsuarioViewModel>>>> Get() =>
             Ok(await _service.GetUsers());
 
-        //[Authorize(policy: "Administrador")]
+        [Authorize(policy: "Administrador")]
         [HttpPut("{id:int}")]
         public async Task<ActionResult<Resultado<UsuarioViewModel>>> Put(int id, AtualizacaoUsuarioViewModel atualizacaoUsuario)
         {

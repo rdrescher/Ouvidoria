@@ -9,7 +9,6 @@ import Loading from "../common/Loading";
 import MessageBox from "../common/MessageBox";
 import Routes from "./Routes";
 
-
 interface IStateProps {
   sidebarIsOpen: boolean;
 }
@@ -18,18 +17,18 @@ function ContentComponent(props: IStateProps) {
   const classes = useStyles();
 
   return (
-    <Container maxWidth="lg" className={classes.container}>
-      <main
-        className={clsx(classes.content, {
-          [classes.contentShift]: props.sidebarIsOpen
-        })}
-      >
+    <main
+      className={clsx(classes.content, {
+        [classes.contentShift]: props.sidebarIsOpen
+      })}
+    >
+      <Container maxWidth="lg" className={classes.container}>
         <Routes />
         <MessageBox />
         <DialogMessage />
         <Loading />
-      </main>
-    </Container>
+      </Container>
+    </main>
   );
 }
 
