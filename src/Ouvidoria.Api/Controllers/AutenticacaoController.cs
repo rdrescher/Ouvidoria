@@ -77,6 +77,7 @@ namespace Ouvidoria.Api.Controllers
         [HttpPost("[action]")]
         public async Task<ActionResult<Resultado<LoginResponseViewModel>>> Login(LoginViewModel login)
         {
+
             if (User.Identity.IsAuthenticated) return Ok(Resultado.Failed());
             if (!ModelState.IsValid)
                 return Ok(Resultado.Failed("Dados Incorretos"));
