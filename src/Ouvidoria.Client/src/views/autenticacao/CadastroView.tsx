@@ -1,4 +1,11 @@
-import { Container, Fab, Paper, Theme, Typography } from "@material-ui/core";
+import {
+  Container,
+  Fab,
+  Grid,
+  Paper,
+  Theme,
+  Typography
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import React, { useEffect, useState, ChangeEvent } from "react";
 import { connect } from "react-redux";
@@ -84,7 +91,7 @@ function CadastroView(props: Props) {
       });
     }
     getClasses();
-  }, []);
+  },        []);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let name = e.target.name;
@@ -356,91 +363,92 @@ function CadastroView(props: Props) {
   return props.isAuthenticated ? (
     <Redirect to="/" />
   ) : (
-    <Container className={styles.container} maxWidth="sm">
+    <Container maxWidth="sm">
       <Paper className={styles.paper}>
         <Typography className={styles.text} variant="h6">
           Cadastre-se!
         </Typography>
-        <InputField
-          name="nome"
-          label="Nome"
-          error={state.errors.name}
-          value={state.user.nome}
-          onChange={handleInputChange}
-          onBlur={validateName}
-        />
-        <InputField
-          name="email"
-          label="E-mail"
-          error={state.errors.email}
-          value={state.user.email}
-          onChange={handleInputChange}
-          onBlur={validateEmail}
-        />
-        <InputField
-          name="cpf"
-          label="CPF"
-          error={state.errors.cpf}
-          value={state.user.cpf}
-          onChange={handleTelephoneCPFChange}
-          onBlur={validateCPF}
-        />
-        <InputField
-          name="telefone"
-          label="Telefone"
-          error={state.errors.phone}
-          value={state.user.telefone}
-          onChange={handleTelephoneCPFChange}
-          onBlur={validateTelephone}
-        />
-        <SelectField
-          name="idCurso"
-          label="Curso"
-          value={state.user.idCurso}
-          onChange={handleSelectChange}
-          data={state.classes}
-          nullable={true}
-        />
-        <InputField
-          name="senha"
-          label="Senha"
-          type="password"
-          error={state.errors.password}
-          value={state.user.senha}
-          onChange={handleInputChange}
-          onBlur={validatePassword}
-        />
-        <InputField
-          name="confirmaSenha"
-          label="Confirmar Senha"
-          error={state.errors.confirmPassword}
-          value={state.user.confirmaSenha}
-          type="password"
-          onChange={handleInputChange}
-          onBlur={validateConfirmPassword}
-        />
-        <div className={styles.buttons}>
-          <SubmitButton
-            loading={state.loading}
-            label="Cadastrar"
-            onSubmit={handleSubmit}
+        <form autoComplete="false">
+          <InputField
+            name="nome"
+            label="Nome * "
+            error={state.errors.name}
+            value={state.user.nome}
+            onChange={handleInputChange}
+            onBlur={validateName}
           />
-          <div className={styles.wrapper}>
-            <Link to="/login">
-              <Fab
-                variant="extended"
-                color="primary"
-                aria-label="login"
-                size="medium"
-                onClick={() => {}}
-              >
-                <Typography variant="inherit" className={styles.contentSpacer}>
-                  Logar
-                </Typography>
-              </Fab>
-            </Link>
-          </div>
-        </div>
+          <InputField
+            name="email"
+            label="E-mail * "
+            error={state.errors.email}
+            value={state.user.email}
+            onChange={handleInputChange}
+            onBlur={validateEmail}
+          />
+          <InputField
+            name="cpf"
+            label="CPF * "
+            error={state.errors.cpf}
+            value={state.user.cpf}
+            onChange={handleTelephoneCPFChange}
+            onBlur={validateCPF}
+          />
+          <InputField
+            name="telefone"
+            label="Telefone"
+            error={state.errors.phone}
+            value={state.user.telefone}
+            onChange={handleTelephoneCPFChange}
+            onBlur={validateTelephone}
+          />
+          <SelectField
+            name="idCurso"
+            label="Curso"
+            value={state.user.idCurso}
+            onChange={handleSelectChange}
+            data={state.classes}
+            nullable={true}
+          />
+          <InputField
+            name="senha"
+            label="Senha * "
+            type="password"
+            error={state.errors.password}
+            value={state.user.senha}
+            onChange={handleInputChange}
+            onBlur={validatePassword}
+          />
+          <InputField
+            name="confirmaSenha"
+            label="Confirmar Senha * "
+            error={state.errors.confirmPassword}
+            value={state.user.confirmaSenha}
+            type="password"
+            onChange={handleInputChange}
+            onBlur={validateConfirmPassword}
+          />
+          <Grid container spacing={2} className={styles.buttons}>
+            <Grid item xs={12}>
+              <SubmitButton
+                loading={state.loading}
+                label="Cadastrar"
+                onSubmit={handleSubmit}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <div className={styles.wrapper}>
+                <Link to="/login">
+                    <Typography
+                      variant="inherit"
+                      className={styles.contentSpacer}
+                    >
+                      Já possuo uma conta
+                    </Typography>
+                </Link>
+              </div>
+            </Grid>
+          </Grid>
+        </form>
       </Paper>
     </Container>
   );
@@ -459,9 +467,6 @@ export default connect(
 )(CadastroView);
 
 const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    marginTop: 30
-  },
   paper: {
     display: "flex",
     flexDirection: "column",
@@ -478,17 +483,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   buttons: {
     marginTop: 20,
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-evenly"
+    "& button": {
+      width: "100% !important"
+    }
   },
   wrapper: {
     margin: theme.spacing(1),
     position: "relative",
-    "& a": { textDecoration: "none" }
+    "& a": { textDecoration: "none" },
+    textAlign: "center"
   },
   contentSpacer: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1)
+    ...theme.typography.button,
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.secondary.main,
+    padding: theme.spacing(1),
+    height: 40,
+    "&:hover": {
+      backgroundColor: theme.palette.grey[200],
+    },
+    borderRadius: 20
   }
 }));

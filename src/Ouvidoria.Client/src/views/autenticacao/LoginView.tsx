@@ -1,4 +1,11 @@
-import { Container, Fab, Paper, Theme, Typography } from "@material-ui/core";
+import {
+  Container,
+  Fab,
+  Grid,
+  Paper,
+  Theme,
+  Typography
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import React, { useState, ChangeEvent } from "react";
 import { connect } from "react-redux";
@@ -156,45 +163,46 @@ function LoginView(props: Props) {
         <Typography className={styles.text} variant="h4">
           Ouvidoria
         </Typography>
-        <InputField
-          name="email"
-          label="E-mail"
-          error={state.errors.email}
-          value={state.user.email}
-          onChange={handleInputChange}
-          onBlur={validateEmail}
-        />
-        <InputField
-          name="senha"
-          label="Senha"
-          type="password"
-          error={state.errors.senha}
-          value={state.user.senha}
-          onChange={handleInputChange}
-          onBlur={validatePassword}
-        />
-        <div className={styles.buttons}>
-          <SubmitButton
-            loading={state.loading}
-            label="Entrar"
-            onSubmit={handleSubmit}
+        <form>
+          <InputField
+            name="email"
+            label="E-mail"
+            error={state.errors.email}
+            value={state.user.email}
+            onChange={handleInputChange}
+            onBlur={validateEmail}
           />
-          <div className={styles.wrapper}>
-            <Link to="/cadastrar">
-              <Fab
-                variant="extended"
-                color="primary"
-                aria-label="cadastrar"
-                size="medium"
-                onClick={() => {}}
-              >
-                <Typography variant="inherit" className={styles.contentSpacer}>
-                  Cadastrar
-                </Typography>
-              </Fab>
-            </Link>
-          </div>
-        </div>
+          <InputField
+            name="senha"
+            label="Senha"
+            type="password"
+            error={state.errors.senha}
+            value={state.user.senha}
+            onChange={handleInputChange}
+            onBlur={validatePassword}
+          />
+          <Grid container spacing={2} className={styles.buttons}>
+            <Grid item xs={12}>
+              <SubmitButton
+                loading={state.loading}
+                label="Entrar"
+                onSubmit={handleSubmit}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <div className={styles.wrapper}>
+                <Link to="/cadastrar">
+                  <Typography
+                    variant="inherit"
+                    className={styles.contentSpacer}
+                  >
+                    Não possuo uma conta
+                  </Typography>
+                </Link>
+              </div>
+            </Grid>
+          </Grid>
+        </form>
       </Paper>
     </Container>
   );
@@ -232,17 +240,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   buttons: {
     marginTop: 20,
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-evenly"
+    "& button": {
+      width: "100% !important"
+    }
   },
   wrapper: {
     margin: theme.spacing(1),
     position: "relative",
-    "& a": { textDecoration: "none" }
+    "& a": { textDecoration: "none" },
+    textAlign: "center"
   },
   contentSpacer: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1)
+    ...theme.typography.button,
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.secondary.main,
+    padding: theme.spacing(1),
+    height: 40,
+    "&:hover": {
+      backgroundColor: theme.palette.grey[200],
+    },
+    borderRadius: 20
   }
 }));
