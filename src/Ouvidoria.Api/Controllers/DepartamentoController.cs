@@ -49,6 +49,6 @@ namespace Ouvidoria.Api.Controllers
 
         [HttpGet("[action]")]
         public async Task<ActionResult<Resultado<List<GenericList>>>> GetGenericList() =>
-        Ok(await _service.GetGenericList());
+            Ok(await _service.GetGenericList());
     }
 }

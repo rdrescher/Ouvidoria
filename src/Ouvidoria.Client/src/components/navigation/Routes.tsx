@@ -13,9 +13,14 @@ import Error from "../../views/errors/Error";
 import NotAllowed from "../../views/errors/NotAllowed";
 import NotFound from "../../views/errors/NotFound";
 import DenunciaView from "../../views/manifestacoes/Denuncia/DenunciaView";
+import NovaDenunciaView from "../../views/manifestacoes/Denuncia/NovaDenunciaView";
 import ElogioView from "../../views/manifestacoes/Elogio/ElogioView";
+import NovoElogioView from "../../views/manifestacoes/Elogio/NovoElogioView";
+import NovaReclamacaoView from "../../views/manifestacoes/Reclamacao/NovaReclamacaoView";
 import ReclamacaoView from "../../views/manifestacoes/Reclamacao/ReclamacaoView";
+import NovaSolicitacaoView from "../../views/manifestacoes/Solicitacao/NovaSolicitacaoView";
 import SolicitacaoView from "../../views/manifestacoes/Solicitacao/SolicitacaoView";
+import NovaSugestaoView from "../../views/manifestacoes/Sugestao/NovaSugestaoView";
 import SugestaoView from "../../views/manifestacoes/Sugestao/SugestaoView";
 import Questionarios from "../../views/questionarios/Questionarios";
 import ResponderQuestionario from "../../views/questionarios/ResponderQuestionario";
@@ -28,10 +33,23 @@ export default function Routes() {
       <Route exact path="/login" component={LoginView} />
       <Route exact path="/cadastrar" component={CadastroView} />
       <Route exact path="/denuncia" component={DenunciaView} />
+      <PrivateRoute exact path="/denuncia/novo" component={NovaDenunciaView} />
       <Route exact path="/elogio" component={ElogioView} />
+      <PrivateRoute exact path="/elogio/novo" component={NovoElogioView} />
       <Route exact path="/reclamacao" component={ReclamacaoView} />
+      <PrivateRoute
+        exact
+        path="/reclamacao/novo"
+        component={NovaReclamacaoView}
+      />
       <Route exact path="/solicitacao" component={SolicitacaoView} />
+      <PrivateRoute
+        exact
+        path="/solicitacao/novo"
+        component={NovaSolicitacaoView}
+      />
       <Route exact path="/sugestao" component={SugestaoView} />
+      <PrivateRoute exact path="/sugestao/novo" component={NovaSugestaoView} />
       <PrivateRoute exact path="/questionarios" component={Questionarios} />
       <PrivateRoute
         exact
