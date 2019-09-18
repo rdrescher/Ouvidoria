@@ -5,13 +5,6 @@ import Criar from "../../../components/administracao/questionario/Criar";
 import DataTable from "../../../components/common/dataTable/DataTable";
 import QuestionarioApi from "../../../services/QuestionarioApi";
 
-const dateOptions = {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-  hour: "numeric",
-  minute: "numeric"
-};
 const headers: MUIDataTableColumnDef[] = [
   { name: "id", label: "Id" },
   {

@@ -66,6 +66,7 @@ function PrivateRoute(props: Props) {
     }
 
     hasPermission();
+    // eslint-disable-next-line
   },        []);
 
   return state.loading ? (

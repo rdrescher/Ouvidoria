@@ -17,7 +17,7 @@ export const getClaims = (): Claim[] => {
   return refreshClaims(token);
 };
 
-export const isAuthenticated = (): boolean => getToken() !== "";
+export const isAuthenticated = (): boolean => !!getToken();
 
 export function login(login: LoginResponse): void {
   setToken(login.accessToken);

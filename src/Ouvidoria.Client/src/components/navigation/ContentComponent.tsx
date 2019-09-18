@@ -53,7 +53,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
     }),
-    marginLeft: -drawerWidth,
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: -drawerWidth
+    },
     paddingTop: 80
   },
   contentShift: {
@@ -61,6 +63,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen
     }),
-    marginLeft: 0
+    marginLeft: "0px !important"
   }
 }));
