@@ -29,16 +29,16 @@ namespace Ouvidoria.Infrastructure.Migrations
                         .HasColumnName("UserId");
 
                     b.Property<string>("Tipo")
-                        .HasColumnName("ClaimType");
-
-                    b.Property<int?>("UsuarioId");
+                        .HasColumnName("ClaimType")
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Valor")
-                        .HasColumnName("ClaimValue");
+                        .HasColumnName("ClaimValue")
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UsuarioId");
+                    b.HasIndex("IdUser");
 
                     b.ToTable("AspNetUserClaims");
                 });
@@ -89,6 +89,35 @@ namespace Ouvidoria.Infrastructure.Migrations
                     b.ToTable("Departamento");
                 });
 
+            modelBuilder.Entity("Ouvidoria.Domain.Models.Interacao", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DataAtualizacao")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime>("DataInsercao")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("varchar(5000)");
+
+                    b.Property<int>("IdManifestacao");
+
+                    b.Property<int>("IdUsuario");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdManifestacao");
+
+                    b.HasIndex("IdUsuario");
+
+                    b.ToTable("Interacao");
+                });
+
             modelBuilder.Entity("Ouvidoria.Domain.Models.Manifestacao", b =>
                 {
                     b.Property<int>("Id")
@@ -108,9 +137,6 @@ namespace Ouvidoria.Infrastructure.Migrations
                     b.Property<int>("IdDepartamento");
 
                     b.Property<int>("IdUsuario");
-
-                    b.Property<string>("Resposta")
-                        .HasColumnType("varchar(5000)");
 
                     b.Property<int>("TipoManifestacao");
 
@@ -313,8 +339,8 @@ namespace Ouvidoria.Infrastructure.Migrations
             modelBuilder.Entity("Ouvidoria.Domain.Models.Claim", b =>
                 {
                     b.HasOne("Ouvidoria.Domain.Models.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId");
+                        .WithMany("Claims")
+                        .HasForeignKey("IdUser");
                 });
 
             modelBuilder.Entity("Ouvidoria.Domain.Models.Departamento", b =>
@@ -322,6 +348,17 @@ namespace Ouvidoria.Infrastructure.Migrations
                     b.HasOne("Ouvidoria.Domain.Models.Usuario", "Usuario")
                         .WithMany("Departamento")
                         .HasForeignKey("IdUsuarioResponsavel");
+                });
+
+            modelBuilder.Entity("Ouvidoria.Domain.Models.Interacao", b =>
+                {
+                    b.HasOne("Ouvidoria.Domain.Models.Manifestacao", "Manifestacao")
+                        .WithMany("Interacoes")
+                        .HasForeignKey("IdManifestacao");
+
+                    b.HasOne("Ouvidoria.Domain.Models.Usuario", "Usuario")
+                        .WithMany("Interacoes")
+                        .HasForeignKey("IdUsuario");
                 });
 
             modelBuilder.Entity("Ouvidoria.Domain.Models.Manifestacao", b =>
@@ -345,7 +382,7 @@ namespace Ouvidoria.Infrastructure.Migrations
             modelBuilder.Entity("Ouvidoria.Domain.Models.Pergunta", b =>
                 {
                     b.HasOne("Ouvidoria.Domain.Models.Questionario", "Questionario")
-                        .WithMany("Pergunta")
+                        .WithMany("Perguntas")
                         .HasForeignKey("IdQuestionario");
                 });
 
@@ -359,7 +396,7 @@ namespace Ouvidoria.Infrastructure.Migrations
             modelBuilder.Entity("Ouvidoria.Domain.Models.QuestionarioResposta", b =>
                 {
                     b.HasOne("Ouvidoria.Domain.Models.Questionario", "Questionario")
-                        .WithMany("QuestionarioResposta")
+                        .WithMany("QuestionarioRespostas")
                         .HasForeignKey("IdQuestionario");
 
                     b.HasOne("Ouvidoria.Domain.Models.Usuario", "Usuario")
@@ -378,7 +415,7 @@ namespace Ouvidoria.Infrastructure.Migrations
                         .HasForeignKey("IdPergunta");
 
                     b.HasOne("Ouvidoria.Domain.Models.QuestionarioResposta", "QuestionarioResposta")
-                        .WithMany("Resposta")
+                        .WithMany("Respostas")
                         .HasForeignKey("IdQuestionarioResposta");
                 });
 
