@@ -26,8 +26,12 @@ namespace Ouvidoria.Application.Services
         public async Task<bool> IsValidUser(CadastroUsuarioViewModel cadastroUsuario) =>
             await Service.IsValidUser(Mapper.Map<Usuario>(cadastroUsuario));
 
-        public async Task<Resultado<List<GenericList>>> GetGenericList() =>
-            Resultado<List<GenericList>>.Successfull(MapToGenericList(await Service.GetUsers()));
+        public async Task<Resultado<List<GenericList>>> GetGenericList()
+        {
+            var list = (await Service.GetUsers()).OrderBy(x => x.Nome).ToList();
+            return Resultado<List<GenericList>>.Successfull(MapToGenericList(list));
+        }
+        
         public async Task<Resultado<List<UsuarioViewModel>>> GetUsers() =>
             Resultado<List<UsuarioViewModel>>.Successfull(Mapper.Map<List<UsuarioViewModel>>(await Service.GetUsersWithClass()));
 

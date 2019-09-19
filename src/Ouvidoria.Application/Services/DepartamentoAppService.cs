@@ -56,7 +56,10 @@ namespace Ouvidoria.Application.Services
                 Resultado<DepartamentoViewModel>.Successfull(DepartamentoViewModel);
         }
 
-        public async Task<Resultado<List<GenericList>>> GetGenericList() =>
-            Resultado<List<GenericList>>.Successfull(base.MapToGenericList(await _service.GetDepartments()));
+        public async Task<Resultado<List<GenericList>>> GetGenericList()
+        {
+            var list = (await _service.GetDepartments()).OrderBy(x => x.Nome).ToList();
+            return Resultado<List<GenericList>>.Successfull(base.MapToGenericList(list));
+        }
     }
 }
