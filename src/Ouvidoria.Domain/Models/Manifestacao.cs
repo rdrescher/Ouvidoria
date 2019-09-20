@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Ouvidoria.Domain.Enums;
 
 namespace Ouvidoria.Domain.Models
@@ -6,18 +7,6 @@ namespace Ouvidoria.Domain.Models
     public class Manifestacao : Entity
     {
         #region Constructors
-        public Manifestacao(
-            string titulo,
-            string descricao,
-            string resposta,
-            int idDepartamento,
-            TipoManifestacao tipoManifestacao,
-            int idUsuario
-        ) : this(titulo, descricao, idDepartamento, tipoManifestacao)
-        {
-            Resposta = resposta;
-            IdUsuario = idUsuario;
-        }
 
         public Manifestacao(
             string titulo,
@@ -42,12 +31,12 @@ namespace Ouvidoria.Domain.Models
         #region Properties 
         public string Titulo { get; private set; }
         public string Descricao { get; private set; }
-        public string Resposta { get; private set; }
         public int IdDepartamento { get; private set; }
         public int IdUsuario { get; private set; }
         public TipoManifestacao TipoManifestacao { get; private set; }
         public virtual Departamento Departamento { get; private set; }
         public virtual Usuario Usuario { get; private set; }
+        public virtual List<Interacao> Interacoes { get; private set; }
         #endregion
 
         #region Methods

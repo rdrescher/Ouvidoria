@@ -15,9 +15,6 @@ namespace Ouvidoria.Domain.Validations.Models
                 .NotEmpty().WithMessage("A descrição é obrigatória")
                 .Length(10, 5000).WithMessage("A descrição deve conter entre 10 e 5000 caracteres");
 
-            RuleFor(m => m.Resposta)
-                .MaximumLength(5000).WithMessage("A resposta deve conter no máximo 5000 caracteres");
-
             RuleFor(m => m.TipoManifestacao)
                 .IsInEnum().WithMessage("Tipo da manifestação inválido")
                 .NotNull().WithMessage("Informe o tipo da manifestação");

@@ -30,7 +30,7 @@ namespace Ouvidoria.Services
         {
             if (!Validate(new ManifestacaoValidation(), manifestation)) return;
             if (!await ValidateDepartment(manifestation.IdDepartamento)) return;
-            if (!await ValidateUser(manifestation.IdDepartamento)) return;
+            if (!await ValidateUser(manifestation.IdUsuario)) return;
 
             await _repository.Create(manifestation);
         }

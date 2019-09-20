@@ -16,7 +16,7 @@ namespace Ouvidoria.Application.Services
     {
         private readonly ICursoService _service;
         public CursoAppService(
-            IMapper map, 
+            IMapper map,
             INotificador notificador,
             ICursoService service
         ) : base(map, notificador)
@@ -47,8 +47,11 @@ namespace Ouvidoria.Application.Services
         public async Task<Resultado<List<CursoViewModel>>> GetClasses() =>
             Resultado<List<CursoViewModel>>.Successfull(base.MapToViewModel(await _service.GetClasses()));
 
-        public async Task<Resultado<List<GenericList>>> GetGenericList() =>
-            Resultado<List<GenericList>>.Successfull(base.MapToGenericList(await _service.GetClasses()));
+        public async Task<Resultado<List<GenericList>>> GetGenericList()
+        {
+            var list = (await _service.GetClasses()).OrderBy(x => x.Nome).ToList();
+            return Resultado<List<GenericList>>.Successfull(base.MapToGenericList(list));
+        }
 
         public async Task<Resultado<CursoViewModel>> Update(CursoViewModel cursoViewModel)
         {

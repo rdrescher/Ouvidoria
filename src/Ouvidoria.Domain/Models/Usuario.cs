@@ -35,6 +35,7 @@ namespace Ouvidoria.Domain.Models
         public virtual List<Questionario> Questionarios { get; private set; }
         public virtual List<QuestionarioResposta> QuestionarioResposta { get; private set; }
         public virtual List<Claim> Claims { get; private set; }
+        public virtual List<Interacao> Interacoes { get; private set; }
 
         public void AdjustToUpdate(string email, string cpf)
         {
