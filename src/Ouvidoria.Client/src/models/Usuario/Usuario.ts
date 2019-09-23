@@ -1,3 +1,4 @@
+import UsuarioPerfil from "../../application/enums/UsuarioPerfil";
 import ICurso from "../Curso/Curso";
 
 export default interface IUsuario {
@@ -10,9 +11,4 @@ export default interface IUsuario {
     idCurso: number;
     usuarioPerfil: UsuarioPerfil;
     curso: ICurso;
-}
-
-export enum UsuarioPerfil {
-    "Usuario",
-    "Administrador"
 }

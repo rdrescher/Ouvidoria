@@ -1,6 +1,6 @@
 import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
-import { UsuarioPerfil } from "../../models/Usuario/Usuario";
+import UsuarioPerfil from "../../application/enums/UsuarioPerfil";
 import CursoView from "../../views/administracao/CursoView";
 import DepartamentoView from "../../views/administracao/DepartamentoView";
 import CadastroQuestionarioView from "../../views/administracao/Questionario/CadastroQuestionarioView";

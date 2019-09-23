@@ -119,5 +119,8 @@ namespace Ouvidoria.Services
             if (!IsValidQuiz(quiz)) return;
             await this.UserCanAnswer(idQuestionario, idUsuario);
         }
+
+        public async Task<List<QuestionarioResposta>> GetAnswersByQuiz(int idQuestionario) =>
+            await _repository.GetAnsersByQuiz(idQuestionario);
     }
 }

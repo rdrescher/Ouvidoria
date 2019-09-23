@@ -27,5 +27,13 @@ namespace Ouvidoria.Api.Controllers
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             return Ok(await _service.Create(manifestacao, userId));
         }
+
+        [HttpPost("[action]")]
+        public async Task<ActionResult<Resultado>> Reply(CadastroInteracaoViewModel resposta)
+        {
+            if(!ModelState.IsValid) return BadRequest();
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            return Ok(await _service.Reply(resposta, userId));
+        }
     }
 }

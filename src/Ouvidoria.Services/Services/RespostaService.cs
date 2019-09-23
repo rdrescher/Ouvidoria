@@ -1,18 +1,21 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Ouvidoria.Domain.Interfaces;
+using Ouvidoria.Domain.Models;
 using Ouvidoria.Services.Interfaces;
 
 namespace Ouvidoria.Services
 {
     public class RespostaService : EntityService, IRespostaService
     {
-        private readonly IRespostaRepository repository;
+        private readonly IRespostaRepository _repository;
         public RespostaService(IRespostaRepository repository, INotificador notificador) : base(notificador)
         { 
-            this.repository = repository;
+            _repository = repository;
         }
-        public void Dispose()
-        {
-            repository.Dispose();
-        }
+        public void Dispose() => _repository.Dispose();
+
+        public async Task<List<Resposta>> GetAnswersById(int id) =>
+            await _repository.GetAnswersById(id);
     }
 }

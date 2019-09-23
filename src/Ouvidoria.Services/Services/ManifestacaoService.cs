@@ -37,6 +37,9 @@ namespace Ouvidoria.Services
 
         public void Dispose() => _repository.Dispose();
 
+        public async Task<Manifestacao> GetById(int idManifestacao) =>
+            await _repository.GetById(idManifestacao);
+
         private async Task<bool> ValidateDepartment(int idDepartamento)
         {
             if (await _departamentoService.GetById(idDepartamento) != null) return true;

@@ -12,13 +12,16 @@ namespace Ouvidoria.Application.Services
     public class ManifestacaoAppService : EntityAppService<Manifestacao, ManifestacaoViewModel>, IManifestacaoAppService
     {
         private readonly IManifestacaoService _service;
+        private readonly IInteracaoService _interationService;
         public ManifestacaoAppService(
-            IMapper map, 
+            IMapper map,
             INotificador notificador,
-            IManifestacaoService service
+            IManifestacaoService service,
+            IInteracaoService interationService
         ) : base(map, notificador)
         {
             _service = service;
+            _interationService = interationService;
         }
 
         public async Task<Resultado> Create(CadastroManifestacaoViewModel manifestacao, int userId)
@@ -27,6 +30,17 @@ namespace Ouvidoria.Application.Services
             manifestation.SetCreator(userId);
 
             await _service.Create(manifestation);
+
+            return Notificador.HasNotification()
+                ? Resultado.Failed(Notificador.GetNotificationsMessages())
+                : Resultado.Successfull();
+        }
+
+        public async Task<Resultado> Reply(CadastroInteracaoViewModel resposta, int userId)
+        {
+            var reply = Mapper.Map<Interacao>(resposta);
+            reply.SetCreator(userId);
+            await _interationService.Create(reply);
 
             return Notificador.HasNotification()
                 ? Resultado.Failed(Notificador.GetNotificationsMessages())

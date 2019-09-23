@@ -1,5 +1,5 @@
 export default interface ICadastroResposta {
-  descricao: string;
+  retorno: string;
   idOpcao: number | null;
   idPergunta: number;
 }

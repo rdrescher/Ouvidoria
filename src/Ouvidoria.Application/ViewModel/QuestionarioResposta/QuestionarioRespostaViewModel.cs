@@ -1,8 +1,10 @@
+using System;
+
 namespace Ouvidoria.Application.ViewModel
 {
     public class QuestionarioRespostaViewModel : EntityViewModel
     {
-        public int idUsuario { get; set; }
-        public int idQuestionario { get; set; }
+        public string usuario { get; set; }
+        public DateTime dataInsercao { get; set; }
     }
 }

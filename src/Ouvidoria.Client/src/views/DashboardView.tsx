@@ -54,7 +54,10 @@ export default function DashboardView() {
 
 const useStyles = makeStyles(() => ({
   container: {
-    padding: 20
+    padding: 20,
+    "& p": {
+      textAlign: "justify"
+    }
   },
   title: {
     textAlign: "center",

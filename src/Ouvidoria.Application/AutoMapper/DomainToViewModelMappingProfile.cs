@@ -1,6 +1,7 @@
 using AutoMapper;
 using Ouvidoria.Application.ViewModel;
 using Ouvidoria.Domain.DTO;
+using Ouvidoria.Domain.Enums;
 using Ouvidoria.Domain.Models;
 
 namespace Ouvidoria.Application.AutoMapper
@@ -30,11 +31,21 @@ namespace Ouvidoria.Application.AutoMapper
                                 c => c.MapFrom(d => d.DataFim.ToString("dd/MM/yyyy hh:mm")))
                 .ForMember(c => c.dataInicio,
                                 c => c.MapFrom(d => d.DataInicio.ToString("dd/MM/yyyy hh:mm")));
+            CreateMap<QuestionarioResposta, QuestionarioRespostaViewModel>()
+                .ForMember(q => q.usuario,
+                                q => q.MapFrom(r => r.Usuario != null ? r.Usuario.Nome : ""));
             CreateMap<Usuario, UsuarioViewModel>();
             CreateMap<Departamento, DepartamentoViewModel>()
                 .ForMember(c => c.usuarioResponsavel,
                                 c => c.MapFrom(d => d.Usuario != null ? d.Usuario.Nome : ""));
             CreateMap<UsuarioDto, UsuarioViewModel>();
+            CreateMap<Resposta, RespostaViewModel>()
+                .ForMember(r => r.pergunta,
+                                r => r.MapFrom(p => p.Pergunta != null ? p.Pergunta.Descricao : ""))
+                .ForMember(r => r.resposta,
+                                d => d.MapFrom(x => x.Opcao == null
+                                                        ? x.Retorno
+                                                        : x.Opcao.Descricao));
 
             #endregion
 

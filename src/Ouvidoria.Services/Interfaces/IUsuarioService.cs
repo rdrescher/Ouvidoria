@@ -11,6 +11,7 @@ namespace Ouvidoria.Services.Interfaces
         Task<List<Usuario>> GetUsers();
         Task<List<UsuarioDto>> GetUsersWithClass();
         Task<Usuario> GetUserById(int id);
+        Task<Usuario> GetUserByIdWithClaims(int id);
         Task<bool> IsValidUser(Usuario usuario);
         Task Update(Usuario usuario);
         Task<bool> IsActiveUser(string email);

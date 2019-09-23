@@ -38,6 +38,7 @@ namespace Ouvidoria.CrossCutting.IoC
             //Domain Services
             services.AddScoped<ICursoService, CursoService>();
             services.AddScoped<IDepartamentoService, DepartamentoService>();
+            services.AddScoped<IInteracaoService, InteracaoService>();
             services.AddScoped<IManifestacaoService, ManifestacaoService>();
             services.AddScoped<IOpcaoService, OpcaoService>();
             services.AddScoped<IPerguntaService, PerguntaService>();
@@ -49,6 +50,7 @@ namespace Ouvidoria.CrossCutting.IoC
             //Repositories
             services.AddScoped<ICursoRepository, CursoRepository>();
             services.AddScoped<IDepartamentoRepository, DepartamentoRepository>();
+            services.AddScoped<IInteracaoRepository, InteracaoRepository>();
             services.AddScoped<IManifestacaoRepository, ManifestacaoRepository>();
             services.AddScoped<IOpcaoRepository, OpcaoRepository>();
             services.AddScoped<IPerguntaRepository, PerguntaRepository>();

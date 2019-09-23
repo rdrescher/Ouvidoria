@@ -1,4 +1,3 @@
-import { Container } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import clsx from "clsx";
 import React from "react";
@@ -22,12 +21,10 @@ function ContentComponent(props: IStateProps) {
         [classes.contentShift]: props.sidebarIsOpen
       })}
     >
-      <Container maxWidth="lg" className={classes.container}>
-        <Routes />
-        <MessageBox />
-        <DialogMessage />
-        <Loading />
-      </Container>
+      <Routes />
+      <MessageBox />
+      <DialogMessage />
+      <Loading />
     </main>
   );
 }
@@ -44,9 +41,7 @@ export default connect(
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    background: "rgb(249, 249, 252)"
-  },
+  container: {},
   content: {
     flexGrow: 1,
     transition: theme.transitions.create("margin", {
@@ -56,7 +51,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up("sm")]: {
       marginLeft: -drawerWidth
     },
-    paddingTop: 80
+    paddingTop: 80,
+    background: "rgb(249, 249, 252)"
   },
   contentShift: {
     transition: theme.transitions.create("margin", {

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Ouvidoria.Application.Interfaces;
@@ -12,14 +13,17 @@ namespace Ouvidoria.Application.Services
     public class QuestionarioRespostaAppService : EntityAppService<QuestionarioResposta, QuestionarioRespostaViewModel>, IQuestionarioRespostaAppService
     {
         private readonly IQuestionarioRespostaService _service;
+        private readonly IRespostaService _respostaService;
 
         public QuestionarioRespostaAppService(
             IMapper map,
             INotificador notificador,
-            IQuestionarioRespostaService service
+            IQuestionarioRespostaService service,
+            IRespostaService respostaService
         ) : base(map, notificador)
         {
             _service = service;
+            _respostaService = respostaService;
         }
 
         public async Task<Resultado> Create(CadastroQuestionarioRespostaViewModel resposta, int idUsuario)
@@ -33,6 +37,12 @@ namespace Ouvidoria.Application.Services
                 ? Resultado.Failed(Notificador.GetNotificationsMessages())
                 : Resultado.Successfull();
         }
+
+        public async Task<List<RespostaViewModel>> GetAnswersById(int id) =>
+            Mapper.Map<List<RespostaViewModel>>(await _respostaService.GetAnswersById(id));
+
+        public async Task<List<QuestionarioRespostaViewModel>> GetAnswersByQuiz(int idQuestionario) =>
+            MapToViewModel(await _service.GetAnswersByQuiz(idQuestionario));
 
         public async Task<Resultado> IsUserAbleToAnswer(int idQuestionario, int idUsuario)
         {
