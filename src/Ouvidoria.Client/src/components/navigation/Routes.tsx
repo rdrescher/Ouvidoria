@@ -15,6 +15,7 @@ import NotFound from "../../views/errors/NotFound";
 import DenunciaView from "../../views/manifestacoes/Denuncia/DenunciaView";
 import NovaDenunciaView from "../../views/manifestacoes/Denuncia/NovaDenunciaView";
 import ElogioView from "../../views/manifestacoes/Elogio/ElogioView";
+import ListaElogiosView from "../../views/manifestacoes/Elogio/ListaElogiosView";
 import NovoElogioView from "../../views/manifestacoes/Elogio/NovoElogioView";
 import NovaReclamacaoView from "../../views/manifestacoes/Reclamacao/NovaReclamacaoView";
 import ReclamacaoView from "../../views/manifestacoes/Reclamacao/ReclamacaoView";
@@ -36,6 +37,7 @@ export default function Routes() {
       <PrivateRoute exact path="/denuncia/novo" component={NovaDenunciaView} />
       <Route exact path="/elogio" component={ElogioView} />
       <PrivateRoute exact path="/elogio/novo" component={NovoElogioView} />
+      <PrivateRoute exact path="/elogio/lista" component={ListaElogiosView} />
       <Route exact path="/reclamacao" component={ReclamacaoView} />
       <PrivateRoute
         exact

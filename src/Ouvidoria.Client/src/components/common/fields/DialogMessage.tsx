@@ -43,7 +43,11 @@ function DialogMessage(props: Props) {
           className={classes.text}
         >
           {props.messages.map(message => (
-            <p>{`${message}`}</p>
+            <label key={message}>
+              <br />
+              {`${message}`}
+              <br />
+            </label>
           ))}
         </DialogContentText>
       </DialogContent>
