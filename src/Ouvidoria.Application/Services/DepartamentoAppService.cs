@@ -23,9 +23,9 @@ namespace Ouvidoria.Application.Services
             _service = service;
         }
 
-        public async Task<Resultado<DepartamentoViewModel>> Create(CadastroDepartamentoViewModel cadastroDepartamentoViewModel)
+        public async Task<Resultado<DepartamentoViewModel>> Create(CadastroDepartamentoViewModel cadastroDepartamento)
         {
-            var Departamento = base.Mapper.Map<Departamento>(cadastroDepartamentoViewModel);
+            var Departamento = base.Mapper.Map<Departamento>(cadastroDepartamento);
             await _service.Create(Departamento);
             var DepartamentoViewModel = base.MapToViewModel(Departamento);
 
@@ -45,9 +45,9 @@ namespace Ouvidoria.Application.Services
                 Resultado.Successfull();
         }
 
-        public async Task<Resultado<DepartamentoViewModel>> Update(AtualizacaoDepartamentoViewModel atualizacaoDepartamentoViewModel)
+        public async Task<Resultado<DepartamentoViewModel>> Update(AtualizacaoDepartamentoViewModel atualizacaoDepartamento)
         {
-            var Departamento = base.Mapper.Map<Departamento>(atualizacaoDepartamentoViewModel);
+            var Departamento = base.Mapper.Map<Departamento>(atualizacaoDepartamento);
             await _service.Update(Departamento);
             var DepartamentoViewModel = base.MapToViewModel(Departamento);
 

@@ -37,7 +37,7 @@ namespace Ouvidoria.Services
 
             await _repository.Create(resposta);
         }
-        
+
         public void Dispose() => _repository.Dispose();
 
         private async Task<bool> UserCanAnswer(int idQuestionario, int idUsuario)
@@ -85,13 +85,11 @@ namespace Ouvidoria.Services
                 var answer = respostas.FirstOrDefault(x => x.IdPergunta == question.Id);
                 if (!Validate(new RespostaValidation(question.Tipo), answer)) return false;
 
-                if (question.Tipo == TipoPergunta.Objetiva)
+                if (question.Tipo == TipoPergunta.Objetiva && !question.Opcoes.Select(x => x.Id).Contains(answer.IdOpcao.Value))
                 {
-                    if (!question.Opcoes.Select(x => x.Id).Contains(answer.IdOpcao.Value))
-                    {
-                        Notify("O Id de uma ou mais opções não condiz com os Ids das opções das perguntas do questionário");
-                        return false;
-                    }
+                    Notify("O Id de uma ou mais opções não condiz com os Ids das opções das perguntas do questionário");
+                    return false;
+
                 }
             }
 

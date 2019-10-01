@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,32 +5,43 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Ouvidoria.Api.Extensions;
-using Ouvidoria.Application.ViewModel;
 using Ouvidoria.Application.Interfaces;
 using Ouvidoria.Application.Utils;
+using Ouvidoria.Application.ViewModel;
 using Ouvidoria.CrossCutting.Identity.Models;
 using Ouvidoria.Domain.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Ouvidoria.Api.Controllers
 {
     [ApiController]
     public class AutenticacaoController : BaseController
     {
+        #region Private Properties
         private readonly IMapper _map;
         private readonly INotificador _notificador;
         private readonly JwtSettings _jwtSettings;
         private readonly SignInManager<AspNetUser> _signInManager;
         private readonly UserManager<AspNetUser> _userManager;
         private readonly IUsuarioAppService _usuarioService;
+        #endregion
 
+        #region Constructor
         public AutenticacaoController(
             IMapper map,
             INotificador notificador,
             SignInManager<AspNetUser> signInManager,
             UserManager<AspNetUser> userManager,
             IUsuarioAppService usuarioService,
-            IOptions<JwtSettings> jwtSettings
-        )
+            IOptions<JwtSettings> jwtSettings,
+            IUser user
+        ) : base(user)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -46,11 +50,17 @@ namespace Ouvidoria.Api.Controllers
             _notificador = notificador;
             _jwtSettings = jwtSettings.Value;
         }
+        #endregion
 
+        #region Routes
+
+        #region CheckToken
         [HttpGet("[action]")]
         [Authorize]
         public ActionResult<Resultado> CheckToken() => Ok(Resultado.Successfull());
+        #endregion
 
+        #region Cadastrar
         [AllowAnonymous]
         [HttpPost("[action]")]
         public async Task<ActionResult<Resultado<LoginResponseViewModel>>> Cadastrar(CadastroUsuarioViewModel cadastroUsuario)
@@ -72,6 +82,9 @@ namespace Ouvidoria.Api.Controllers
             }
             return Ok(Resultado.Failed(GetRegisterErrors(result.Errors).ToArray()));
         }
+        #endregion
+
+        #region Login
 
         [AllowAnonymous]
         [HttpPost("[action]")]
@@ -97,13 +110,21 @@ namespace Ouvidoria.Api.Controllers
 
             return Ok(Resultado.Failed("Usuário ou Senha incorretos"));
         }
+        #endregion
 
+        #endregion
+
+        #region Private Methods
+
+        #region GetRegisterErrors
         private IEnumerable<string> GetRegisterErrors(IEnumerable<IdentityError> errors)
         {
             foreach (var item in errors)
                 yield return item.Description;
         }
+        #endregion
 
+        #region GenerateJWT
         private async Task<LoginResponseViewModel> GenerateJWT(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -145,8 +166,13 @@ namespace Ouvidoria.Api.Controllers
 
             return response;
         }
+        #endregion
 
+        #region ToUnixEpochDate
         private static long ToUnixEpochDate(DateTime date)
             => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
+        #endregion
+
+        #endregion
     }
 }

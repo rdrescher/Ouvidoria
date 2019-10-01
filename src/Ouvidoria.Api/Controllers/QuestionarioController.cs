@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ouvidoria.Application.Interfaces;
 using Ouvidoria.Application.Utils;
 using Ouvidoria.Application.ViewModel;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Ouvidoria.Api.Controllers
 {
@@ -19,8 +18,9 @@ namespace Ouvidoria.Api.Controllers
         private readonly IQuestionarioRespostaAppService _questionarioRespostaService;
         public QuestionarioController(
             IQuestionarioAppService service,
-            IQuestionarioRespostaAppService questionarioRespostaService
-        )
+            IQuestionarioRespostaAppService questionarioRespostaService,
+            IUser user
+        ) : base(user)
         {
             _service = service;
             _questionarioRespostaService = questionarioRespostaService;

@@ -1,8 +1,8 @@
 using AutoMapper;
 using Ouvidoria.Application.ViewModel;
 using Ouvidoria.Domain.DTO;
-using Ouvidoria.Domain.Enums;
 using Ouvidoria.Domain.Models;
+using System.Linq;
 
 namespace Ouvidoria.Application.AutoMapper
 {
@@ -13,7 +13,36 @@ namespace Ouvidoria.Application.AutoMapper
             #region ViewModels
             CreateMap<Curso, CursoViewModel>();
             CreateMap<Departamento, CadastroDepartamentoViewModel>();
-            CreateMap<Manifestacao, ManifestacaoViewModel>();
+            CreateMap<Departamento, DepartamentoViewModel>()
+                .ForMember(c => c.usuarioResponsavel,
+                                c => c.MapFrom(d => d.Usuario != null ? d.Usuario.Nome : ""));
+            CreateMap<Interacao, InteracaoViewModel>()
+                .ForMember(i => i.dataCriacao,
+                                i => i.MapFrom(d => d.DataInsercao.ToString("dd/MM/yyyy")))
+                .ForMember(i => i.Usuario,
+                                i => i.MapFrom(u => u.Usuario != null ? u.Usuario.Nome : ""));
+            CreateMap<Manifestacao, ManifestacaoViewModel>()
+                .ForMember(m => m.usuario,
+                                m => m.MapFrom(u => u.Usuario != null ? u.Usuario.Nome : ""))
+                .ForMember(m => m.dataCriacao,
+                                m => m.MapFrom(i => i.DataInsercao.ToString("dd/MM/yyyy")))
+                .ForMember(m => m.departamento,
+                                m => m.MapFrom(u => u.Departamento != null ? u.Departamento.Nome : ""));
+            CreateMap<Manifestacao, ManifestacaoPeviewViewModel>()
+                .ForMember(m => m.usuario,
+                                m => m.MapFrom(u => u.Usuario != null ? u.Usuario.Nome : ""))
+                .ForMember(m => m.departamento,
+                                m => m.MapFrom(u => u.Departamento != null ? u.Departamento.Nome : ""))
+                .ForMember(m => m.numeroInteracoes,
+                                m => m.MapFrom(i => i.Interacoes.Count))
+                .ForMember(m => m.dataCriacao,
+                                m => m.MapFrom(i => i.DataInsercao.ToString("dd/MM/yyyy")))
+                .ForMember(m => m.usuarioUltimaInteracao,
+                                m => m.MapFrom(u => u.Interacoes != null || u.Interacoes.Count > 0
+                                                        ? u.Interacoes.LastOrDefault().Usuario != null
+                                                            ? u.Interacoes.LastOrDefault().Usuario.Nome
+                                                            : ""
+                                                        : ""));
             CreateMap<Opcao, OpcaoViewModel>();
             CreateMap<Pergunta, PerguntaViewModel>();
             CreateMap<Questionario, QuestionarioViewModel>();
@@ -35,9 +64,6 @@ namespace Ouvidoria.Application.AutoMapper
                 .ForMember(q => q.usuario,
                                 q => q.MapFrom(r => r.Usuario != null ? r.Usuario.Nome : ""));
             CreateMap<Usuario, UsuarioViewModel>();
-            CreateMap<Departamento, DepartamentoViewModel>()
-                .ForMember(c => c.usuarioResponsavel,
-                                c => c.MapFrom(d => d.Usuario != null ? d.Usuario.Nome : ""));
             CreateMap<UsuarioDto, UsuarioViewModel>();
             CreateMap<Resposta, RespostaViewModel>()
                 .ForMember(r => r.pergunta,

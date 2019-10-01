@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Ouvidoria.Domain.Enums;
 using Ouvidoria.Domain.Interfaces;
 using Ouvidoria.Domain.Models;
 using Ouvidoria.Domain.Validations.Models;
@@ -37,8 +39,29 @@ namespace Ouvidoria.Services
 
         public void Dispose() => _repository.Dispose();
 
+        public async Task<List<Manifestacao>> GetAll() =>
+            await _repository.GetWithIncludes();
+
+        public async Task<List<Manifestacao>> GetAll(TipoManifestacao tipo) =>
+            await _repository.GetWithIncludes(x => x.TipoManifestacao == tipo);
+
         public async Task<Manifestacao> GetById(int idManifestacao) =>
             await _repository.GetById(idManifestacao);
+
+        public async Task<Manifestacao> GetByIdWithDetails(int id, int idUsuario)
+        {
+            var manifestation = await _repository.GetByIdWithIncludes(id);
+
+            await UserHasPermission(manifestation, idUsuario);
+
+            return manifestation;
+        }
+
+        public async Task<List<Manifestacao>> GetByUser(int idUsuario) =>
+            await _repository.GetWithIncludes(x => x.IdUsuario == idUsuario);
+
+        public async Task<List<Manifestacao>> GetByUser(int idUsuario, TipoManifestacao tipo) =>
+            await _repository.GetWithIncludes(x => x.IdUsuario == idUsuario && x.TipoManifestacao == tipo);
 
         private async Task<bool> ValidateDepartment(int idDepartamento)
         {
@@ -55,6 +78,20 @@ namespace Ouvidoria.Services
 
             Notify("Você está inapto para responder");
             return false;
+        }
+
+
+        private async Task UserHasPermission(Manifestacao manifestacao, int idUsuario)
+        {
+            var user = await _usuarioService.GetUserByIdWithClaims(idUsuario);
+            var claims = user.Claims.Select(x => x.Valor).ToList();
+
+            if (manifestacao.IdUsuario == idUsuario
+                || claims.Contains(UsuarioPerfil.Administrador.ToString())
+                || manifestacao.Departamento.IdUsuarioResponsavel == idUsuario)
+                return;
+
+            Notify("Você não tem permissão para visualizar este questionário");
         }
     }
 }

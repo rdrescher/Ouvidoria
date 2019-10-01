@@ -1,7 +1,7 @@
-using System;
 using AutoMapper;
-using Ouvidoria.Application.AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
+using Ouvidoria.Application.AutoMapper;
+using System;
 
 namespace Ouvidoria.Api.Configurations
 {
