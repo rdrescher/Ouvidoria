@@ -1,5 +1,11 @@
-import { Fab, Grid, Tooltip, Typography } from "@material-ui/core";
-import { RemoveRedEye } from "@material-ui/icons";
+import { Chip, Fab, Grid, Tooltip, Typography } from "@material-ui/core";
+import {
+  CalendarToday,
+  RecordVoiceOver,
+  ThumbsUpDown,
+  Work
+} from "@material-ui/icons";
+import { HowToReg, Message, RemoveRedEye } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
@@ -23,10 +29,12 @@ interface IDispatchToProps {
 
 interface IState {
   manifestations: ManifestacaoPeview[];
+  loaded: boolean;
 }
 
 const initialState: IState = {
-  manifestations: []
+  manifestations: [],
+  loaded: false
 };
 
 type Props = IProps & IDispatchToProps;
@@ -54,7 +62,8 @@ function ListaManifestacoes(props: Props) {
       if (result.success) {
         setState(prevState => ({
           ...prevState,
-          manifestations: result.data!
+          manifestations: result.data!,
+          loaded: true
         }));
       }
 
@@ -66,9 +75,13 @@ function ListaManifestacoes(props: Props) {
   return (
     <div>
       {state.manifestations.length === 0 ? (
-        <Typography variant="body1" align="center">
-          Você ainda não enviou nenhuma manifestação desse tipo.
-        </Typography>
+        state.loaded ? (
+          <Typography variant="body1" align="center">
+            Você ainda não enviou nenhuma manifestação desse tipo.
+          </Typography>
+        ) : (
+          <></>
+        )
       ) : (
         state.manifestations.map(manifestation => (
           <div key={manifestation.id} className={classes.item}>
@@ -83,35 +96,71 @@ function ListaManifestacoes(props: Props) {
                   ? `${manifestation.descricao.substring(0, 80)}...`
                   : manifestation.descricao}
               </Typography>
-              <Grid container>
-                <Grid item xs={12} sm={12} md={6}>
-                  <b>{`Registrado em: `}</b>
-                  {manifestation.dataCriacao}
+              <Grid container spacing={1}>
+                <Grid item>
+                  <Tooltip title="Data da criação">
+                    <Chip
+                      color="secondary"
+                      size="small"
+                      label={manifestation.dataCriacao}
+                      icon={<CalendarToday />}
+                    />
+                  </Tooltip>
                 </Grid>
-                <Grid item xs={12} sm={12} md={6}>
-                  <b>{`Departamento: `}</b>
-                  {manifestation.departamento}
+                <Grid item>
+                  <Tooltip title="Departamento">
+                    <Chip
+                      color="secondary"
+                      size="small"
+                      label={manifestation.departamento}
+                      icon={<Work />}
+                    />
+                  </Tooltip>
                 </Grid>
                 {adminVision && (
-                  <Grid item xs={12} sm={12} md={6}>
-                    <b>{`Manifestante: `}</b>
-                    {manifestation.usuario}
+                  <Grid item>
+                    <Tooltip title="Manifestante">
+                      <Chip
+                        color="secondary"
+                        size="small"
+                        label={manifestation.usuario}
+                        icon={<RecordVoiceOver />}
+                      />
+                    </Tooltip>
                   </Grid>
                 )}
                 {manifestationType === undefined && (
-                  <Grid item xs={12} sm={12} md={6}>
-                    <b>{`Tipo da Manifestação: `}</b>
-                    {TipoManifestacao[manifestation.tipoManifestacao]}
+                  <Grid item>
+                    <Tooltip title="Tipo da manifestação">
+                      <Chip
+                        color="secondary"
+                        size="small"
+                        label={TipoManifestacao[manifestation.tipoManifestacao]}
+                        icon={<ThumbsUpDown />}
+                      />
+                    </Tooltip>
                   </Grid>
                 )}
-                <Grid item xs={12} sm={12} md={6}>
-                  <b>{`Número de Interações: `}</b>
-                  {manifestation.numeroInteracoes}
+                <Grid item>
+                  <Tooltip title="Número de interações">
+                    <Chip
+                      color="secondary"
+                      size="small"
+                      label={manifestation.numeroInteracoes}
+                      icon={<Message />}
+                    />
+                  </Tooltip>
                 </Grid>
                 {!!manifestation.usuarioUltimaInteracao && (
-                  <Grid item xs={12} sm={12} md={6}>
-                    <b>{`Última interação: `}</b>
-                    {manifestation.usuarioUltimaInteracao}
+                  <Grid item>
+                    <Tooltip title="Último usuário a interagir">
+                      <Chip
+                        color="secondary"
+                        size="small"
+                        label={manifestation.usuarioUltimaInteracao}
+                        icon={<HowToReg />}
+                      />
+                    </Tooltip>
                   </Grid>
                 )}
               </Grid>

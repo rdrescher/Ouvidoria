@@ -170,6 +170,7 @@ function LoginView(props: Props) {
             value={state.user.email}
             onChange={handleInputChange}
             onBlur={validateEmail}
+            onEnterPress={handleSubmit}
           />
           <InputField
             name="senha"
@@ -179,6 +180,7 @@ function LoginView(props: Props) {
             value={state.user.senha}
             onChange={handleInputChange}
             onBlur={validatePassword}
+            onEnterPress={handleSubmit}
           />
           <Grid container spacing={2} className={styles.buttons}>
             <Grid item xs={12}>

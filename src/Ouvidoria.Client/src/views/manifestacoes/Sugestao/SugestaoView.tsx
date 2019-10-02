@@ -28,7 +28,12 @@ function SugestaoView(props: IStateProps) {
         </Typography>
         <br />
         {props.isAuthenticated ? (
-          <Grid container spacing={2} className={classes.buttons}>
+          <Grid
+            container
+            spacing={2}
+            className={classes.buttons}
+            justify="center"
+          >
             <Grid item xs={12} sm={12} md={4}>
               <Link to="/sugestao/lista">
                 <Fab variant="extended" size="large" color="secondary">
@@ -43,15 +48,15 @@ function SugestaoView(props: IStateProps) {
                 </Fab>
               </Link>
             </Grid>
-            <Grid item xs={12} sm={12} md={4}>
-              {/* <Link to="/sugestao">
+            {/* <Grid item xs={12} sm={12} md={4}>
+              <Link to="/sugestao">
                 <Fab variant="extended" size="large" color="secondary">
                 <Typography variant="button">
                 Ver todas manifestações
                 </Typography>
                 </Fab>
-              </Link> */}
-            </Grid>
+              </Link>
+            </Grid> */}
           </Grid>
         ) : (
           <Typography variant="body2">

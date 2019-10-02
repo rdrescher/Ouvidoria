@@ -12,7 +12,7 @@ type HttpMethods =
   | "TRACE";
 
 export default class Http {
-  private static _baseUrl: string = "";
+  private static _baseUrl: string = "https://localhost:5001";
   private static _baseClientUrl: string = "";
 
   public static get baseUrl(): string {

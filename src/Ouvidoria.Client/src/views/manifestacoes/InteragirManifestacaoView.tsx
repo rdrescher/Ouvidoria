@@ -4,6 +4,7 @@ import {
   Divider,
   Grid,
   Paper,
+  Theme,
   Typography
 } from "@material-ui/core";
 import React, { useEffect, useState, ChangeEvent } from "react";
@@ -11,7 +12,6 @@ import { connect } from "react-redux";
 import { Redirect, RouteComponentProps } from "react-router-dom";
 import { bindActionCreators, Dispatch } from "redux";
 import TipoManifestacao from "../../application/enums/TipoManifestacao";
-import TipoPergunta from "../../application/enums/TipoPergunta";
 import Params from "../../application/types/RouteParams";
 import * as Validations from "../../application/Validations";
 import InputField from "../../components/common/formFields/InputField";
@@ -66,7 +66,7 @@ function InteragirManifestacaoView(props: Props) {
     setState(prevState => {
       return { ...prevState, id };
     });
-  },        [props.match]);
+  }, [props.match]);
 
   useEffect(() => {
     if (state.id === null) return;
@@ -101,7 +101,7 @@ function InteragirManifestacaoView(props: Props) {
       }
       getManifestation();
     }
-  },        [state.id, setLoading, setLoaded, open]);
+  }, [state.id, setLoading, setLoaded, open]);
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     let value = event.target.value;
@@ -203,7 +203,7 @@ function InteragirManifestacaoView(props: Props) {
                 Esta manifestação ainda não possui interações
               </Typography>
             ) : (
-              <Grid container className={classes.container}>
+              <Grid container className={classes.container3}>
                 {state.manifestation.interacoes!.map((interation, index) => (
                   <Grid
                     item
@@ -211,7 +211,7 @@ function InteragirManifestacaoView(props: Props) {
                     className={classes.interaction}
                     key={index}
                   >
-                    <Typography variant="body2" paragraph align="justify">
+                    <Typography variant="body2" paragraph>
                       <b>{interation.usuario}</b> - {interation.dataCriacao}{" "}
                       <br />
                     </Typography>
@@ -239,12 +239,13 @@ function InteragirManifestacaoView(props: Props) {
               value={state.interaction.descricao}
               onBlur={validateDescription}
             />
-            <SubmitButton 
-              label="Salvar Interação"
-              loading={false}
-              onSubmit={handleSubmit}
-              saveIcon
-            />
+            <div className={classes.button}>
+              <SubmitButton
+                label="Interagir"
+                loading={false}
+                onSubmit={handleSubmit}
+              />
+            </div>
           </div>
         </div>
       </Paper>
@@ -267,12 +268,27 @@ export default connect(
   mapDispatchToProps
 )(InteragirManifestacaoView);
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   container: {
     padding: 20
   },
   container2: {
-    padding: "0 20px 20px 20px"
+    [theme.breakpoints.up("xs")]: {
+      padding: "0 20px 0 20px",
+      textAlign: "right"
+    },
+    [theme.breakpoints.down("xs")]: {
+      padding: 0,
+      textAlign: "center"
+    },
+  },
+  container3: {
+    [theme.breakpoints.up("xs")]: {
+      padding: 20
+    },
+    [theme.breakpoints.down("xs")]: {
+      padding: 0
+    }
   },
   content: {
     padding: 20,
@@ -304,5 +320,8 @@ const useStyles = makeStyles(() => ({
   divider: {
     background: "#ddd",
     margin: "20px 0"
+  },
+  button: {
+    marginTop: 20
   }
 }));

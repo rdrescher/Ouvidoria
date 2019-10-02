@@ -14,13 +14,18 @@ interface IProps {
   disabled?: boolean;
   multiline?: boolean;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  onKeyPress?: (e: KeyboardEvent<HTMLDivElement>) => void;
+  onEnterPress?: (e: KeyboardEvent<HTMLDivElement>) => void;
   onBlur?: () => void;
 }
 
 export default function InputField(props: IProps) {
   const handleKeyPress = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter") e.preventDefault();
+    if (e.key === "Enter") {
+      if(props.onEnterPress === undefined)
+        e.preventDefault();
+      else
+        props.onEnterPress(e);
+    }
   };
 
   return (
@@ -36,9 +41,7 @@ export default function InputField(props: IProps) {
         disabled={props.disabled}
         onChange={props.onChange}
         onBlur={props.onBlur !== undefined ? props.onBlur : () => {}}
-        onKeyPress={
-          props.onKeyPress !== undefined ? props.onKeyPress : handleKeyPress
-        }
+        onKeyPress={handleKeyPress}
         multiline={props.multiline}
         rows="3"
         rowsMax="10"

@@ -30,7 +30,12 @@ function DenunciaView(props: IStateProps) {
         </Typography>
         <br />
         {props.isAuthenticated ? (
-          <Grid container spacing={2} className={classes.buttons}>
+          <Grid
+            container
+            spacing={2}
+            className={classes.buttons}
+            justify="center"
+          >
             <Grid item xs={12} sm={12} md={4}>
               <Link to="/denuncia/lista">
                 <Fab variant="extended" size="large" color="secondary">
@@ -45,15 +50,15 @@ function DenunciaView(props: IStateProps) {
                 </Fab>
               </Link>
             </Grid>
-            <Grid item xs={12} sm={12} md={4}>
-              {/* <Link to="/denuncia">
+            {/* <Grid item xs={12} sm={12} md={4}>
+              <Link to="/denuncia">
                 <Fab variant="extended" size="large" color="secondary">
                   <Typography variant="button">
                     Ver todas manifestações
                   </Typography>
                 </Fab>
-              </Link> */}
-            </Grid>
+              </Link>
+            </Grid> */}
           </Grid>
         ) : (
           <Typography variant="body2">
