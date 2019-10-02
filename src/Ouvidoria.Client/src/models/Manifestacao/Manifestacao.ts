@@ -1,3 +1,4 @@
+import TipoManifestacao from "../../application/enums/TipoManifestacao";
 import Interacao from "../Interacao/Interacao";
 
 export default interface IManifestacao {
@@ -7,5 +8,6 @@ export default interface IManifestacao {
     departamento: string;
     usuario: string;
     dataCriacao: string;
+    tipoManifestacao: TipoManifestacao;
     interacoes: Interacao[];
 }

@@ -44,7 +44,6 @@ function DialogMessage(props: Props) {
         >
           {props.messages.map(message => (
             <label key={message}>
-              <br />
               {`${message}`}
               <br />
             </label>

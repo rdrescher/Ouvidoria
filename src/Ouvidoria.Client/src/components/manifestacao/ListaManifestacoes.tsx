@@ -2,15 +2,23 @@ import { Fab, Grid, Tooltip, Typography } from "@material-ui/core";
 import { RemoveRedEye } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
 import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { bindActionCreators, Dispatch } from "redux";
 import TipoManifestacao from "../../application/enums/TipoManifestacao";
 import ManifestacaoPeview from "../../models/Manifestacao/ManifestacaoPreview";
 import Resultado from "../../models/Resultado";
 import ManifestacaoApi from "../../services/ManifestacaoApi";
+import * as LoadingActions from "../../store/ducks/loading/LoadingActions";
 
 interface IProps {
   manifestationType?: TipoManifestacao;
   adminVision?: boolean;
+}
+
+interface IDispatchToProps {
+  setLoading: () => void;
+  setLoaded: () => void;
 }
 
 interface IState {
@@ -21,15 +29,16 @@ const initialState: IState = {
   manifestations: []
 };
 
-type Props = IProps;
+type Props = IProps & IDispatchToProps;
 
-export default function ListarManifestacoes(props: Props) {
-  const { manifestationType, adminVision } = props;
+function ListaManifestacoes(props: Props) {
+  const { manifestationType, adminVision, setLoading, setLoaded } = props;
   const [state, setState] = useState(initialState);
   const classes = useStyles();
 
   useEffect(() => {
     async function GetManifestations() {
+      setLoading();
       let result: Resultado<ManifestacaoPeview[]>;
       if (manifestationType === undefined) {
         result = adminVision
@@ -48,9 +57,11 @@ export default function ListarManifestacoes(props: Props) {
           manifestations: result.data!
         }));
       }
+
+      setLoaded();
     }
     GetManifestations();
-  }, [manifestationType, adminVision]);
+  }, [manifestationType, adminVision, setLoading, setLoaded]);
 
   return (
     <div>
@@ -90,7 +101,7 @@ export default function ListarManifestacoes(props: Props) {
                 {manifestationType === undefined && (
                   <Grid item xs={12} sm={12} md={6}>
                     <b>{`Tipo da Manifestação: `}</b>
-                    {manifestation.tipoManifestacao}
+                    {TipoManifestacao[manifestation.tipoManifestacao]}
                   </Grid>
                 )}
                 <Grid item xs={12} sm={12} md={6}>
@@ -121,6 +132,14 @@ export default function ListarManifestacoes(props: Props) {
     </div>
   );
 }
+
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(LoadingActions, dispatch);
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(ListaManifestacoes);
 
 const useStyles = makeStyles(() => ({
   item: {

@@ -10,6 +10,7 @@ namespace Ouvidoria.Application.ViewModel
         public string departamento { get; set; }
         public string usuario { get; set; }
         public string dataCriacao { get; set; }
+        public TipoManifestacao tipoManifestacao { get; set; }
         public List<InteracaoViewModel> interacoes { get; set; }
     }
 }

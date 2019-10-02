@@ -36,6 +36,8 @@ namespace Ouvidoria.Services
             if (!await IsValidUser(reply.IdManifestacao, reply.IdUsuario)) return;
 
             await _repository.Create(reply);
+
+            reply = await _repository.GetWithUser(reply.Id);
         }
 
         private async Task<bool> IsValidUser(int idManifestacao, int idUsuario)

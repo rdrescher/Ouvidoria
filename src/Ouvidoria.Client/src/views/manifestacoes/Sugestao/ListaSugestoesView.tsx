@@ -4,16 +4,16 @@ import React from "react";
 import TipoManifestacao from "../../../application/enums/TipoManifestacao";
 import ListaManifestacoes from "../../../components/manifestacao/ListaManifestacoes";
 
-export default function ListaElogiosView() {
+export default function ListaSugestoesView() {
   const classes = useStyles();
 
   return (
     <Container maxWidth="md">
       <Paper className={classes.container}>
         <Typography variant="h4" align="center" className={classes.title}>
-          Meus Elogios
+          Minhas Sugestões
         </Typography>
-        <ListaManifestacoes manifestationType={TipoManifestacao.Elogio} />
+        <ListaManifestacoes manifestationType={TipoManifestacao.Sugestao} />
       </Paper>
     </Container>
   );

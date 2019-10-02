@@ -59,7 +59,7 @@ namespace Ouvidoria.Application.Services
         public async Task<Resultado<ManifestacaoViewModel>> GetById(int id)
         {
             var manifestation = MapToViewModel(await _service.GetByIdWithDetails(id, _user.GetId()));
-            
+
             return Notificador.HasNotification()
                 ? Resultado<ManifestacaoViewModel>.Failed(Notificador.GetNotificationsMessages())
                 : Resultado<ManifestacaoViewModel>.Successfull(manifestation);
@@ -79,16 +79,18 @@ namespace Ouvidoria.Application.Services
             return Resultado<List<ManifestacaoPeviewViewModel>>.Successfull(manifestations);
         }
 
-        public async Task<Resultado> Reply(CadastroInteracaoViewModel resposta)
+        public async Task<Resultado<InteracaoViewModel>> Reply(CadastroInteracaoViewModel resposta)
         {
             var reply = Mapper.Map<Interacao>(resposta);
             reply.SetCreator(_user.GetId());
 
             await _interationService.Create(reply);
 
+            var interaction = Mapper.Map<InteracaoViewModel>(reply);
+
             return Notificador.HasNotification()
-                ? Resultado.Failed(Notificador.GetNotificationsMessages())
-                : Resultado.Successfull();
+                ? Resultado<InteracaoViewModel>.Failed(Notificador.GetNotificationsMessages())
+                : Resultado<InteracaoViewModel>.Successfull(interaction);
         }
     }
 }

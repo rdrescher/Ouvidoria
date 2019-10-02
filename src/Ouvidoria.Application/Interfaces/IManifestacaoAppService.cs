@@ -10,7 +10,7 @@ namespace Ouvidoria.Application.Interfaces
     public interface IManifestacaoAppService : IEntityAppService<Manifestacao, ManifestacaoViewModel>
     {
         Task<Resultado> Create(CadastroManifestacaoViewModel manifestacao);
-        Task<Resultado> Reply(CadastroInteracaoViewModel resposta);
+        Task<Resultado<InteracaoViewModel>> Reply(CadastroInteracaoViewModel resposta);
         Task<Resultado<List<ManifestacaoPeviewViewModel>>> GetByUser();
         Task<Resultado<List<ManifestacaoPeviewViewModel>>> GetByUser(TipoManifestacao tipo);
         Task<Resultado<List<ManifestacaoPeviewViewModel>>> GetAll();

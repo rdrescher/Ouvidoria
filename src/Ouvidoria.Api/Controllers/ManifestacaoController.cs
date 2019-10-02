@@ -29,7 +29,7 @@ namespace Ouvidoria.Api.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<ActionResult<Resultado>> Reply(CadastroInteracaoViewModel resposta)
+        public async Task<ActionResult<Resultado<InteracaoViewModel>>> Reply(CadastroInteracaoViewModel resposta)
         {
             if (!ModelState.IsValid) return BadRequest();
             return Ok(await _service.Reply(resposta));

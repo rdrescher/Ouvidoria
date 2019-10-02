@@ -30,11 +30,11 @@ function SugestaoView(props: IStateProps) {
         {props.isAuthenticated ? (
           <Grid container spacing={2} className={classes.buttons}>
             <Grid item xs={12} sm={12} md={4}>
-              {/* <Link to="/sugestao">
+              <Link to="/sugestao/lista">
                 <Fab variant="extended" size="large" color="secondary">
                   <Typography variant="button">Ver minhas sugestões</Typography>
                 </Fab>
-              </Link> */}
+              </Link>
             </Grid>
             <Grid item xs={12} sm={12} md={4}>
               <Link to="/sugestao/novo">

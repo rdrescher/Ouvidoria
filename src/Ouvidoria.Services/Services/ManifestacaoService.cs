@@ -52,7 +52,10 @@ namespace Ouvidoria.Services
         {
             var manifestation = await _repository.GetByIdWithIncludes(id);
 
-            await UserHasPermission(manifestation, idUsuario);
+            if (manifestation == null)
+                Notify("Manifestação não encontrada");
+            else
+                await UserHasPermission(manifestation, idUsuario);
 
             return manifestation;
         }
@@ -91,7 +94,7 @@ namespace Ouvidoria.Services
                 || manifestacao.Departamento.IdUsuarioResponsavel == idUsuario)
                 return;
 
-            Notify("Você não tem permissão para visualizar este questionário");
+            Notify("Você não tem permissão para visualizar esta manifestação");
         }
     }
 }

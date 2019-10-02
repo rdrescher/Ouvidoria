@@ -1,7 +1,7 @@
 import { makeStyles, Container, Paper, Typography } from "@material-ui/core";
 import React from "react";
 import TipoManifestacao from "../../../application/enums/TipoManifestacao";
-import FormManifestacao from "../../../components/manifestation/FormManifestacao";
+import FormManifestacao from "../../../components/manifestacao/FormManifestacao";
 
 export default function NovaReclamacaoView() {
   const classes = useStyles(0);

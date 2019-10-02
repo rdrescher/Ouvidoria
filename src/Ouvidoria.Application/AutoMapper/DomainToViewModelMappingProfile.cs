@@ -18,14 +18,14 @@ namespace Ouvidoria.Application.AutoMapper
                                 c => c.MapFrom(d => d.Usuario != null ? d.Usuario.Nome : ""));
             CreateMap<Interacao, InteracaoViewModel>()
                 .ForMember(i => i.dataCriacao,
-                                i => i.MapFrom(d => d.DataInsercao.ToString("dd/MM/yyyy")))
+                                i => i.MapFrom(d => d.DataInsercao.ToString("dd/MM/yyyy HH:mm")))
                 .ForMember(i => i.Usuario,
                                 i => i.MapFrom(u => u.Usuario != null ? u.Usuario.Nome : ""));
             CreateMap<Manifestacao, ManifestacaoViewModel>()
                 .ForMember(m => m.usuario,
                                 m => m.MapFrom(u => u.Usuario != null ? u.Usuario.Nome : ""))
                 .ForMember(m => m.dataCriacao,
-                                m => m.MapFrom(i => i.DataInsercao.ToString("dd/MM/yyyy")))
+                                m => m.MapFrom(i => i.DataInsercao.ToString("dd/MM/yyyy HH:mm")))
                 .ForMember(m => m.departamento,
                                 m => m.MapFrom(u => u.Departamento != null ? u.Departamento.Nome : ""));
             CreateMap<Manifestacao, ManifestacaoPeviewViewModel>()
@@ -36,7 +36,7 @@ namespace Ouvidoria.Application.AutoMapper
                 .ForMember(m => m.numeroInteracoes,
                                 m => m.MapFrom(i => i.Interacoes.Count))
                 .ForMember(m => m.dataCriacao,
-                                m => m.MapFrom(i => i.DataInsercao.ToString("dd/MM/yyyy")))
+                                m => m.MapFrom(i => i.DataInsercao.ToString("dd/MM/yyyy HH:mm")))
                 .ForMember(m => m.usuarioUltimaInteracao,
                                 m => m.MapFrom(u => u.Interacoes != null || u.Interacoes.Count > 0
                                                         ? u.Interacoes.LastOrDefault().Usuario != null
@@ -48,7 +48,7 @@ namespace Ouvidoria.Application.AutoMapper
             CreateMap<Questionario, QuestionarioViewModel>();
             CreateMap<Questionario, QuestionarioPreviewViewModel>()
                 .ForMember(q => q.dataFim,
-                                q => q.MapFrom(c => c.DataFim.ToString("dd/MM/yyyy hh:mm")));
+                                q => q.MapFrom(c => c.DataFim.ToString("dd/MM/yyyy HH:mm")));
             CreateMap<Questionario, DetalheQuestionarioViewModel>()
                 .ForMember(c => c.usuarioCriador,
                                 c => c.MapFrom(d => d.Usuario != null ? d.Usuario.Nome : ""))
@@ -57,9 +57,9 @@ namespace Ouvidoria.Application.AutoMapper
                 .ForMember(c => c.respostas,
                                 c => c.MapFrom(d => d.QuestionarioRespostas.Count))
                 .ForMember(c => c.dataFim,
-                                c => c.MapFrom(d => d.DataFim.ToString("dd/MM/yyyy hh:mm")))
+                                c => c.MapFrom(d => d.DataFim.ToString("dd/MM/yyyy HH:mm")))
                 .ForMember(c => c.dataInicio,
-                                c => c.MapFrom(d => d.DataInicio.ToString("dd/MM/yyyy hh:mm")));
+                                c => c.MapFrom(d => d.DataInicio.ToString("dd/MM/yyyy HH:mm")));
             CreateMap<QuestionarioResposta, QuestionarioRespostaViewModel>()
                 .ForMember(q => q.usuario,
                                 q => q.MapFrom(r => r.Usuario != null ? r.Usuario.Nome : ""));
