@@ -43,7 +43,7 @@ namespace Ouvidoria.Services
         private async Task<bool> UserCanAnswer(int idQuestionario, int idUsuario)
         {
             var user = await _usuarioService.GetUserById(idUsuario);
-            if (!user.Ativo)
+            if (user == null || !user.Ativo)
             {
                 Notify("Você está inapto para responder");
                 return false;
@@ -89,7 +89,6 @@ namespace Ouvidoria.Services
                 {
                     Notify("O Id de uma ou mais opções não condiz com os Ids das opções das perguntas do questionário");
                     return false;
-
                 }
             }
 
