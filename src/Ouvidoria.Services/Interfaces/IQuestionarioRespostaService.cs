@@ -10,5 +10,6 @@ namespace Ouvidoria.Services.Interfaces
         Task Create(QuestionarioResposta resposta);
         Task IsUserAbleToAnswer(int idQuestionario, int idUsuario);
         Task<List<QuestionarioResposta>> GetAnswersByQuiz(int idQuestionario);
+        Task<QuestionarioResposta> GetByIdWithAnswers(int id);
     }
 }

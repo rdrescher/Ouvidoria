@@ -42,7 +42,7 @@ function DialogMessage(props: Props) {
           id="alert-dialog-description"
           className={classes.text}
         >
-          {props.messages.length === 0
+          {props.messages.length === 0 && props.isOpen
             ? `Ops, parece de algo deu errado. Tente novamente!`
             : props.messages.map(message => (
                 <label key={message}>

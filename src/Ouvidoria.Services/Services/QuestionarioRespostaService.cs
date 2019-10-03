@@ -117,7 +117,27 @@ namespace Ouvidoria.Services
             await this.UserCanAnswer(idQuestionario, idUsuario);
         }
 
-        public async Task<List<QuestionarioResposta>> GetAnswersByQuiz(int idQuestionario) =>
-            await _repository.GetAnsersByQuiz(idQuestionario);
+        public async Task<List<QuestionarioResposta>> GetAnswersByQuiz(int idQuestionario)
+        {
+            var quiz = await _questionarioService.GetById(idQuestionario);
+            if (quiz == null)
+            {
+                Notify("Questionário não encontrado");
+                return new List<QuestionarioResposta>();
+            }
+
+            var answers = await _repository.GetAnsersByQuiz(idQuestionario);
+            if (answers == null)
+                Notify("O questionário em questão ainda não possui respostas");
+
+            return answers;
+        }
+
+        public async Task<QuestionarioResposta> GetByIdWithAnswers(int id)
+        {
+            var answer = await _repository.GetByIdWithIncludes(id);
+            if (answer == null) Notify("Resposta não encontrada");
+            return answer;
+        }
     }
 }

@@ -38,11 +38,21 @@ namespace Ouvidoria.Application.Services
                 : Resultado.Successfull();
         }
 
-        public async Task<List<RespostaViewModel>> GetAnswersById(int id) =>
-            Mapper.Map<List<RespostaViewModel>>(await _respostaService.GetAnswersById(id));
+        public async Task<Resultado<QuestionarioRespostaDetailViewModel>> GetAnswersById(int id)
+        {
+            var answers = Mapper.Map<QuestionarioRespostaDetailViewModel>(await _service.GetByIdWithAnswers(id));
+            return Notificador.HasNotification()
+                ? Resultado<QuestionarioRespostaDetailViewModel>.Failed(Notificador.GetNotificationsMessages())
+                : Resultado<QuestionarioRespostaDetailViewModel>.Successfull(answers);
+        }
 
-        public async Task<List<QuestionarioRespostaViewModel>> GetAnswersByQuiz(int idQuestionario) =>
-            MapToViewModel(await _service.GetAnswersByQuiz(idQuestionario));
+        public async Task<Resultado<List<QuestionarioRespostaViewModel>>> GetAnswersByQuiz(int idQuestionario)
+        {
+            var answers = MapToViewModel(await _service.GetAnswersByQuiz(idQuestionario));
+            return Notificador.HasNotification()
+                ? Resultado<List<QuestionarioRespostaViewModel>>.Failed(Notificador.GetNotificationsMessages())
+                : Resultado<List<QuestionarioRespostaViewModel>>.Successfull(answers);
+        }
 
         public async Task<Resultado> IsUserAbleToAnswer(int idQuestionario, int idUsuario)
         {

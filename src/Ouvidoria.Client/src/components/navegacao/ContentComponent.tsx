@@ -41,8 +41,9 @@ export default connect(
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) => ({
-  container: {},
   content: {
+    marginBottom: 20,
+    minHeight: "calc(100vh - 20px)",
     flexGrow: 1,
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,

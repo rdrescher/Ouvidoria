@@ -22,5 +22,16 @@ namespace Ouvidoria.Infrastructure.Repositories
                 .Include(x => x.Usuario)
                 .Where(x => x.IdQuestionario == idQuestionario)
                 .ToListAsync();
+
+        public async Task<QuestionarioResposta> GetByIdWithIncludes(int id) =>
+            await DbSet
+                .AsNoTracking()
+                .Include(x => x.Usuario)
+                .Include(x => x.Questionario)
+                .Include(x => x.Respostas)
+                .ThenInclude(x => x.Opcao)
+                .Include(x => x.Respostas)
+                .ThenInclude(x => x.Pergunta)
+                .FirstOrDefaultAsync(x => x.Id == id);
     }
 }

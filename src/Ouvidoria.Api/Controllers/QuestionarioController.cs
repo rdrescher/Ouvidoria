@@ -77,7 +77,7 @@ namespace Ouvidoria.Api.Controllers
 
         [Authorize(policy: "Administrador")]
         [HttpGet("[Action]/{id:int}")]
-        public async Task<ActionResult<Resultado<List<RespostaViewModel>>>> GetAnswersById(int id) =>
+        public async Task<ActionResult<Resultado<QuestionarioRespostaDetailViewModel>>> GetAnswersById(int id) =>
             Ok(await _questionarioRespostaService.GetAnswersById(id));
     }
 }

@@ -1,12 +1,14 @@
 /* eslint-disable */
 import {
   makeStyles,
+  Container,
   Dialog,
   DialogContent,
   DialogTitle,
   Divider,
   Grow,
-  LinearProgress
+  LinearProgress,
+  Paper
 } from "@material-ui/core";
 import { TransitionProps } from "@material-ui/core/transitions";
 import MUIDataTable, {
@@ -15,11 +17,13 @@ import MUIDataTable, {
 } from "mui-datatables";
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 import { bindActionCreators, Dispatch } from "redux";
 import Operacao from "../../../application/types/Operacao";
 import IResultado from "../../../models/Resultado";
 import { IApplicationState } from "../../../store";
 import * as DialogActions from "../../../store/ducks/dialogDatatable/DialogActions";
+import * as DialogMessagesActions from "../../../store/ducks/dialogMessages/DialogMessagesActions";
 import DataTableToolBar from "./DataTableToolBar";
 import DataTableToolBarSelected from "./DataTableToolBarSelected";
 
@@ -29,6 +33,7 @@ interface IState {
   loading: boolean;
   selectedData: object;
   options: MUIDataTableOptions;
+  success: boolean;
 }
 
 interface IDialogsState {
@@ -53,10 +58,12 @@ interface IProps {
 interface IDispatchProps {
   openDialog(operation: Operacao, selectedObject: object): void;
   closeDialog(): void;
+  open(title: string, messages: string[]): void;
 }
 
 interface IStateProps {
   dialogIsOpen: boolean;
+  isOpen: boolean;
 }
 
 interface IIndex {
@@ -69,6 +76,7 @@ const initialState: IState = {
   columns: [],
   selectedData: {},
   loading: false,
+  success: true,
   options: {
     responsive: "scroll",
     filterType: "textField",
@@ -168,13 +176,22 @@ function DataTable(props: Props) {
 
     async function getData() {
       let result = await props.data();
-      setState((prevState: IState) => {
-        return {
+      if (result.success)
+        setState((prevState: IState) => {
+          return {
+            ...prevState,
+            data: result.data!,
+            loading: false
+          };
+        });
+      else {
+        props.open("Atenção", result.messages);
+        setState(prevState => ({
           ...prevState,
-          data: result.data!,
+          success: false,
           loading: false
-        };
-      });
+        }));
+      }
     }
 
     getData();
@@ -237,35 +254,39 @@ function DataTable(props: Props) {
     });
   };
 
-  return (
-    <>
-      <div className={classes.wrapper}>
-        <MUIDataTable
-          title={props.title}
-          data={state.data}
-          columns={state.columns}
-          options={state.options}
-        />
-        {state.loading && (
-          <div className={classes.progress}>
-            <LinearProgress />
-            <div className={classes.whiteSpace} />
-          </div>
-        )}
-      </div>
-      <Dialog
-        open={props.dialogIsOpen}
-        onClose={props.closeDialog}
-        aria-labelledby="form-dialog-title"
-        maxWidth="sm"
-        fullWidth
-        TransitionComponent={Transition}
-      >
-        <DialogTitle id="form-dialog-title">{dialogs.operation}</DialogTitle>
-        <Divider className={classes.divider} />
-        <DialogContent>{props.dialogContent}</DialogContent>
-      </Dialog>
-    </>
+  return !state.loading && !state.success && !props.isOpen ? (
+    <Redirect to="/" />
+  ) : (
+    <Container maxWidth="xl">
+      <Paper>
+        <div className={classes.wrapper}>
+          <MUIDataTable
+            title={props.title}
+            data={state.data}
+            columns={state.columns}
+            options={state.options}
+          />
+          {state.loading && (
+            <div className={classes.progress}>
+              <LinearProgress />
+              <div className={classes.whiteSpace} />
+            </div>
+          )}
+        </div>
+        <Dialog
+          open={props.dialogIsOpen}
+          onClose={props.closeDialog}
+          aria-labelledby="form-dialog-title"
+          maxWidth="sm"
+          fullWidth
+          TransitionComponent={Transition}
+        >
+          <DialogTitle id="form-dialog-title">{dialogs.operation}</DialogTitle>
+          <Divider className={classes.divider} />
+          <DialogContent>{props.dialogContent}</DialogContent>
+        </Dialog>
+      </Paper>
+    </Container>
   );
 }
 
@@ -288,11 +309,15 @@ const useStyles = makeStyles(() => ({
 }));
 
 const mapStateToProps = (state: IApplicationState) => ({
-  dialogIsOpen: state.DialogReducer.dialogIsOpen
+  dialogIsOpen: state.DialogReducer.dialogIsOpen,
+  isOpen: state.DialogMessagesReducer.isOpen
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators(DialogActions, dispatch);
+  bindActionCreators(
+    Object.assign({}, DialogActions, DialogMessagesActions),
+    dispatch
+  );
 
 export default connect(
   mapStateToProps,

@@ -14,8 +14,5 @@ namespace Ouvidoria.Services
             _repository = repository;
         }
         public void Dispose() => _repository.Dispose();
-
-        public async Task<List<Resposta>> GetAnswersById(int id) =>
-            await _repository.GetAnswersById(id);
     }
 }

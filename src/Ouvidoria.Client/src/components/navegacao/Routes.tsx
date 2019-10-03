@@ -5,6 +5,8 @@ import CursoView from "../../views/administracao/CursoView";
 import DepartamentoView from "../../views/administracao/DepartamentoView";
 import CadastroQuestionarioView from "../../views/administracao/Questionario/CadastroQuestionarioView";
 import ListaQuestionarios from "../../views/administracao/Questionario/ListaQuestionarios";
+import ListaRespostasPorQuestionarioView from "../../views/administracao/Questionario/ListaRespostasPorQuestionarioView";
+import ListaRespostasView from "../../views/administracao/Questionario/ListaRespostasView";
 import PreviewQuestionarioView from "../../views/administracao/Questionario/PreviewQuestionarioView";
 import UsuarioView from "../../views/administracao/UsuarioView";
 import CadastroView from "../../views/autenticacao/CadastroView";
@@ -31,7 +33,7 @@ import SugestaoView from "../../views/manifestacoes/Sugestao/SugestaoView";
 import Questionarios from "../../views/questionarios/Questionarios";
 import ResponderQuestionario from "../../views/questionarios/ResponderQuestionario";
 import DashboardView from "../../views/DashboardView";
-import PrivateRoute from "./PrivateRoute";
+import PrivateRoute from "./PrivateRoute"; 
 
 export default function Routes() {
   return (
@@ -97,10 +99,21 @@ export default function Routes() {
       />
       <PrivateRoute
         exact
+        path="/questionarios/:id/respostas"
+        component={ListaRespostasPorQuestionarioView}
+        claimRequired={UsuarioPerfil.Administrador}
+      />
+      <PrivateRoute
+        exact
         path="/questionarios/pre-visualizar/:id"
         component={PreviewQuestionarioView}
         claimRequired={UsuarioPerfil.Administrador}
-      />
+      /><PrivateRoute
+      exact
+      path="/questionarios/resposta/:id"
+      component={ListaRespostasView}
+      claimRequired={UsuarioPerfil.Administrador}
+    />
       <PrivateRoute
         exact
         path="/cursos"
