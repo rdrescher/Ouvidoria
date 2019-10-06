@@ -13,18 +13,20 @@ namespace Ouvidoria.Application.Services
 {
     public class DepartamentoAppService : EntityAppService<Departamento, DepartamentoViewModel>, IDepartamentoAppService
     {
-        private readonly INotificador Notificador;
-        private readonly IDepartamentoService Service;
-        public DepartamentoAppService(IMapper map, IDepartamentoService service, INotificador notificador) : base(map)
+        private readonly IDepartamentoService _service;
+        public DepartamentoAppService(
+            IMapper map,
+            INotificador notificador,
+            IDepartamentoService service
+        ) : base(map, notificador)
         {
-            this.Notificador = notificador;
-            this.Service = service;
+            _service = service;
         }
 
-        public async Task<Resultado<DepartamentoViewModel>> Create(CadastroDepartamentoViewModel cadastroDepartamentoViewModel)
+        public async Task<Resultado<DepartamentoViewModel>> Create(CadastroDepartamentoViewModel cadastroDepartamento)
         {
-            var Departamento = base.Mapper.Map<Departamento>(cadastroDepartamentoViewModel);
-            await Service.Create(Departamento);
+            var Departamento = base.Mapper.Map<Departamento>(cadastroDepartamento);
+            await _service.Create(Departamento);
             var DepartamentoViewModel = base.MapToViewModel(Departamento);
 
             return Notificador.HasNotification() ?
@@ -33,20 +35,20 @@ namespace Ouvidoria.Application.Services
         }
 
         public async Task<Resultado<List<DepartamentoViewModel>>> GetDepartments() =>
-            Resultado<List<DepartamentoViewModel>>.Successfull(base.MapToViewModel(await Service.GetDepartments()));
+            Resultado<List<DepartamentoViewModel>>.Successfull(base.MapToViewModel(await _service.GetDepartments()));
 
         public async Task<Resultado> Delete(int id)
         {
-            await Service.Delete(id);
+            await _service.Delete(id);
             return Notificador.HasNotification() ?
                 Resultado.Failed(Notificador.GetNotifications().Select(x => x.Mensagem).ToArray()) :
                 Resultado.Successfull();
         }
 
-        public async Task<Resultado<DepartamentoViewModel>> Update(AtualizacaoDepartamentoViewModel atualizacaoDepartamentoViewModel)
+        public async Task<Resultado<DepartamentoViewModel>> Update(AtualizacaoDepartamentoViewModel atualizacaoDepartamento)
         {
-            var Departamento = base.Mapper.Map<Departamento>(atualizacaoDepartamentoViewModel);
-            await Service.Update(Departamento);
+            var Departamento = base.Mapper.Map<Departamento>(atualizacaoDepartamento);
+            await _service.Update(Departamento);
             var DepartamentoViewModel = base.MapToViewModel(Departamento);
 
             return Notificador.HasNotification() ?
@@ -54,7 +56,10 @@ namespace Ouvidoria.Application.Services
                 Resultado<DepartamentoViewModel>.Successfull(DepartamentoViewModel);
         }
 
-        public async Task<Resultado<List<GenericList>>> GetGenericList() =>
-            Resultado<List<GenericList>>.Successfull(base.MapToGenericList(await Service.GetDepartments()));
+        public async Task<Resultado<List<GenericList>>> GetGenericList()
+        {
+            var list = (await _service.GetDepartments()).OrderBy(x => x.Nome).ToList();
+            return Resultado<List<GenericList>>.Successfull(base.MapToGenericList(list));
+        }
     }
 }

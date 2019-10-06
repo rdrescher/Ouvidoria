@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ouvidoria.Domain.Interfaces;
@@ -17,6 +18,12 @@ namespace Ouvidoria.Infrastructure.Repositories
                 .AsNoTracking()
                 .Include(x => x.Usuario)
                 .ToListAsync();
+
+        public async Task<Departamento> GetByIdWithManifestation(int id) =>
+            await base.DbSet
+                .AsNoTracking()
+                .Include(x => x.Manifestacoes)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
         public async Task<Departamento> GetWithOwner(int id) =>
             await base.DbSet

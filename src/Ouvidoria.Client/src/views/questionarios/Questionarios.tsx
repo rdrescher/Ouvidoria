@@ -44,7 +44,7 @@ function Questionarios(props: IDispatchToProps) {
     }
 
     getQuizzesPreview();
-  },        [setLoaded, setLoading]);
+  }, [setLoaded, setLoading]);
 
   return (
     <Container maxWidth="md">
@@ -66,6 +66,7 @@ function Questionarios(props: IDispatchToProps) {
                     : quiz.titulo}
                 </Typography>
                 <Typography className={classes.quizDescription} variant="body2">
+                  Descrição:{" "}
                   {quiz.descricao.length > 100
                     ? `${quiz.descricao.substring(0, 100)}...`
                     : quiz.descricao}

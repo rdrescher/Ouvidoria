@@ -14,7 +14,7 @@ export default function Acoes(props: IProps) {
     <>
       {props.answers > 0 && (
         <Tooltip title="Ver Respostas">
-          <Link to="/" className={classes.btn}>
+          <Link to={`/questionarios/${props.id}/respostas`} className={classes.btn}>
             <Fab size="small" color="secondary">
               <List />
             </Fab>

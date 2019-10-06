@@ -1,12 +1,15 @@
 import {
   makeStyles,
+  withWidth,
   Collapse,
   Divider,
-  Drawer,
   List,
+  SwipeableDrawer,
   Theme,
   Typography
 } from "@material-ui/core";
+import { Breakpoint } from "@material-ui/core/styles/createBreakpoints";
+import { isWidthUp } from "@material-ui/core/withWidth";
 import {
   Build,
   Home,
@@ -21,32 +24,53 @@ import {
   ThumbUp,
   Work
 } from "@material-ui/icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { bindActionCreators, Dispatch } from "redux";
 import AMFIcon from "../../assets/img/amf_white.png";
 import Background from "../../assets/img/bg-clear.png";
 import Claim from "../../models/Autenticacao/Claim";
 import UserToken from "../../models/Autenticacao/UserToken";
 import { IApplicationState } from "../../store";
+import * as NavigationActions from "../../store/ducks/navigation/NavigationActions";
 import SidebarExpandItem from "../common/fields/SidebarExpandItem";
 import SidebarItem from "../common/fields/SidebarItem";
 
 const drawerWidth = 240;
+
+interface IDispatchState {
+  openSidebar(): void;
+  closeSidebar(): void;
+}
+
 interface IStateProps {
   sidebarIsOpen: boolean;
   user: UserToken | null;
   claims: Claim[];
 }
 
-function SidebarComponent(props: IStateProps) {
+interface IWidth {
+  width: Breakpoint;
+}
+
+type Props = IStateProps & IWidth & IDispatchState;
+
+function SidebarComponent(props: Props) {
   const classes = useStyles();
-  const sidebarIsOpen = props.sidebarIsOpen;
+  const { sidebarIsOpen, width, openSidebar, closeSidebar } = props;
   const [manifestationIsOpen, setManifestationIsOpen] = useState<boolean>(
     false
   );
   const [administrationIsOpen, setAdministrationIsOpen] = useState<boolean>(
     false
   );
+  const iOS =
+    typeof window !== "undefined" &&
+    /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+  useEffect(() => {
+    if (!isWidthUp("sm", width)) closeSidebar();
+  },        [width, closeSidebar]);
 
   function handleManifestationChange(): void {
     setManifestationIsOpen(!manifestationIsOpen);
@@ -57,15 +81,19 @@ function SidebarComponent(props: IStateProps) {
   }
 
   return (
-    <Drawer
+    <SwipeableDrawer
       className={classes.drawer}
-      variant="persistent"
+      variant={isWidthUp("sm", width) ? "persistent" : "temporary"}
       anchor="left"
       open={sidebarIsOpen}
       color="secondary"
+      onOpen={openSidebar}
+      onClose={closeSidebar}
       classes={{
         paper: classes.drawerPaper
       }}
+      disableBackdropTransition={!iOS}
+      disableDiscovery={iOS}
     >
       <div className={classes.drawerHeader} />
       <img src={AMFIcon} className={classes.AMFIcon} alt="AMF" />
@@ -166,7 +194,7 @@ function SidebarComponent(props: IStateProps) {
           </>
         )}
       </List>
-    </Drawer>
+    </SwipeableDrawer>
   );
 }
 
@@ -176,10 +204,13 @@ const mapStateToProps = (state: IApplicationState) => ({
   claims: state.SessionReducer.claims
 });
 
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(NavigationActions, dispatch);
+
 export default connect(
   mapStateToProps,
-  null
-)(SidebarComponent);
+  mapDispatchToProps
+)(withWidth()(SidebarComponent));
 
 const useStyles = makeStyles((theme: Theme) => ({
   title: {

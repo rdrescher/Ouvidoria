@@ -81,6 +81,9 @@ namespace Ouvidoria.Services
         public async Task<Usuario> GetUserById(int id) =>
             await repository.GetById(id);
 
+        public async Task<Usuario> GetUserByIdWithClaims(int id) =>
+            await repository.GetUserByIdWithClaims(id);
+
         public async Task<bool> IsActiveUser(string email) =>
             (await repository.Search(u => u.Email == email)).FirstOrDefault().Ativo;
 

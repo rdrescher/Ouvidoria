@@ -1,11 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Ouvidoria.Application.Interfaces;
+using Ouvidoria.Application.Utils;
+using Ouvidoria.Application.ViewModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Ouvidoria.Application.ViewModel;
-using Ouvidoria.Application.Interfaces;
-using Ouvidoria.Application.Utils;
 
 namespace Ouvidoria.Api.Controllers
 {
@@ -15,9 +15,9 @@ namespace Ouvidoria.Api.Controllers
     public class DepartamentoController : BaseController
     {
         private readonly IDepartamentoAppService _service;
-        public DepartamentoController(IDepartamentoAppService service)
+        public DepartamentoController(IDepartamentoAppService service, IUser user) : base(user)
         {
-            this._service = service;
+            _service = service;
         }
 
         [Authorize(policy: "Administrador")]
@@ -49,6 +49,6 @@ namespace Ouvidoria.Api.Controllers
 
         [HttpGet("[action]")]
         public async Task<ActionResult<Resultado<List<GenericList>>>> GetGenericList() =>
-        Ok(await _service.GetGenericList());
+            Ok(await _service.GetGenericList());
     }
 }

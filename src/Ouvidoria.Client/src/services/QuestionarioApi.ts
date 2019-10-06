@@ -4,11 +4,21 @@ import DetalheQuestionario from "../models/Questionario/DetalheQuestionario";
 import Questionario from "../models/Questionario/Questionario";
 import QuestionarioPreview from "../models/Questionario/QuestionarioPreview";
 import CadastroQuestionarioResposta from "../models/QuestionarioResposta/CadastroQuestionarioResposta";
+import QuestionarioResposta from "../models/QuestionarioResposta/QuestionarioResposta";
+import QuestionarioRespostaDetail from "../models/QuestionarioResposta/QuestionarioRespostaDetail";
 import Resultado from "../models/Resultado";
 import EntityApi from "./EntityApi";
 
 export default class QuestionarioApi {
     public static readonly entity = new EntityApi<DetalheQuestionario>("Questionario");
+
+    public static async GetAnswersById(id: number): Promise<Resultado<QuestionarioRespostaDetail>> {
+        return await Http.get(`/api/Questionario/GetAnswersById/${id}`);
+    }
+
+    public static async GetAnswersByQuiz(id: number): Promise<Resultado<QuestionarioResposta[]>> {
+        return await Http.get(`/api/Questionario/GetAnswersByQuiz/${id}`);
+    }
 
     public static async create(quiz: CadastroQuestionario): Promise<Resultado> {
         return await Http.post(`/api/Questionario`, quiz);
@@ -21,7 +31,7 @@ export default class QuestionarioApi {
     public static async get(id: number): Promise<Resultado<Questionario>> {
         return await Http.get(`/api/Questionario/${id}`);
     }
-    public static async IsUserAbleToAnswer(id: number): Promise<Resultado>  {
+    public static async IsUserAbleToAnswer(id: number): Promise<Resultado> {
         return await Http.get(`/api/Questionario/IsUserAbleToAnswer/${id}`);
     }
 

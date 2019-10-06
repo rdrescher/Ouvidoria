@@ -3,15 +3,18 @@ using Ouvidoria.Application.ViewModel;
 using Ouvidoria.Domain.Models;
 using AutoMapper;
 using System.Collections.Generic;
+using Ouvidoria.Domain.Interfaces;
 
 namespace Ouvidoria.Application.Services
 {
     public abstract class EntityAppService<TEntity, TEntityViewModel> : IEntityAppService<TEntity, TEntityViewModel> where TEntity : Entity where TEntityViewModel : EntityViewModel
     {
         protected readonly IMapper Mapper;
-        protected EntityAppService(IMapper map)
+        protected readonly INotificador Notificador;
+        protected EntityAppService(IMapper map, INotificador notificador)
         {
-            this.Mapper = map;
+            Mapper = map;
+            Notificador = notificador;
         }
 
         public TEntity MapToDomain(TEntityViewModel entityViewModel) =>

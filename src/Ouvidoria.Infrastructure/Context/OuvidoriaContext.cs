@@ -18,6 +18,7 @@ namespace Ouvidoria.Infrastructure.Context
 
         public DbSet<Curso> Cursos { get; set; }
         public DbSet<Departamento> Departamentos { get; set; }
+        public DbSet<Interacao> Interacoes { get; set; }
         public DbSet<Manifestacao> Manifestacoes { get; set; }
         public DbSet<Opcao> Opcaos { get; set; }
         public DbSet<Pergunta> Perguntas { get; set; }

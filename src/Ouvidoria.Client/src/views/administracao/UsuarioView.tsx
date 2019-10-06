@@ -1,12 +1,13 @@
 import { ThumbDown, ThumbUp } from "@material-ui/icons";
 import { MUIDataTableColumnDef } from "mui-datatables";
 import React, { useState } from "react";
+import UsuarioPerfil from "../../application/enums/UsuarioPerfil";
 import Operacao from "../../application/types/Operacao";
 import UsuarioComponent from "../../components/administracao/UsuarioComponent";
 import DataTable from "../../components/common/dataTable/DataTable";
 import Resultado from "../../models/Resultado";
 import AtualizacaoUsuario from "../../models/Usuario/AtualizacaoUsuario";
-import Usuario, { UsuarioPerfil } from "../../models/Usuario/Usuario";
+import Usuario from "../../models/Usuario/Usuario";
 import UsuarioApi from "../../services/UsuarioApi";
 
 const headers: MUIDataTableColumnDef[] = [

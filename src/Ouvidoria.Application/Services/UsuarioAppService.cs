@@ -14,18 +14,24 @@ namespace Ouvidoria.Application.Services
     public class UsuarioAppService : EntityAppService<Usuario, UsuarioViewModel>, IUsuarioAppService
     {
         private readonly IUsuarioService Service;
-        private readonly INotificador Notificador;
-        public UsuarioAppService(IMapper map, IUsuarioService service, INotificador notificador) : base(map)
+        public UsuarioAppService(
+            IMapper map,
+            INotificador notificador,
+            IUsuarioService service
+        ) : base(map, notificador)
         {
-            this.Notificador = notificador;
             this.Service = service;
         }
 
         public async Task<bool> IsValidUser(CadastroUsuarioViewModel cadastroUsuario) =>
             await Service.IsValidUser(Mapper.Map<Usuario>(cadastroUsuario));
 
-        public async Task<Resultado<List<GenericList>>> GetGenericList() =>
-            Resultado<List<GenericList>>.Successfull(MapToGenericList(await Service.GetUsers()));
+        public async Task<Resultado<List<GenericList>>> GetGenericList()
+        {
+            var list = (await Service.GetUsers()).OrderBy(x => x.Nome).ToList();
+            return Resultado<List<GenericList>>.Successfull(MapToGenericList(list));
+        }
+        
         public async Task<Resultado<List<UsuarioViewModel>>> GetUsers() =>
             Resultado<List<UsuarioViewModel>>.Successfull(Mapper.Map<List<UsuarioViewModel>>(await Service.GetUsersWithClass()));
 

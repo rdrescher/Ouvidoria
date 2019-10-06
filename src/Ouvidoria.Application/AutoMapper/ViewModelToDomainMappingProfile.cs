@@ -1,6 +1,7 @@
 using AutoMapper;
 using Ouvidoria.Application.ViewModel;
 using Ouvidoria.CrossCutting.Identity.Models;
+using Ouvidoria.Domain.Enums;
 using Ouvidoria.Domain.Models;
 
 namespace Ouvidoria.Application.AutoMapper
@@ -30,16 +31,20 @@ namespace Ouvidoria.Application.AutoMapper
                 .ConstructUsing(u => new Usuario(u.nome, u.email, u.telefone, u.cpf, u.idCurso));
             CreateMap<CursoViewModel, Curso>()
                 .ConstructUsing(c => new Curso(c.nome));
+            CreateMap<CadastroManifestacaoViewModel, Manifestacao>()
+                .ConstructUsing(m => new Manifestacao(m.titulo, m.descricao, m.idDepartamento, (TipoManifestacao)m.tipoManifestacao));
             CreateMap<CadastroOpcaoViewModel, Opcao>()
                 .ConstructUsing(o => new Opcao(o.descricao));
             CreateMap<CadastroPerguntaViewModel, Pergunta>()
-                .ConstructUsing(p => new Pergunta(p.descricao, p.tipo));
+                .ConstructUsing(p => new Pergunta(p.descricao, (TipoPergunta)p.tipo));
             CreateMap<CadastroQuestionarioViewModel, Questionario>()
                 .ConstructUsing(q => new Questionario(q.titulo, q.descricao, q.dataInicio, q.dataFim));
             CreateMap<CadastroQuestionarioRespostaViewModel, QuestionarioResposta>()
                 .ConstructUsing(q => new QuestionarioResposta(q.idQuestionario));
             CreateMap<CadastroRespostaViewModel, Resposta>()
                 .ConstructUsing(r => new Resposta(r.retorno, r.idOpcao, r.idPergunta));
+            CreateMap<CadastroInteracaoViewModel, Interacao>()
+                .ConstructUsing(r => new Interacao(r.descricao, r.idManifestacao));
             #endregion
 
             #endregion

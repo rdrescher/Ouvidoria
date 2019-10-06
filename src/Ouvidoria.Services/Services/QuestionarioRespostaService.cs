@@ -26,7 +26,6 @@ namespace Ouvidoria.Services
             _questionarioService = questionarioService;
             _usuarioService = usuarioService;
         }
-        public void Dispose() => _repository.Dispose();
 
         public async Task Create(QuestionarioResposta resposta)
         {
@@ -39,10 +38,12 @@ namespace Ouvidoria.Services
             await _repository.Create(resposta);
         }
 
+        public void Dispose() => _repository.Dispose();
+
         private async Task<bool> UserCanAnswer(int idQuestionario, int idUsuario)
         {
             var user = await _usuarioService.GetUserById(idUsuario);
-            if (!user.Ativo)
+            if (user == null || !user.Ativo)
             {
                 Notify("Você está inapto para responder");
                 return false;
@@ -84,13 +85,10 @@ namespace Ouvidoria.Services
                 var answer = respostas.FirstOrDefault(x => x.IdPergunta == question.Id);
                 if (!Validate(new RespostaValidation(question.Tipo), answer)) return false;
 
-                if (question.Tipo == TipoPergunta.Objetiva)
+                if (question.Tipo == TipoPergunta.Objetiva && !question.Opcoes.Select(x => x.Id).Contains(answer.IdOpcao.Value))
                 {
-                    if (!question.Opcoes.Select(x => x.Id).Contains(answer.IdOpcao.Value))
-                    {
-                        Notify("O Id de uma ou mais opções não condiz com os Ids das opções das perguntas do questionário");
-                        return false;
-                    }
+                    Notify("O Id de uma ou mais opções não condiz com os Ids das opções das perguntas do questionário");
+                    return false;
                 }
             }
 
@@ -117,6 +115,29 @@ namespace Ouvidoria.Services
             var quiz = await _questionarioService.GetById(idQuestionario);
             if (!IsValidQuiz(quiz)) return;
             await this.UserCanAnswer(idQuestionario, idUsuario);
+        }
+
+        public async Task<List<QuestionarioResposta>> GetAnswersByQuiz(int idQuestionario)
+        {
+            var quiz = await _questionarioService.GetById(idQuestionario);
+            if (quiz == null)
+            {
+                Notify("Questionário não encontrado");
+                return new List<QuestionarioResposta>();
+            }
+
+            var answers = await _repository.GetAnsersByQuiz(idQuestionario);
+            if (answers == null)
+                Notify("O questionário em questão ainda não possui respostas");
+
+            return answers;
+        }
+
+        public async Task<QuestionarioResposta> GetByIdWithAnswers(int id)
+        {
+            var answer = await _repository.GetByIdWithIncludes(id);
+            if (answer == null) Notify("Resposta não encontrada");
+            return answer;
         }
     }
 }

@@ -1,3 +1,7 @@
+import "react-app-polyfill/ie11";
+import "react-app-polyfill/ie9";
+import "react-app-polyfill/stable";
+// tslint:disable-next-line: ordered-imports
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ThemeProvider } from "@material-ui/styles";
 import React from "react";
@@ -10,5 +14,5 @@ ReactDOM.render(
     <CssBaseline />
     <App />
   </ThemeProvider>,
-  document.querySelector("#root"),
+  document.querySelector("#root")
 );

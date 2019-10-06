@@ -40,5 +40,11 @@ namespace Ouvidoria.Infrastructure.Repositories
             var user = await DbSet.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
             return (user.Email, user.CPF);
         }
+
+        public async Task<Usuario> GetUserByIdWithClaims(int id) =>
+            await DbSet
+                .AsNoTracking()
+                .Include(x => x.Claims)
+                .FirstOrDefaultAsync(x => x.Id == id);
     }
 }

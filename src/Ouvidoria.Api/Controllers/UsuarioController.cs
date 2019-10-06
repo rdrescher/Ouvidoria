@@ -1,19 +1,20 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Ouvidoria.Application.Enums;
+using Ouvidoria.Application.Interfaces;
+using Ouvidoria.Application.Utils;
+using Ouvidoria.Application.ViewModel;
+using Ouvidoria.CrossCutting.Identity.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Ouvidoria.Application.ViewModel;
-using Ouvidoria.Application.Enums;
-using Ouvidoria.Application.Interfaces;
-using Ouvidoria.Application.Utils;
-using Ouvidoria.CrossCutting.Identity.Models;
 
 namespace Ouvidoria.Api.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class UsuarioController : BaseController
     {
@@ -21,7 +22,9 @@ namespace Ouvidoria.Api.Controllers
         private readonly UserManager<AspNetUser> _userManager;
         public UsuarioController(
             IUsuarioAppService service,
-            UserManager<AspNetUser> userManager)
+            UserManager<AspNetUser> userManager,
+            IUser user
+        ) : base(user)
         {
             _service = service;
             _userManager = userManager;

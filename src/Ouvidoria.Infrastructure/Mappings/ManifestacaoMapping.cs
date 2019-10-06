@@ -18,9 +18,6 @@ namespace Ouvidoria.Infrastructure.Mappings
                 .IsRequired()
                 .HasColumnType("varchar(5000)");
 
-            builder.Property(c => c.Resposta)
-                .HasColumnType("varchar(5000)");
-
             builder.HasOne(c => c.Usuario)
                 .WithMany(c => c.Manifestacoes)
                 .HasForeignKey(c => c.IdUsuario);

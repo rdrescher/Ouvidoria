@@ -319,7 +319,7 @@ function CadastroQuestionarioView(props: IDispatchProps) {
       />
       <div className={classes.buttons}>
         <SubmitButton
-          label="Salvar Questionários"
+          label="Salvar Questionário"
           loading={state.loading}
           onSubmit={handleSubmit}
         />

@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ouvidoria.Application.Interfaces;
 using Ouvidoria.Application.Utils;
 using Ouvidoria.Application.ViewModel;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Ouvidoria.Api.Controllers
 {
@@ -19,8 +18,9 @@ namespace Ouvidoria.Api.Controllers
         private readonly IQuestionarioRespostaAppService _questionarioRespostaService;
         public QuestionarioController(
             IQuestionarioAppService service,
-            IQuestionarioRespostaAppService questionarioRespostaService
-        )
+            IQuestionarioRespostaAppService questionarioRespostaService,
+            IUser user
+        ) : base(user)
         {
             _service = service;
             _questionarioRespostaService = questionarioRespostaService;
@@ -70,5 +70,14 @@ namespace Ouvidoria.Api.Controllers
             return Ok(await _questionarioRespostaService.IsUserAbleToAnswer(id, userId));
         }
 
+        [Authorize(policy: "Administrador")]
+        [HttpGet("[action]/{id:int}")]
+        public async Task<ActionResult<Resultado<List<QuestionarioRespostaViewModel>>>> GetAnswersByQuiz(int id) =>
+            Ok(await _questionarioRespostaService.GetAnswersByQuiz(id));
+
+        [Authorize(policy: "Administrador")]
+        [HttpGet("[Action]/{id:int}")]
+        public async Task<ActionResult<Resultado<QuestionarioRespostaDetailViewModel>>> GetAnswersById(int id) =>
+            Ok(await _questionarioRespostaService.GetAnswersById(id));
     }
 }

@@ -1,4 +1,4 @@
-import { UsuarioPerfil } from "./Usuario";
+import UsuarioPerfil from "../../application/enums/UsuarioPerfil";
 
 export default interface IAtualizacaoUsuario {
     id: number;

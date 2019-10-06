@@ -1,15 +1,17 @@
-using System;
-using System.Text;
 using Equinox.Infra.CrossCutting.Identity.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Ouvidoria.Api.Extensions;
 using Ouvidoria.Application.Enums;
+using Ouvidoria.Application.Interfaces;
 using Ouvidoria.CrossCutting.Identity.Context;
 using Ouvidoria.CrossCutting.Identity.Models;
+using System;
+using System.Text;
 
 namespace Ouvidoria.Api.Configurations
 {
@@ -18,6 +20,9 @@ namespace Ouvidoria.Api.Configurations
         public static IServiceCollection IdentityServiceConfig(this IServiceCollection services, IConfiguration configuration)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IUser, User>();
 
             services.AddDefaultIdentity<AspNetUser>(u =>
                 {

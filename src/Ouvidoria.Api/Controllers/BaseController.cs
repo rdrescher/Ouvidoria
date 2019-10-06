@@ -1,5 +1,5 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Ouvidoria.Application.Interfaces;
 
 namespace Ouvidoria.Api.Controllers
 {
@@ -7,6 +7,8 @@ namespace Ouvidoria.Api.Controllers
     [ApiController]
     public abstract class BaseController : ControllerBase
     {
-        protected BaseController() { }
+        public readonly IUser ApplicationUser;
+
+        protected BaseController(IUser user) => ApplicationUser = user;
     }
 }

@@ -32,6 +32,7 @@ namespace Ouvidoria.Infrastructure.Migrations
                 onDelete: ReferentialAction.Restrict
             );
 
+
             migrationBuilder.CreateTable(
                 name: "Departamento",
                 columns: table => new
@@ -89,7 +90,6 @@ namespace Ouvidoria.Infrastructure.Migrations
                     DataInsercao = table.Column<DateTime>(type: "datetime", nullable: false),
                     Titulo = table.Column<string>(type: "varchar(150)", nullable: false),
                     Descricao = table.Column<string>(type: "varchar(5000)", nullable: false),
-                    Resposta = table.Column<string>(type: "varchar(5000)", nullable: true),
                     IdDepartamento = table.Column<int>(nullable: false),
                     IdUsuario = table.Column<int>(nullable: false),
                     TipoManifestacao = table.Column<int>(nullable: false)
@@ -163,6 +163,35 @@ namespace Ouvidoria.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Interacao",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    DataAtualizacao = table.Column<DateTime>(type: "datetime", nullable: false),
+                    DataInsercao = table.Column<DateTime>(type: "datetime", nullable: false),
+                    Descricao = table.Column<string>(type: "varchar(5000)", nullable: false),
+                    IdManifestacao = table.Column<int>(nullable: false),
+                    IdUsuario = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Interacao", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Interacao_Manifestacao_IdManifestacao",
+                        column: x => x.IdManifestacao,
+                        principalTable: "Manifestacao",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Interacao_AspNetUsers_IdUsuario",
+                        column: x => x.IdUsuario,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Opcao",
                 columns: table => new
                 {
@@ -221,9 +250,24 @@ namespace Ouvidoria.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_IdCurso",
+                table: "AspNetUsers",
+                column: "IdCurso");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Departamento_IdUsuarioResponsavel",
                 table: "Departamento",
                 column: "IdUsuarioResponsavel");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Interacao_IdManifestacao",
+                table: "Interacao",
+                column: "IdManifestacao");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Interacao_IdUsuario",
+                table: "Interacao",
+                column: "IdUsuario");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Manifestacao_IdDepartamento",
@@ -279,19 +323,22 @@ namespace Ouvidoria.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Manifestacao");
+                name: "Interacao");
 
             migrationBuilder.DropTable(
                 name: "Resposta");
 
             migrationBuilder.DropTable(
-                name: "Departamento");
+                name: "Manifestacao");
 
             migrationBuilder.DropTable(
                 name: "Opcao");
 
             migrationBuilder.DropTable(
                 name: "QuestionarioResposta");
+
+            migrationBuilder.DropTable(
+                name: "Departamento");
 
             migrationBuilder.DropTable(
                 name: "Pergunta");

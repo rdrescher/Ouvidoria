@@ -42,9 +42,14 @@ function DialogMessage(props: Props) {
           id="alert-dialog-description"
           className={classes.text}
         >
-          {`\n`}
-          {props.messages.map(message => `\n${message}`)}
-          {`\n`}
+          {props.messages.length === 0 && props.isOpen
+            ? `Ops, parece de algo deu errado. Tente novamente!`
+            : props.messages.map(message => (
+                <label key={message}>
+                  {`${message}`}
+                  <br />
+                </label>
+              ))}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -65,7 +70,7 @@ const useStyles = makeStyles(() => ({
 const mapStateToProps = (state: IApplicationState) => ({
   isOpen: state.DialogMessagesReducer.isOpen,
   title: state.DialogMessagesReducer.title,
-  messages: state.DialogMessagesReducer.messages,
+  messages: state.DialogMessagesReducer.messages
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) =>
@@ -75,4 +80,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(DialogMessage);
-

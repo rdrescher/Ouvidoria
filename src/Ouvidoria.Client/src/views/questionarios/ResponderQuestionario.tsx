@@ -111,7 +111,7 @@ function ResponderQuestionario(props: Props) {
     let errors: string[] = [];
 
     state.quiz.perguntas.forEach(question => {
-      questions.push({ descricao: "", idOpcao: null, idPergunta: question.id });
+      questions.push({ retorno: "", idOpcao: null, idPergunta: question.id });
       errors.push("");
     });
 
@@ -139,7 +139,7 @@ function ResponderQuestionario(props: Props) {
         answer: {
           ...prevState.answer!,
           respostas: prevState.answer!.respostas.map(ans =>
-            questionId === ans.idPergunta ? { ...ans, descricao: value } : ans
+            questionId === ans.idPergunta ? { ...ans, retorno: value } : ans
           )
         }
       };
@@ -178,10 +178,10 @@ function ResponderQuestionario(props: Props) {
       valid = false;
       message = "Selecione uma opção";
     } else if (question!.tipo === TipoPergunta.Dissertativa) {
-      if (!answer.descricao) {
+      if (!answer.retorno) {
         valid = false;
         message = "A resposta é obrigatória";
-      } else if (!Validations.hasCorrectSize(answer.descricao, 2, 5000)) {
+      } else if (!Validations.hasCorrectSize(answer.retorno, 2, 5000)) {
         valid = false;
         message = "A resposta deve ter entre 2 e 5000 caracteres";
       }
@@ -263,7 +263,7 @@ function ResponderQuestionario(props: Props) {
                 label="Resposta"
                 name={question.id.toString()}
                 onChange={handleAnswerChange}
-                value={state.answer!.respostas[index].descricao}
+                value={state.answer!.respostas[index].retorno}
                 multiline
                 onBlur={() => validateAnswer(index)}
               />

@@ -1,5 +1,5 @@
+using Ouvidoria.Application.Enums;
 using System.Collections.Generic;
-using Ouvidoria.Domain.Enums;
 
 namespace Ouvidoria.Application.ViewModel
 {

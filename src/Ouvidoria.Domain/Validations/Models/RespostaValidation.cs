@@ -11,6 +11,7 @@ namespace Ouvidoria.Domain.Validations.Models
             if (tipo == TipoPergunta.Dissertativa)
             {
                 RuleFor(r => r.Retorno)
+                    .NotEmpty().WithMessage("A resposta de perguntas dissertativas não pode estar vazia")
                     .Length(2, 5000).WithMessage("A resposta deve conter entre 2 e 5000 caracteres");
 
                 RuleFor(r => r.IdOpcao)

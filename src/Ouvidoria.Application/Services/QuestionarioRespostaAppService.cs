@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Ouvidoria.Application.Interfaces;
@@ -11,37 +12,54 @@ namespace Ouvidoria.Application.Services
 {
     public class QuestionarioRespostaAppService : EntityAppService<QuestionarioResposta, QuestionarioRespostaViewModel>, IQuestionarioRespostaAppService
     {
-        private readonly INotificador _notificador;
         private readonly IQuestionarioRespostaService _service;
+        private readonly IRespostaService _respostaService;
 
         public QuestionarioRespostaAppService(
             IMapper map,
+            INotificador notificador,
             IQuestionarioRespostaService service,
-            INotificador notificador
-        ) : base(map)
+            IRespostaService respostaService
+        ) : base(map, notificador)
         {
             _service = service;
-            _notificador = notificador;
+            _respostaService = respostaService;
         }
 
         public async Task<Resultado> Create(CadastroQuestionarioRespostaViewModel resposta, int idUsuario)
         {
             var response = Mapper.Map<QuestionarioResposta>(resposta);
             response.SetUser(idUsuario);
-            
+
             await _service.Create(response);
 
-            return _notificador.HasNotification()
-                ? Resultado.Failed(_notificador.GetNotificationsMessages()) 
+            return Notificador.HasNotification()
+                ? Resultado.Failed(Notificador.GetNotificationsMessages())
                 : Resultado.Successfull();
+        }
+
+        public async Task<Resultado<QuestionarioRespostaDetailViewModel>> GetAnswersById(int id)
+        {
+            var answers = Mapper.Map<QuestionarioRespostaDetailViewModel>(await _service.GetByIdWithAnswers(id));
+            return Notificador.HasNotification()
+                ? Resultado<QuestionarioRespostaDetailViewModel>.Failed(Notificador.GetNotificationsMessages())
+                : Resultado<QuestionarioRespostaDetailViewModel>.Successfull(answers);
+        }
+
+        public async Task<Resultado<List<QuestionarioRespostaViewModel>>> GetAnswersByQuiz(int idQuestionario)
+        {
+            var answers = MapToViewModel(await _service.GetAnswersByQuiz(idQuestionario));
+            return Notificador.HasNotification()
+                ? Resultado<List<QuestionarioRespostaViewModel>>.Failed(Notificador.GetNotificationsMessages())
+                : Resultado<List<QuestionarioRespostaViewModel>>.Successfull(answers);
         }
 
         public async Task<Resultado> IsUserAbleToAnswer(int idQuestionario, int idUsuario)
         {
             await _service.IsUserAbleToAnswer(idQuestionario, idUsuario);
-            
-            return _notificador.HasNotification()
-                ? Resultado.Failed(_notificador.GetNotificationsMessages()) 
+
+            return Notificador.HasNotification()
+                ? Resultado.Failed(Notificador.GetNotificationsMessages())
                 : Resultado.Successfull();
         }
     }

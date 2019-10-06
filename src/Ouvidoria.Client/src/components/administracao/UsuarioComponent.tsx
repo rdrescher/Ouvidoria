@@ -9,12 +9,13 @@ import {
 import React, { useEffect, useState, ChangeEvent, SyntheticEvent } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
+import UsuarioPerfil from "../../application/enums/UsuarioPerfil";
 import Operacao from "../../application/types/Operacao";
 import * as Validations from "../../application/Validations";
 import GenericList from "../../models/GenericList";
 import Resultado from "../../models/Resultado";
 import AtualizacaoUsuario from "../../models/Usuario/AtualizacaoUsuario";
-import Usuario, { UsuarioPerfil } from "../../models/Usuario/Usuario";
+import Usuario from "../../models/Usuario/Usuario";
 import CursoApi from "../../services/CursoApi";
 import UsuarioApi from "../../services/UsuarioApi";
 import * as DialogActions from "../../store/ducks/dialogDatatable/DialogActions";
@@ -88,14 +89,14 @@ function UsuarioComponent(props: Props) {
       });
     }
     getClasses();
-  },        []);
+  }, []);
 
   useEffect(() => {
     if (!!props.user.nome)
       setState((prevState: IState) => {
         return { ...prevState, user: props.user };
       });
-  },        [props]);
+  }, [props]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let name = e.target.name;

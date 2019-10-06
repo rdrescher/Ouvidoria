@@ -9,5 +9,6 @@ namespace Ouvidoria.Domain.Interfaces
     {
          Task<List<UsuarioDto>> GetAllWithClass();
          Task<(string email, string cpf)> GetEmailCPF(int id);
+        Task<Usuario> GetUserByIdWithClaims(int id);
     }
 }

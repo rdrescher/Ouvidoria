@@ -1,11 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Ouvidoria.Application.Interfaces;
+using Ouvidoria.Application.Utils;
+using Ouvidoria.Application.ViewModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Ouvidoria.Application.ViewModel;
-using Ouvidoria.Application.Interfaces;
-using Ouvidoria.Application.Utils;
 
 namespace Ouvidoria.Api.Controllers
 {
@@ -15,7 +15,7 @@ namespace Ouvidoria.Api.Controllers
     public class CursoController : BaseController
     {
         private readonly ICursoAppService _service;
-        public CursoController(ICursoAppService service)
+        public CursoController(ICursoAppService service, IUser user) : base(user)
         {
             this._service = service;
         }

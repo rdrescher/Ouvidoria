@@ -109,6 +109,17 @@ const theme = createMuiTheme({
       secondary: {
         color: "white"
       }
+    },
+    MuiChip: {
+      icon: {
+        marginLeft: 10,
+      },
+      iconSmall: {
+        marginRight: 0
+      },
+      colorSecondary: {
+        color: "white"
+      }
     }
   }
 });

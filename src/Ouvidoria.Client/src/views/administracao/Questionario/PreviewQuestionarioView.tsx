@@ -3,7 +3,6 @@ import {
   Container,
   FormControl,
   FormControlLabel,
-  FormHelperText,
   Paper,
   Radio,
   RadioGroup,
@@ -68,7 +67,7 @@ function PreviewQuestionario(props: Props) {
       setLoaded();
     }
     if (!isNaN(id)) getQuiz();
-  },        [props.match]);
+  },        [props.match, setLoading, open, setLoaded]);
 
   return props.match.params.id === null ? (
     <Redirect to="/" />
