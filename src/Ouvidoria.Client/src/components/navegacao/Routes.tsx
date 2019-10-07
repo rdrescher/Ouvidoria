@@ -33,12 +33,14 @@ import SugestaoView from "../../views/manifestacoes/Sugestao/SugestaoView";
 import Questionarios from "../../views/questionarios/Questionarios";
 import ResponderQuestionario from "../../views/questionarios/ResponderQuestionario";
 import DashboardView from "../../views/DashboardView";
+import Teste from "../../views/Teste";
 import PrivateRoute from "./PrivateRoute"; 
 
 export default function Routes() {
   return (
     <Switch>
       <Route exact path="/login" component={LoginView} />
+      <Route exact path="/teste" component={Teste} />
       <Route exact path="/cadastrar" component={CadastroView} />
       <Route exact path="/denuncia" component={DenunciaView} />
       <PrivateRoute exact path="/denuncia/novo" component={NovaDenunciaView} />

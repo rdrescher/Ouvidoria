@@ -5,8 +5,7 @@ import {
   Paper,
   Typography
 } from "@material-ui/core";
-import { CalendarToday, Face, HowToReg, Person } from "@material-ui/icons";
-import clsx from "clsx";
+import { CalendarToday, Person } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Redirect, RouteComponentProps } from "react-router-dom";
