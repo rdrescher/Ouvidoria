@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Ouvidoria.Domain.DTO;
 using Ouvidoria.Domain.Models;
 
 namespace Ouvidoria.Domain.Interfaces
@@ -9,5 +10,6 @@ namespace Ouvidoria.Domain.Interfaces
         Task<List<Questionario>> GetAllInfos();
         Task<List<Questionario>> GetPreviewList(int userId);
         Task<Questionario> GetByIdWithQuestions(int idQuestionario);
+        Task<QuestionarioDTO> GetQuizForReport(int id);
     }
 }

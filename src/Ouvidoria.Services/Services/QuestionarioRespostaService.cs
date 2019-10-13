@@ -38,6 +38,36 @@ namespace Ouvidoria.Services
             await _repository.Create(resposta);
         }
 
+        public async Task IsUserAbleToAnswer(int idQuestionario, int idUsuario)
+        {
+            var quiz = await _questionarioService.GetById(idQuestionario);
+            if (!IsValidQuiz(quiz)) return;
+            await this.UserCanAnswer(idQuestionario, idUsuario);
+        }
+
+        public async Task<List<QuestionarioResposta>> GetAnswersByQuiz(int idQuestionario)
+        {
+            var quiz = await _questionarioService.GetById(idQuestionario);
+            if (quiz == null)
+            {
+                Notify("Questionário não encontrado");
+                return new List<QuestionarioResposta>();
+            }
+
+            var answers = await _repository.GetAnsersByQuiz(idQuestionario);
+            if (answers == null)
+                Notify("O questionário em questão ainda não possui respostas");
+
+            return answers;
+        }
+
+        public async Task<QuestionarioResposta> GetByIdWithAnswers(int id)
+        {
+            var answer = await _repository.GetByIdWithIncludes(id);
+            if (answer == null) Notify("Resposta não encontrada");
+            return answer;
+        }
+
         public void Dispose() => _repository.Dispose();
 
         private async Task<bool> UserCanAnswer(int idQuestionario, int idUsuario)
@@ -85,6 +115,8 @@ namespace Ouvidoria.Services
                 var answer = respostas.FirstOrDefault(x => x.IdPergunta == question.Id);
                 if (!Validate(new RespostaValidation(question.Tipo), answer)) return false;
 
+                if (question.Tipo == TipoPergunta.Objetiva) answer.ResetResponse();
+
                 if (question.Tipo == TipoPergunta.Objetiva && !question.Opcoes.Select(x => x.Id).Contains(answer.IdOpcao.Value))
                 {
                     Notify("O Id de uma ou mais opções não condiz com os Ids das opções das perguntas do questionário");
@@ -108,36 +140,6 @@ namespace Ouvidoria.Services
                 return false;
             }
             return true;
-        }
-
-        public async Task IsUserAbleToAnswer(int idQuestionario, int idUsuario)
-        {
-            var quiz = await _questionarioService.GetById(idQuestionario);
-            if (!IsValidQuiz(quiz)) return;
-            await this.UserCanAnswer(idQuestionario, idUsuario);
-        }
-
-        public async Task<List<QuestionarioResposta>> GetAnswersByQuiz(int idQuestionario)
-        {
-            var quiz = await _questionarioService.GetById(idQuestionario);
-            if (quiz == null)
-            {
-                Notify("Questionário não encontrado");
-                return new List<QuestionarioResposta>();
-            }
-
-            var answers = await _repository.GetAnsersByQuiz(idQuestionario);
-            if (answers == null)
-                Notify("O questionário em questão ainda não possui respostas");
-
-            return answers;
-        }
-
-        public async Task<QuestionarioResposta> GetByIdWithAnswers(int id)
-        {
-            var answer = await _repository.GetByIdWithIncludes(id);
-            if (answer == null) Notify("Resposta não encontrada");
-            return answer;
         }
     }
 }

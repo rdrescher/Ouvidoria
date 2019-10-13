@@ -44,7 +44,9 @@ namespace Ouvidoria.Application.AutoMapper
                                                             : ""
                                                         : ""));
             CreateMap<Opcao, OpcaoViewModel>();
+            CreateMap<OpcaoDTO, OpcaoReportViewModel>();
             CreateMap<Pergunta, PerguntaViewModel>();
+            CreateMap<PerguntaDTO, PerguntaReportViewModel>();
             CreateMap<Questionario, QuestionarioViewModel>();
             CreateMap<Questionario, QuestionarioPreviewViewModel>()
                 .ForMember(q => q.dataFim,
@@ -60,6 +62,7 @@ namespace Ouvidoria.Application.AutoMapper
                                 c => c.MapFrom(d => d.DataFim.ToString("dd/MM/yyyy HH:mm")))
                 .ForMember(c => c.dataInicio,
                                 c => c.MapFrom(d => d.DataInicio.ToString("dd/MM/yyyy HH:mm")));
+            CreateMap<QuestionarioDTO, QuestionarioReportViewModel>();
             CreateMap<QuestionarioResposta, QuestionarioRespostaViewModel>()
                 .ForMember(q => q.usuario,
                                 q => q.MapFrom(r => r.Usuario != null ? r.Usuario.Nome : ""))

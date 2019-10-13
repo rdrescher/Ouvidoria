@@ -20,5 +20,6 @@ namespace Ouvidoria.Domain.Models
         public virtual Opcao Opcao { get; private set; }
         public virtual Pergunta Pergunta { get; private set; }
         public virtual QuestionarioResposta QuestionarioResposta { get; private set; }
+        public void ResetResponse() => Retorno = null;
     }
 }

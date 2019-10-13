@@ -68,7 +68,7 @@ function ResponderQuestionario(props: Props) {
     setState(prevState => {
       return { ...prevState, id };
     });
-  },        [props.match]);
+  }, [props.match]);
 
   useEffect(() => {
     if (state.id === null) return;
@@ -103,7 +103,7 @@ function ResponderQuestionario(props: Props) {
       }
       getQuiz();
     }
-  },        [state.id, setLoading, setLoaded, open]);
+  }, [state.id, setLoading, setLoaded, open]);
 
   useEffect(() => {
     if (state.quiz === null) return;
@@ -127,7 +127,7 @@ function ResponderQuestionario(props: Props) {
         errors
       };
     });
-  },        [state.quiz]);
+  }, [state.quiz]);
 
   const handleAnswerChange = (e: ChangeEvent<HTMLInputElement>) => {
     let questionId = Number(e.target.name);
@@ -276,7 +276,7 @@ function ResponderQuestionario(props: Props) {
                       name={state.answer!.respostas[
                         index
                       ].idPergunta.toString()}
-                      value={state.answer!.respostas[index].idOpcao}
+                      value={!!state.answer!.respostas[index].idOpcao}
                       onChange={handleOptionChange(index)}
                       row
                     >

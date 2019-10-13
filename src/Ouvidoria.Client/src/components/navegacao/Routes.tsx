@@ -31,10 +31,11 @@ import ListaSugestoesView from "../../views/manifestacoes/Sugestao/ListaSugestoe
 import NovaSugestaoView from "../../views/manifestacoes/Sugestao/NovaSugestaoView";
 import SugestaoView from "../../views/manifestacoes/Sugestao/SugestaoView";
 import Questionarios from "../../views/questionarios/Questionarios";
+import RelatorioQuestionarioView from "../../views/questionarios/RelatorioQuestionarioView";
 import ResponderQuestionario from "../../views/questionarios/ResponderQuestionario";
 import DashboardView from "../../views/DashboardView";
 import Teste from "../../views/Teste";
-import PrivateRoute from "./PrivateRoute"; 
+import PrivateRoute from "./PrivateRoute";
 
 export default function Routes() {
   return (
@@ -107,15 +108,22 @@ export default function Routes() {
       />
       <PrivateRoute
         exact
+        path="/questionarios/:id/relatorio"
+        component={RelatorioQuestionarioView}
+        claimRequired={UsuarioPerfil.Administrador}
+      />
+      <PrivateRoute
+        exact
         path="/questionarios/pre-visualizar/:id"
         component={PreviewQuestionarioView}
         claimRequired={UsuarioPerfil.Administrador}
-      /><PrivateRoute
-      exact
-      path="/questionarios/resposta/:id"
-      component={ListaRespostasView}
-      claimRequired={UsuarioPerfil.Administrador}
-    />
+      />
+      <PrivateRoute
+        exact
+        path="/questionarios/resposta/:id"
+        component={ListaRespostasView}
+        claimRequired={UsuarioPerfil.Administrador}
+      />
       <PrivateRoute
         exact
         path="/cursos"

@@ -12,5 +12,6 @@ namespace Ouvidoria.Application.Interfaces
         Task<Resultado> Create(CadastroQuestionarioViewModel questionario, int userId);
         Task<Resultado<List<QuestionarioPreviewViewModel>>> GetPreviewList(int userId);
         Task<Resultado<QuestionarioViewModel>> GetById(int idQuestionario);
+        Task<Resultado<QuestionarioReportViewModel>> GetQuizForReport(int id);
     }
 }
