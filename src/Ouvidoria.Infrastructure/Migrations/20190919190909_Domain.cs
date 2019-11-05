@@ -221,7 +221,7 @@ namespace Ouvidoria.Infrastructure.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     DataAtualizacao = table.Column<DateTime>(type: "datetime", nullable: false),
                     DataInsercao = table.Column<DateTime>(type: "datetime", nullable: false),
-                    Retorno = table.Column<string>(type: "varchar(50)", nullable: true),
+                    Retorno = table.Column<string>(type: "varchar(5000)", nullable: true),
                     IdOpcao = table.Column<int>(nullable: true),
                     IdPergunta = table.Column<int>(nullable: false),
                     IdQuestionarioResposta = table.Column<int>(nullable: false)

@@ -1,15 +1,11 @@
 import { Container, Fab, Grid, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import React from "react";
-import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { IApplicationState } from "../../../store";
+import PainelElogio from "../../../components/manifestacao/painel/PainelElogio";
+import PainelManifestacoes from "../../../components/manifestacao/painel/PainelManifestacoes";
 
-interface IStateProps {
-  isAuthenticated: boolean;
-}
-
-function ElogioView(props: IStateProps) {
+export default function ElogioView() {
   const classes = useStyles();
   return (
     <Container maxWidth="md">
@@ -17,6 +13,14 @@ function ElogioView(props: IStateProps) {
         <Typography variant="h4" className={classes.title}>
           Elogios
         </Typography>
+
+        <Typography variant="h6" align="center" paragraph>
+          Sobre Manifestações e Elogios
+        </Typography>
+
+        <PainelManifestacoes />
+        <PainelElogio />
+
         <Typography variant="body1">
           Espaço destinado para compartilhar registros de bom atendimento ou
           satisfação com atendimentos e serviços recebidos na instituição que
@@ -25,30 +29,29 @@ function ElogioView(props: IStateProps) {
           maneira correta e satisfatória.
         </Typography>
         <br />
-        {props.isAuthenticated ? (
-          <Grid
-            container
-            spacing={2}
-            className={classes.buttons}
-            justify="center"
-          >
-            <Grid item xs={12} sm={12} md={4}>
-              {
-                <Link to="/elogio/lista">
-                  <Fab variant="extended" size="large" color="secondary">
-                    <Typography variant="button">Ver meus elogios</Typography>
-                  </Fab>
-                </Link>
-              }
-            </Grid>
-            <Grid item xs={12} sm={12} md={4}>
-              <Link to="/elogio/novo">
+        <Grid
+          container
+          spacing={2}
+          className={classes.buttons}
+          justify="center"
+        >
+          <Grid item xs={12} sm={12} md={4}>
+            {
+              <Link to="/elogio/lista">
                 <Fab variant="extended" size="large" color="secondary">
-                  <Typography variant="button">Novo elogio</Typography>
+                  <Typography variant="button">Ver meus elogios</Typography>
                 </Fab>
               </Link>
-            </Grid>
-            {/* <Grid item xs={12} sm={12} md={4}>
+            }
+          </Grid>
+          <Grid item xs={12} sm={12} md={4}>
+            <Link to="/elogio/novo">
+              <Fab variant="extended" size="large" color="secondary">
+                <Typography variant="button">Novo elogio</Typography>
+              </Fab>
+            </Link>
+          </Grid>
+          {/* <Grid item xs={12} sm={12} md={4}>
               <Link to="/elogio">
                 <Fab variant="extended" size="large" color="secondary">
                   <Typography variant="button">
@@ -57,35 +60,16 @@ function ElogioView(props: IStateProps) {
                 </Fab>
               </Link>
             </Grid> */}
-          </Grid>
-        ) : (
-          <Typography variant="body2">
-            <i>
-              * Para registrar um elogio, você deve estar{" "}
-              <Link to="/login">logado</Link> no sistema.
-            </i>
-          </Typography>
-        )}
+        </Grid>
       </Paper>
     </Container>
   );
 }
 
-const mapStateToProps = (state: IApplicationState) => ({
-  isAuthenticated: state.SessionReducer.isAuthenticated
-});
-
-export default connect(
-  mapStateToProps,
-  null
-)(ElogioView);
-
 const useStyles = makeStyles(() => ({
   container: {
     padding: 20,
-    "& p": {
-      textAlign: "justify"
-    }
+    textAlign: "justify"
   },
   title: {
     textAlign: "center",

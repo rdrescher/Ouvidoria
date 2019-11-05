@@ -286,7 +286,7 @@ namespace Ouvidoria.Infrastructure.Migrations
                     b.Property<int>("IdQuestionarioResposta");
 
                     b.Property<string>("Retorno")
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("varchar(5000)");
 
                     b.HasKey("Id");
 

@@ -51,6 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: "relative",
     paddingTop: 10,
     paddingLeft: 20,
+    paddingRight: 10,
     margin: "10px 0",
     background: "#f2f2f2",
     borderRadius: 10,

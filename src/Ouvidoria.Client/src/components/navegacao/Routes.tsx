@@ -11,6 +11,7 @@ import PreviewQuestionarioView from "../../views/administracao/Questionario/Prev
 import UsuarioView from "../../views/administracao/UsuarioView";
 import CadastroView from "../../views/autenticacao/CadastroView";
 import LoginView from "../../views/autenticacao/LoginView";
+import LogoutView from "../../views/autenticacao/LogoutView";
 import Error from "../../views/errors/Error";
 import NotAllowed from "../../views/errors/NotAllowed";
 import NotFound from "../../views/errors/NotFound";
@@ -41,6 +42,7 @@ export default function Routes() {
   return (
     <Switch>
       <Route exact path="/login" component={LoginView} />
+      <Route exact path="/logout" component={LogoutView} />
       <Route exact path="/teste" component={Teste} />
       <Route exact path="/cadastrar" component={CadastroView} />
       <Route exact path="/denuncia" component={DenunciaView} />

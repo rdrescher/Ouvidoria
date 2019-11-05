@@ -28,6 +28,7 @@ interface IDispatchState {
 interface IStateProps {
   isAuthenticated: boolean;
 }
+
 interface IState {
   user: Login;
   errors: Login;

@@ -7,7 +7,6 @@ import {
   Chart,
   Legend,
   PieSeries,
-  Title,
   Tooltip
 } from "@devexpress/dx-react-chart-material-ui";
 import { makeStyles, Typography } from "@material-ui/core";
@@ -60,7 +59,6 @@ export default function GraficoPizza(props: IProps) {
   return (
     <Chart data={data}>
       <PieSeries valueField="numeroEscolhas" argumentField="descricao" />
-      <Title text="Area of Countries" />
       <Animation />
       <EventTracker />
       <Tooltip contentComponent={TooltipBody} />

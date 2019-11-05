@@ -90,7 +90,7 @@ function RelatorioQuestionarioView(props: Props) {
           Descrição: {state.quiz!.descricao}
         </Typography>
         <Typography variant="h5" paragraph align="center">
-          Perguntas
+          Respostas
         </Typography>
         {state.quiz!.perguntas.map((question, index) => (
           <div key={index} className={classes.questionContainer}>

@@ -17,7 +17,6 @@ import * as SessionActions from "../../store/ducks/session/SessionActions";
 
 interface IDispatchState {
   toggleSidebar(): void;
-  logout(): void;
 }
 
 interface IStateProps {
@@ -50,13 +49,11 @@ function NavbarComponent(props: Props) {
             <div className={classes.grow} />
             <div className={classes.user}>
               {props.isAuthenticated ? (
-                <Typography
-                  variant="body1"
-                  onClick={props.logout}
-                  className={classes.link}
-                >
-                  Sair
-                </Typography>
+                <Link to="/logout" className={classes.link}>
+                  <Typography variant="body1">
+                    Sair
+                  </Typography>
+                </Link>
               ) : (
                 <Typography variant="body1">
                   <Link to="/login" className={classes.link}>

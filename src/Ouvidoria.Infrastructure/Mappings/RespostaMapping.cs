@@ -11,7 +11,7 @@ namespace Ouvidoria.Infrastructure.Mappings
             builder.HasKey(c => c.Id);
 
             builder.Property(c => c.Retorno)
-                .HasColumnType("varchar(50)");
+                .HasColumnType("varchar(5000)");
 
             builder.HasOne(c => c.Opcao)
                 .WithMany(c => c.Respostas)
