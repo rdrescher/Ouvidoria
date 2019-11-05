@@ -21,16 +21,6 @@ export default function SolicitacaoView() {
         <PainelManifestacoes />
         <PainelSolicitacao />
 
-        <Typography variant="body1">
-          Espaço destinado para você solicitar um atendimento, prestação de
-          algum serviço ou auxílios na instituição.
-        </Typography>
-        <br />
-        <Typography variant="body1">
-          Solicite à instituição algo que você esteja necessitando no momento ou
-          necessitará futuramente.
-        </Typography>
-        <br />
         <Grid
           container
           spacing={2}

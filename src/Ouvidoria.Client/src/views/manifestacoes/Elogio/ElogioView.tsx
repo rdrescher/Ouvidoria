@@ -21,14 +21,6 @@ export default function ElogioView() {
         <PainelManifestacoes />
         <PainelElogio />
 
-        <Typography variant="body1">
-          Espaço destinado para compartilhar registros de bom atendimento ou
-          satisfação com atendimentos e serviços recebidos na instituição que
-          você deseja compartilhar com a mesma, a fim de contribuir com o
-          ambiente, mostrando que a instituição está realizando as atividades de
-          maneira correta e satisfatória.
-        </Typography>
-        <br />
         <Grid
           container
           spacing={2}

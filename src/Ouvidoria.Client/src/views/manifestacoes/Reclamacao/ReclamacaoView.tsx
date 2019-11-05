@@ -21,16 +21,6 @@ export default function ReclamacaoView() {
         <PainelManifestacoes />
         <PainelReclamacao />
 
-        <Typography variant="body1">
-          Espaço destinado para demonstrar insatisfações relacionadas a
-          atendimentos ou serviços prestados pela instituição.
-        </Typography>
-        <br />
-        <Typography variant="body1">
-          Reclame aqui caso você tenha uma crítica ou algum relato de
-          instisfação que você deseja compartilhar com a instituição.
-        </Typography>
-        <br />
         <Grid
           container
           spacing={2}

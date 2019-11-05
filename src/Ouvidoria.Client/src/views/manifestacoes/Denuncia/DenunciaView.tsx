@@ -19,18 +19,6 @@ export default function DenunciaView() {
         <PainelManifestacoes />
         <PainelDenuncia />
 
-        <Typography variant="body1">
-          Espaço destinado para reportar a ocorrência de algum ato ilícito,
-          ilegal, criminoso ou uma irregularidade praticada pela sociedade ou
-          por alunos, funcionários e professores da instituição.
-        </Typography>
-        <br />
-        <Typography variant="body1">
-          Realize uma denúncia caso algum ato familiar tenha acontecido com você
-          ou caso você tenha presenciado alguma ocorrência similar na
-          instituição.
-        </Typography>
-        <br />
         <Grid
           container
           spacing={2}

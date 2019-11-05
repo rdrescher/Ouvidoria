@@ -46,7 +46,7 @@ export default class Http {
         return await response.json();
       }
     } catch (err) {
-      window.location.href = ``;
+      window.location.href = "/error";
     }
     return { success: false, data: [], messages: [] };
   }

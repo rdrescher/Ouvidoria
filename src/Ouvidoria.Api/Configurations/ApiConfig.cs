@@ -35,10 +35,9 @@ namespace Ouvidoria.Api.Configurations
             options.DefaultFileNames.Clear();
             options.DefaultFileNames.Add("index.html");
 
-            app.UseDefaultFiles(options);
-            app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseMvc(x => x.MapRoute("default", "api/{controller}/{action}/{id?}"));
+            app.UseDefaultFiles(options);
             app.UseStaticFiles();
             app.MapWhen
             (

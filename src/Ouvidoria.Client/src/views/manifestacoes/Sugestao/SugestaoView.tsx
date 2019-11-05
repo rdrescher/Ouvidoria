@@ -21,16 +21,6 @@ export default function SugestaoView() {
         <PainelManifestacoes />
         <PainelSugestao />
 
-        <Typography variant="body1">
-          Espaço destinado para você enviar sua ideia ou proposta de melhoria
-          nos serviços, atendimentos ou no espaço da instituição.
-        </Typography>
-        <br />
-        <Typography variant="body1">
-          Sugira à insituição melhorias que você julga válidas ou necessárias no
-          ambiente.
-        </Typography>
-        <br />
         <Grid
           container
           spacing={2}
