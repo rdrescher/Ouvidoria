@@ -1,14 +1,11 @@
 import {
   makeStyles,
   Container,
-  Grid,
   Paper,
   Typography
 } from "@material-ui/core";
-import { ExitToAppOutlined, Person, QuestionAnswer } from "@material-ui/icons";
 import React from "react";
 import { connect } from "react-redux";
-import Botao from "../components/home/Botao";
 import ListaManifestacoes from "../components/home/ListaManifestacoes";
 import SobreOuvidoria from "../components/home/SobreOuvidoria";
 import { IApplicationState } from "../store";
@@ -27,37 +24,6 @@ function DashboardView(props: IStateProps) {
         </Typography>
         <SobreOuvidoria />
         <ListaManifestacoes />
-        <Grid container spacing={1}>
-          <Grid item xs={12} sm={6}>
-            <div className={classes.area}>
-              <Typography variant="h5" paragraph>
-                Responda Questionários!
-              </Typography>
-              <Botao
-                title="Questionário"
-                link="/questionarios"
-                icon={<QuestionAnswer />}
-              />
-            </div>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            {props.isAuthenticated ? (
-              <div className={classes.area}>
-                <Typography variant="h5" paragraph>
-                  Sua conta
-                </Typography>
-                <Botao title="Sair" link="/logout" icon={<ExitToAppOutlined />} />
-              </div>
-            ) : (
-              <div className={classes.area}>
-                <Typography variant="h5" paragraph>
-                  Acesse o Sistema!
-                </Typography>
-                <Botao title="Acessar" link="/login" icon={<Person />} />
-              </div>
-            )}
-          </Grid>
-        </Grid>
       </Paper>
     </Container>
   );

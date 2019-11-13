@@ -15,24 +15,21 @@ export default function Acoes(props: IProps) {
       {props.answers > 0 ? (
         <Tooltip title="Ver Respostas">
           <Link to={`/questionarios/${props.id}/respostas`}>
-            <Fab size="small" color="secondary">
+            <Fab size="small" color="secondary" className={classes.btn}>
               <List />
             </Fab>
           </Link>
         </Tooltip>
       ) : (
         <Tooltip title="Ver Respostas">
-          <Fab size="small" color="secondary" disabled>
+          <Fab size="small" color="secondary" disabled className={classes.btn}>
             <List />
           </Fab>
         </Tooltip>
       )}
       <Tooltip title="Pré Visualizar">
-        <Link
-          to={`/questionarios/pre-visualizar/${props.id}`}
-          className={classes.btn}
-        >
-          <Fab size="small" color="secondary">
+        <Link to={`/questionarios/pre-visualizar/${props.id}`}>
+          <Fab size="small" color="secondary" className={classes.btn}>
             <RemoveRedEye />
           </Fab>
         </Link>
@@ -40,14 +37,14 @@ export default function Acoes(props: IProps) {
       {props.answers > 0 ? (
         <Tooltip title="Relatório">
           <Link to={`/questionarios/${props.id}/relatorio`}>
-            <Fab size="small" color="secondary">
+            <Fab size="small" color="secondary" className={classes.btn}>
               <PieChart />
             </Fab>
           </Link>
         </Tooltip>
       ) : (
         <Tooltip title="Relatório">
-          <Fab size="small" color="secondary" disabled>
+          <Fab size="small" color="secondary" disabled className={classes.btn}>
             <PieChart />
           </Fab>
         </Tooltip>
@@ -58,7 +55,6 @@ export default function Acoes(props: IProps) {
 
 const useStyles = makeStyles(() => ({
   btn: {
-    marginRight: 10,
-    marginLeft: 10
+    margin: 2
   }
 }));

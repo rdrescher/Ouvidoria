@@ -28,13 +28,11 @@ export default function ElogioView() {
           justify="center"
         >
           <Grid item xs={12} sm={12} md={4}>
-            {
-              <Link to="/elogio/lista">
-                <Fab variant="extended" size="large" color="secondary">
-                  <Typography variant="button">Ver meus elogios</Typography>
-                </Fab>
-              </Link>
-            }
+            <Link to="/elogio/lista">
+              <Fab variant="extended" size="large" color="secondary">
+                <Typography variant="button">Ver meus elogios</Typography>
+              </Fab>
+            </Link>
           </Grid>
           <Grid item xs={12} sm={12} md={4}>
             <Link to="/elogio/novo">
