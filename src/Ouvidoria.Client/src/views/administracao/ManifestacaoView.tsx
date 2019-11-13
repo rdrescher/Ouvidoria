@@ -27,7 +27,7 @@ const headers: MUIDataTableColumnDef[] = [
   { name: "usuario", label: "Usuário" },
   { name: "dataCriacao", label: "Criado em" },
   { name: "numeroInteracoes", label: "Interações" },
-  { name: "usuarioUltimaInteracao", label: "Última Alteração" },
+  { name: "usuarioUltimaInteracao", label: "Última Interação" },
   {
     name: "",
     label: "Ações",
