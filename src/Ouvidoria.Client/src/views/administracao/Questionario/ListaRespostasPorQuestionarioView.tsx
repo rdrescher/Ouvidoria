@@ -8,6 +8,8 @@ import DataTable from "../../../components/common/dataTable/DataTable";
 import QuestionarioApi from "../../../services/QuestionarioApi";
 import { IApplicationState } from "../../../store";
 import * as LoadingActions from "../../../store/ducks/loading/LoadingActions";
+import { Tooltip, Fab } from "@material-ui/core";
+import { RemoveRedEye } from "@material-ui/icons";
 
 interface IDispatchProps {
   open(title: string, messages: string[]): void;
@@ -31,14 +33,22 @@ const headers: MUIDataTableColumnDef[] = [
   { label: "Id", name: "id" },
   { label: "Usuário", name: "usuario" },
   { label: "Data da Resposta", name: "dataInsercao" },
-  { label: "Ações", name: "", options: {
-    customBodyRender: (a, tbl) =>
-      tbl.tableData.length > 0 && (
-        <Link to={`/questionarios/resposta/${tbl.rowData[0]}`}>
-          Visualizar
-        </Link>
-      )
-  }}
+  {
+    label: "Ações",
+    name: "",
+    options: {
+      customBodyRender: (a, tbl) =>
+        tbl.tableData.length > 0 && (
+          <Tooltip title="Visualizar">
+            <Link to={`/questionarios/resposta/${tbl.rowData[0]}`}>
+              <Fab size="small" variant="round" color="secondary">
+                <RemoveRedEye />
+              </Fab>
+            </Link>
+          </Tooltip>
+        )
+    }
+  }
 ];
 
 type Props = IDispatchProps & RouteComponentProps<Params> & IStateProps;
@@ -55,7 +65,7 @@ function ListaRespostasPorQuestinarioView(props: Props) {
     } else {
       setState(prevState => ({ ...prevState, id }));
     }
-  },        [props.match.params.id, open]);
+  }, [props.match.params.id, open]);
 
   async function getQuizAnswers() {
     return await QuestionarioApi.GetAnswersByQuiz(state.id!);

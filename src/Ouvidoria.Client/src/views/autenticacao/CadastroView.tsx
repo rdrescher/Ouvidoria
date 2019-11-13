@@ -1,10 +1,4 @@
-import {
-  Container,
-  Grid,
-  Paper,
-  Theme,
-  Typography
-} from "@material-ui/core";
+import { Container, Grid, Paper, Theme, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import React, { useEffect, useState, ChangeEvent } from "react";
 import { connect } from "react-redux";
@@ -101,9 +95,9 @@ function CadastroView(props: Props) {
   const handleTelephoneCPFChange = (e: ChangeEvent<HTMLInputElement>) => {
     let name = e.target.name;
     let value = e.target.value;
-    let regex = /^\s*\d*\s*$/;
-    if (regex.test(String(value)))
-      setState({ ...state, user: { ...state.user, [name]: value } });
+    let regex = /[^0-9]/g;
+    let newValue = value.replace(regex, "");
+    setState({ ...state, user: { ...state.user, [name]: newValue } });
   };
 
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -362,72 +356,97 @@ function CadastroView(props: Props) {
   return props.isAuthenticated ? (
     <Redirect to="/" />
   ) : (
-    <Container maxWidth="sm">
+    <Container maxWidth="md">
       <Paper className={styles.paper}>
         <Typography className={styles.text} variant="h6">
           Cadastre-se!
         </Typography>
         <form autoComplete="false">
-          <InputField
-            name="nome"
-            label="Nome * "
-            error={state.errors.name}
-            value={state.user.nome}
-            onChange={handleInputChange}
-            onBlur={validateName}
-          />
-          <InputField
-            name="email"
-            label="E-mail * "
-            error={state.errors.email}
-            value={state.user.email}
-            onChange={handleInputChange}
-            onBlur={validateEmail}
-          />
-          <InputField
-            name="cpf"
-            label="CPF * "
-            error={state.errors.cpf}
-            value={state.user.cpf}
-            onChange={handleTelephoneCPFChange}
-            onBlur={validateCPF}
-          />
-          <InputField
-            name="telefone"
-            label="Telefone"
-            error={state.errors.phone}
-            value={state.user.telefone}
-            onChange={handleTelephoneCPFChange}
-            onBlur={validateTelephone}
-          />
-          <SelectField
-            name="idCurso"
-            label="Curso"
-            value={state.user.idCurso}
-            onChange={handleSelectChange}
-            data={state.classes}
-            nullable={true}
-          />
-          <InputField
-            name="senha"
-            label="Senha * "
-            type="password"
-            error={state.errors.password}
-            value={state.user.senha}
-            onChange={handleInputChange}
-            onBlur={validatePassword}
-          />
-          <InputField
-            name="confirmaSenha"
-            label="Confirmar Senha * "
-            error={state.errors.confirmPassword}
-            value={state.user.confirmaSenha}
-            type="password"
-            onChange={handleInputChange}
-            onBlur={validateConfirmPassword}
-          />
-          <Grid container spacing={2} className={styles.buttons}>
-            <Grid item xs={12}>
+          <Grid container spacing={1}>
+            <Grid item xs={12} sm={12} md={6}>
+              <InputField
+                name="nome"
+                label="Nome * "
+                error={state.errors.name}
+                value={state.user.nome}
+                onChange={handleInputChange}
+                onBlur={validateName}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+              <InputField
+                name="email"
+                label="E-mail * "
+                error={state.errors.email}
+                value={state.user.email}
+                onChange={handleInputChange}
+                onBlur={validateEmail}
+              />
+            </Grid>
+          </Grid>
+          <Grid container spacing={1}>
+            <Grid item xs={12} sm={12} md={6}>
+              <InputField
+                name="cpf"
+                label="CPF * "
+                error={state.errors.cpf}
+                value={state.user.cpf}
+                onChange={handleTelephoneCPFChange}
+                onBlur={validateCPF}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+              <InputField
+                name="telefone"
+                label="Telefone"
+                error={state.errors.phone}
+                value={state.user.telefone}
+                onChange={handleTelephoneCPFChange}
+                onBlur={validateTelephone}
+              />
+            </Grid>
+          </Grid>
+          <div className={styles.select}>
+            <SelectField
+              name="idCurso"
+              label="Curso"
+              value={state.user.idCurso}
+              onChange={handleSelectChange}
+              data={state.classes}
+              nullable={true}
+            />
+          </div>
+          <Grid container spacing={1}>
+            <Grid item xs={12} sm={12} md={6}>
+              <InputField
+                name="senha"
+                label="Senha * "
+                type="password"
+                error={state.errors.password}
+                value={state.user.senha}
+                onChange={handleInputChange}
+                onBlur={validatePassword}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+              <InputField
+                name="confirmaSenha"
+                label="Confirmar Senha * "
+                error={state.errors.confirmPassword}
+                value={state.user.confirmaSenha}
+                type="password"
+                onChange={handleInputChange}
+                onBlur={validateConfirmPassword}
+              />
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            justify="center"
+            spacing={2}
+            className={styles.buttons}
+          >
+            <Grid item xs={12} sm={6}>
               <SubmitButton
                 loading={state.loading}
                 label="Cadastrar"
@@ -437,12 +456,12 @@ function CadastroView(props: Props) {
             <Grid item xs={12}>
               <div className={styles.wrapper}>
                 <Link to="/login">
-                    <Typography
-                      variant="inherit"
-                      className={styles.contentSpacer}
-                    >
-                      Já possuo uma conta
-                    </Typography>
+                  <Typography
+                    variant="inherit"
+                    className={styles.contentSpacer}
+                  >
+                    Já possuo uma conta
+                  </Typography>
                 </Link>
               </div>
             </Grid>
@@ -467,10 +486,6 @@ export default connect(
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
     padding: "20px 30px"
   },
   logo: {
@@ -499,8 +514,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(1),
     height: 40,
     "&:hover": {
-      backgroundColor: theme.palette.grey[200],
+      backgroundColor: theme.palette.grey[200]
     },
     borderRadius: 20
+  },
+  select: {
+    margin: "10px 0"
   }
 }));

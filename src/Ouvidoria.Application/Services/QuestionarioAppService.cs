@@ -49,5 +49,13 @@ namespace Ouvidoria.Application.Services
             return Resultado<List<DetalheQuestionarioViewModel>>.Successfull(quizzes);
         }
 
+        public async Task<Resultado<QuestionarioReportViewModel>> GetQuizForReport(int id)
+        {
+            var quiz = Mapper.Map<QuestionarioReportViewModel>(await _service.GetQuizForReport(id));
+
+            return Notificador.HasNotification()
+                ? Resultado<QuestionarioReportViewModel>.Failed(Notificador.GetNotificationsMessages())
+                : Resultado<QuestionarioReportViewModel>.Successfull(quiz);
+        }
     }
 }

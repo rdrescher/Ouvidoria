@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Ouvidoria.Domain.DTO;
 using Ouvidoria.Domain.Interfaces;
 using Ouvidoria.Domain.Models;
 using Ouvidoria.Domain.Validations.Models;
@@ -45,6 +46,19 @@ namespace Ouvidoria.Services
 
         public async Task<List<Questionario>> GetQuizzes() =>
             await _repository.GetAllInfos();
+
+        public async Task<QuestionarioDTO> GetQuizForReport(int id)
+        {
+            var quiz = await _repository.GetQuizForReport(id);
+
+            if (quiz == null)
+                Notify("Questionário não encontrado");
+
+            if(quiz != null && quiz.NumeroRespostas == 0)
+                Notify("O questionário ainda não possui respostas");
+
+            return quiz;
+        }
 
         private bool IsValidPeriod(DateTime startDate)
         {

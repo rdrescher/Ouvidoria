@@ -12,8 +12,7 @@ type HttpMethods =
   | "TRACE";
 
 export default class Http {
-  private static _baseUrl: string = "";
-  private static _baseClientUrl: string = "";
+  private static _baseUrl: string = "https://localhost:5001";
 
   public static get baseUrl(): string {
     return Http._baseUrl;
@@ -47,7 +46,7 @@ export default class Http {
         return await response.json();
       }
     } catch (err) {
-      window.location.href = `https://ouvidoriahomolog.azurewebsites.net/error`;
+      window.location.href = "/error";
     }
     return { success: false, data: [], messages: [] };
   }

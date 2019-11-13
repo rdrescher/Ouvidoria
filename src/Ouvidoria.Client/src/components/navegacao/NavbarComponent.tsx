@@ -1,12 +1,13 @@
 import {
   makeStyles,
   AppBar,
+  Fab,
   IconButton,
   Theme,
   Toolbar,
   Typography
 } from "@material-ui/core";
-import { Menu } from "@material-ui/icons";
+import { ExitToAppOutlined, Menu, Person } from "@material-ui/icons";
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -17,7 +18,6 @@ import * as SessionActions from "../../store/ducks/session/SessionActions";
 
 interface IDispatchState {
   toggleSidebar(): void;
-  logout(): void;
 }
 
 interface IStateProps {
@@ -48,19 +48,31 @@ function NavbarComponent(props: Props) {
               </Link>
             </Typography>
             <div className={classes.grow} />
-            <div className={classes.user}>
+            <div>
               {props.isAuthenticated ? (
-                <Typography
-                  variant="body1"
-                  onClick={props.logout}
-                  className={classes.link}
-                >
-                  Sair
-                </Typography>
+                <Link to="/logout" className={classes.link}>
+                  <Fab
+                    size="small"
+                    variant="extended"
+                    color="default"
+                    className={classes.button}
+                  >
+                    Sair
+                    <ExitToAppOutlined className={classes.userIcon} />
+                  </Fab>
+                </Link>
               ) : (
                 <Typography variant="body1">
                   <Link to="/login" className={classes.link}>
-                    Acesse!
+                    <Fab
+                      size="small"
+                      variant="extended"
+                      color="default"
+                      className={classes.button}
+                    >
+                      Acessar
+                      <Person className={classes.userIcon} />
+                    </Fab>
                   </Link>
                 </Typography>
               )}
@@ -101,7 +113,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   hamburger: {
     marginRight: theme.spacing(2),
     color: "inherit",
-    marginLeft: 6
   },
   grow: {
     flexGrow: 1
@@ -117,7 +128,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: "space-between",
     width: "100%"
   },
-  user: {
-    marginRight: 40
+  userIcon: {
+    marginLeft: 10
+  },
+  button: {
+    padding: "0 15px !important",
+    background: "transparent",
+    color: "white",
+    boxShadow: "none",
+    border: "1px solid white",
+    "&:hover": {
+      background: "rgba(255, 255, 255, .1)"
+    }
   }
 }));

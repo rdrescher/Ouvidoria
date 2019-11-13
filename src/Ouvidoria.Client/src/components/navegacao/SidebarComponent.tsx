@@ -177,6 +177,12 @@ function SidebarComponent(props: Props) {
                     icon={<Work />}
                   />
                   <SidebarItem
+                    path="/manifestacoes"
+                    label="Manifestações"
+                    nested
+                    icon={<ThumbsUpDown />}
+                  />
+                  <SidebarItem
                     path="/questionarios/lista"
                     label="Questionários"
                     nested

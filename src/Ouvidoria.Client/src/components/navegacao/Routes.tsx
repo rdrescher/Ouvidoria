@@ -3,14 +3,16 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import UsuarioPerfil from "../../application/enums/UsuarioPerfil";
 import CursoView from "../../views/administracao/CursoView";
 import DepartamentoView from "../../views/administracao/DepartamentoView";
+import ManifestacaoView from "../../views/administracao/ManifestacaoView";
 import CadastroQuestionarioView from "../../views/administracao/Questionario/CadastroQuestionarioView";
-import ListaQuestionarios from "../../views/administracao/Questionario/ListaQuestionarios";
+import ListaQuestionariosView from "../../views/administracao/Questionario/ListaQuestionariosView";
 import ListaRespostasPorQuestionarioView from "../../views/administracao/Questionario/ListaRespostasPorQuestionarioView";
 import ListaRespostasView from "../../views/administracao/Questionario/ListaRespostasView";
 import PreviewQuestionarioView from "../../views/administracao/Questionario/PreviewQuestionarioView";
 import UsuarioView from "../../views/administracao/UsuarioView";
 import CadastroView from "../../views/autenticacao/CadastroView";
 import LoginView from "../../views/autenticacao/LoginView";
+import LogoutView from "../../views/autenticacao/LogoutView";
 import Error from "../../views/errors/Error";
 import NotAllowed from "../../views/errors/NotAllowed";
 import NotFound from "../../views/errors/NotFound";
@@ -31,14 +33,18 @@ import ListaSugestoesView from "../../views/manifestacoes/Sugestao/ListaSugestoe
 import NovaSugestaoView from "../../views/manifestacoes/Sugestao/NovaSugestaoView";
 import SugestaoView from "../../views/manifestacoes/Sugestao/SugestaoView";
 import Questionarios from "../../views/questionarios/Questionarios";
+import RelatorioQuestionarioView from "../../views/questionarios/RelatorioQuestionarioView";
 import ResponderQuestionario from "../../views/questionarios/ResponderQuestionario";
 import DashboardView from "../../views/DashboardView";
-import PrivateRoute from "./PrivateRoute"; 
+import Teste from "../../views/Teste";
+import PrivateRoute from "./PrivateRoute";
 
 export default function Routes() {
   return (
     <Switch>
       <Route exact path="/login" component={LoginView} />
+      <Route exact path="/logout" component={LogoutView} />
+      <Route exact path="/teste" component={Teste} />
       <Route exact path="/cadastrar" component={CadastroView} />
       <Route exact path="/denuncia" component={DenunciaView} />
       <PrivateRoute exact path="/denuncia/novo" component={NovaDenunciaView} />
@@ -88,7 +94,13 @@ export default function Routes() {
       <PrivateRoute
         exact
         path="/questionarios/lista"
-        component={ListaQuestionarios}
+        component={ListaQuestionariosView}
+        claimRequired={UsuarioPerfil.Administrador}
+      />
+      <PrivateRoute
+        exact
+        path="/manifestacoes"
+        component={ManifestacaoView}
         claimRequired={UsuarioPerfil.Administrador}
       />
       <PrivateRoute
@@ -105,15 +117,22 @@ export default function Routes() {
       />
       <PrivateRoute
         exact
+        path="/questionarios/:id/relatorio"
+        component={RelatorioQuestionarioView}
+        claimRequired={UsuarioPerfil.Administrador}
+      />
+      <PrivateRoute
+        exact
         path="/questionarios/pre-visualizar/:id"
         component={PreviewQuestionarioView}
         claimRequired={UsuarioPerfil.Administrador}
-      /><PrivateRoute
-      exact
-      path="/questionarios/resposta/:id"
-      component={ListaRespostasView}
-      claimRequired={UsuarioPerfil.Administrador}
-    />
+      />
+      <PrivateRoute
+        exact
+        path="/questionarios/resposta/:id"
+        component={ListaRespostasView}
+        claimRequired={UsuarioPerfil.Administrador}
+      />
       <PrivateRoute
         exact
         path="/cursos"

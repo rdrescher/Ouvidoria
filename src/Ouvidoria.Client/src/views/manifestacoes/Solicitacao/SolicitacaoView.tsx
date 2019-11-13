@@ -1,15 +1,11 @@
 import { Container, Fab, Grid, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import React from "react";
-import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { IApplicationState } from "../../../store";
+import PainelManifestacoes from "../../../components/manifestacao/painel/PainelManifestacoes";
+import PainelSolicitacao from "../../../components/manifestacao/painel/PainelSolicitacao";
 
-interface IStateProps {
-  isAuthenticated: boolean;
-}
-
-function SolicitacaoView(props: IStateProps) {
+export default function SolicitacaoView() {
   const classes = useStyles();
   return (
     <Container maxWidth="md">
@@ -17,40 +13,37 @@ function SolicitacaoView(props: IStateProps) {
         <Typography variant="h4" className={classes.title}>
           Solicitações
         </Typography>
-        <Typography variant="body1">
-          Espaço destinado para você solicitar um atendimento, prestação de
-          algum serviço ou auxílios na instituição.
+
+        <Typography variant="h6" align="center" paragraph>
+          Sobre Manifestações e Solicitações
         </Typography>
-        <br />
-        <Typography variant="body1">
-          Solicite à instituição algo que você esteja necessitando no momento ou
-          necessitará futuramente.
-        </Typography>
-        <br />
-        {props.isAuthenticated ? (
-          <Grid
-            container
-            spacing={2}
-            className={classes.buttons}
-            justify="center"
-          >
-            <Grid item xs={12} sm={12} md={4}>
-              <Link to="/solicitacao/lista">
-                <Fab variant="extended" size="large" color="secondary">
-                  <Typography variant="button">
-                    Ver minhas solicitações
-                  </Typography>
-                </Fab>
-              </Link>
-            </Grid>
-            <Grid item xs={12} sm={12} md={4}>
-              <Link to="/solicitacao/novo">
-                <Fab variant="extended" size="large" color="secondary">
-                  <Typography variant="button">Nova Solicitação</Typography>
-                </Fab>
-              </Link>
-            </Grid>
-            {/* <Grid item xs={12} sm={12} md={4}>
+
+        <PainelManifestacoes />
+        <PainelSolicitacao />
+
+        <Grid
+          container
+          spacing={2}
+          className={classes.buttons}
+          justify="center"
+        >
+          <Grid item xs={12} sm={12} md={4}>
+            <Link to="/solicitacao/lista">
+              <Fab variant="extended" size="large" color="secondary">
+                <Typography variant="button">
+                  Ver minhas solicitações
+                </Typography>
+              </Fab>
+            </Link>
+          </Grid>
+          <Grid item xs={12} sm={12} md={4}>
+            <Link to="/solicitacao/novo">
+              <Fab variant="extended" size="large" color="secondary">
+                <Typography variant="button">Nova Solicitação</Typography>
+              </Fab>
+            </Link>
+          </Grid>
+          {/* <Grid item xs={12} sm={12} md={4}>
               <Link to="/solicitacao">
                 <Fab variant="extended" size="large" color="secondary">
                   <Typography variant="button">
@@ -59,35 +52,16 @@ function SolicitacaoView(props: IStateProps) {
                 </Fab>
               </Link>
             </Grid> */}
-          </Grid>
-        ) : (
-          <Typography variant="body2">
-            <i>
-              * Para realizar uma denúncia, você deve estar{" "}
-              <Link to="/login">logado</Link> no sistema.
-            </i>
-          </Typography>
-        )}
+        </Grid>
       </Paper>
     </Container>
   );
 }
 
-const mapStateToProps = (state: IApplicationState) => ({
-  isAuthenticated: state.SessionReducer.isAuthenticated
-});
-
-export default connect(
-  mapStateToProps,
-  null
-)(SolicitacaoView);
-
 const useStyles = makeStyles(() => ({
   container: {
     padding: 20,
-    "& p": {
-      textAlign: "justify"
-    }
+    textAlign: "justify"
   },
   title: {
     textAlign: "center",

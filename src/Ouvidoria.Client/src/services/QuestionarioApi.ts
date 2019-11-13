@@ -3,6 +3,7 @@ import CadastroQuestionario from "../models/Questionario/CadastroQuestionario";
 import DetalheQuestionario from "../models/Questionario/DetalheQuestionario";
 import Questionario from "../models/Questionario/Questionario";
 import QuestionarioPreview from "../models/Questionario/QuestionarioPreview";
+import QuestionarioReport from "../models/Questionario/QuestionarioReport";
 import CadastroQuestionarioResposta from "../models/QuestionarioResposta/CadastroQuestionarioResposta";
 import QuestionarioResposta from "../models/QuestionarioResposta/QuestionarioResposta";
 import QuestionarioRespostaDetail from "../models/QuestionarioResposta/QuestionarioRespostaDetail";
@@ -37,5 +38,9 @@ export default class QuestionarioApi {
 
     public static async Reply(answer: CadastroQuestionarioResposta): Promise<Resultado> {
         return await Http.post(`/api/Questionario/Reply`, answer);
+    }
+
+    public static async getForReport(id: number): Promise<Resultado<QuestionarioReport>> {
+        return await Http.get(`/api/Questionario/GetQuizForReport/${id}`);
     }
 }
