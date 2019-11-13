@@ -3,8 +3,9 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import UsuarioPerfil from "../../application/enums/UsuarioPerfil";
 import CursoView from "../../views/administracao/CursoView";
 import DepartamentoView from "../../views/administracao/DepartamentoView";
+import ManifestacaoView from "../../views/administracao/ManifestacaoView";
 import CadastroQuestionarioView from "../../views/administracao/Questionario/CadastroQuestionarioView";
-import ListaQuestionarios from "../../views/administracao/Questionario/ListaQuestionarios";
+import ListaQuestionariosView from "../../views/administracao/Questionario/ListaQuestionariosView";
 import ListaRespostasPorQuestionarioView from "../../views/administracao/Questionario/ListaRespostasPorQuestionarioView";
 import ListaRespostasView from "../../views/administracao/Questionario/ListaRespostasView";
 import PreviewQuestionarioView from "../../views/administracao/Questionario/PreviewQuestionarioView";
@@ -93,7 +94,13 @@ export default function Routes() {
       <PrivateRoute
         exact
         path="/questionarios/lista"
-        component={ListaQuestionarios}
+        component={ListaQuestionariosView}
+        claimRequired={UsuarioPerfil.Administrador}
+      />
+      <PrivateRoute
+        exact
+        path="/manifestacoes"
+        component={ManifestacaoView}
         claimRequired={UsuarioPerfil.Administrador}
       />
       <PrivateRoute

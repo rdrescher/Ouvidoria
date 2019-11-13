@@ -42,12 +42,15 @@ const headers: MUIDataTableColumnDef[] = [
             id={tbl.rowData[0] as number}
             answers={tbl.rowData[7] as number}
           />
-        )
+        ),
+      filter: false,
+      searchable: false,
+      sort: false
     }
   }
 ];
 
-export default function ListaQuestionarios() {
+export default function ListaQuestionariosView() {
   async function getQuizzes() {
     return await QuestionarioApi.entity.get();
   }
